@@ -13,6 +13,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useCategories } from "@/hooks/use-categories";
+import { UserMenu } from "@/components/dashboard/user-menu";
+import { AddCategorySheet } from "@/components/dashboard/add-category-sheet";
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -22,6 +24,7 @@ interface SidebarProps {
 export function Sidebar({ isExpanded, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const { data: categories = [], isLoading } = useCategories();
+  const [addCategoryOpen, setAddCategoryOpen] = useState(false);
 
   return (
     <aside
@@ -95,26 +98,21 @@ export function Sidebar({ isExpanded, onToggle }: SidebarProps) {
             "w-full justify-start gap-3",
             !isExpanded && "justify-center px-0"
           )}
+          onClick={() => setAddCategoryOpen(true)}
         >
           <HugeiconsIcon icon={PlusSignIcon} className="h-5 w-5 shrink-0" />
           {isExpanded && <span>Add Category</span>}
         </Button>
       </nav>
 
-      {/* User Profile - TODO: Add dropdown */}
-      <div className="border-t p-4">
-        {isExpanded ? (
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-primary" />
-            <div className="flex-1 text-sm">
-              <p className="font-medium">User Name</p>
-              <p className="text-xs text-muted-foreground">user@email.com</p>
-            </div>
-          </div>
-        ) : (
-          <div className="mx-auto h-8 w-8 rounded-full bg-primary" />
-        )}
-      </div>
+      {/* User Menu */}
+      <UserMenu isExpanded={isExpanded} />
+
+      {/* Add Category Sheet */}
+      <AddCategorySheet
+        open={addCategoryOpen}
+        onOpenChange={setAddCategoryOpen}
+      />
     </aside>
   );
 }
