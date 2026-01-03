@@ -8,7 +8,8 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Laptop, Moon, Sun } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { LaptopIcon, Moon02Icon, Sun01Icon } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -31,20 +32,23 @@ const ThemeSwitcher = () => {
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="ghost" size={"sm"} />}>
         {theme === "light" ? (
-          <Sun
+          <HugeiconsIcon
             key="light"
+            icon={Sun01Icon}
             size={ICON_SIZE}
             className={"text-muted-foreground"}
           />
         ) : theme === "dark" ? (
-          <Moon
+          <HugeiconsIcon
             key="dark"
+            icon={Moon02Icon}
             size={ICON_SIZE}
             className={"text-muted-foreground"}
           />
         ) : (
-          <Laptop
+          <HugeiconsIcon
             key="system"
+            icon={LaptopIcon}
             size={ICON_SIZE}
             className={"text-muted-foreground"}
           />
@@ -56,15 +60,27 @@ const ThemeSwitcher = () => {
           onValueChange={(e) => setTheme(e)}
         >
           <DropdownMenuRadioItem className="flex gap-2" value="light">
-            <Sun size={ICON_SIZE} className="text-muted-foreground" />{" "}
+            <HugeiconsIcon
+              icon={Sun01Icon}
+              size={ICON_SIZE}
+              className="text-muted-foreground"
+            />{" "}
             <span>Light</span>
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem className="flex gap-2" value="dark">
-            <Moon size={ICON_SIZE} className="text-muted-foreground" />{" "}
+            <HugeiconsIcon
+              icon={Moon02Icon}
+              size={ICON_SIZE}
+              className="text-muted-foreground"
+            />{" "}
             <span>Dark</span>
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem className="flex gap-2" value="system">
-            <Laptop size={ICON_SIZE} className="text-muted-foreground" />{" "}
+            <HugeiconsIcon
+              icon={LaptopIcon}
+              size={ICON_SIZE}
+              className="text-muted-foreground"
+            />{" "}
             <span>System</span>
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>

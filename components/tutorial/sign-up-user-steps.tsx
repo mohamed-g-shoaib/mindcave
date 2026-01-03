@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TutorialStep } from "./tutorial-step";
-import { ArrowUpRight } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 
 export function SignUpUserSteps() {
   return (
@@ -50,7 +51,7 @@ export function SignUpUserSteps() {
               <span className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-xs font-medium text-secondary-foreground border">
                 {`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL?.replace(
                   ".vercel.app",
-                  "",
+                  ""
                 )}-*-[vercel-team-url].vercel.app/**`}
               </span>{" "}
               (Vercel Team URL can be found in{" "}
@@ -69,7 +70,8 @@ export function SignUpUserSteps() {
             target="_blank"
             className="text-primary/50 hover:text-primary flex items-center text-sm gap-1 mt-4"
           >
-            Redirect URLs Docs <ArrowUpRight size={14} />
+            Redirect URLs Docs{" "}
+            <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} />
           </Link>
         </TutorialStep>
       ) : null}
