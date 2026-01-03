@@ -3,6 +3,8 @@
 import { ReactNode, useState } from "react";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { TopBar } from "@/components/dashboard/top-bar";
+import { CommandPalette } from "@/components/dashboard/command-palette";
+import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -34,8 +36,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <main className="p-6">{children}</main>
       </div>
 
-      {/* TODO: Add bookmark sheet */}
-      {/* TODO: Add command palette */}
+      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
+      <AddBookmarkSheet
+        open={addBookmarkOpen}
+        onOpenChange={setAddBookmarkOpen}
+      />
     </div>
   );
 }
