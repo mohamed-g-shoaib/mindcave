@@ -1,14 +1,41 @@
-import { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useState } from "react";
+import { Sidebar } from "@/components/dashboard/sidebar";
+import { TopBar } from "@/components/dashboard/top-bar";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background">
-      {/* TODO: Add Sidebar and TopBar components */}
-      {children}
+      <Sidebar
+        isExpanded={sidebarExpanded}
+        onToggle={() => setSidebarExpanded(!sidebarExpanded)}
+      />
+
+      <div
+        className="transition-all duration-300"
+        style={{
+          marginLeft: sidebarExpanded ? "16rem" : "4rem",
+        }}
+      >
+        <TopBar
+          onAddBookmark={() => setAddBookmarkOpen(true)}
+          onOpenSearch={() => setSearchOpen(true)}
+        />
+
+        <main className="p-6">{children}</main>
+      </div>
+
+      {/* TODO: Add bookmark sheet */}
+      {/* TODO: Add command palette */}
     </div>
   );
 }
