@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
+import { useCreateBookmark } from "@/hooks/use-bookmarks";
+import { useCategories } from "@/hooks/use-categories";
 
 interface AddBookmarkSheetProps {
   open: boolean;
@@ -18,14 +21,30 @@ export function AddBookmarkSheet({
     title: "",
     url: "",
     description: "",
-    categoryId: "",
+    category_id: "",
   });
+
+  const createBookmark = useCreateBookmark();
+  const { data: categories = [] } = useCategories();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement bookmark creation
-    console.log("Creating bookmark:", formData);
-    onOpenChange(false);
+
+    try {
+      await createBookmark.mutateAsync({
+        title: formData.title,
+        url: formData.url,
+        description: formData.description || undefined,
+        category_id: formData.category_id || null,
+        user_id: "", // Will be set by API
+      });
+
+      toast.success("Bookmark added successfully");
+      setFormData({ title: "", url: "", description: "", category_id: "" });
+      onOpenChange(false);
+    } catch (error) {
+      toast.error("Failed to add bookmark");
+    }
   };
 
   if (!open) return null;
@@ -112,14 +131,18 @@ export function AddBookmarkSheet({
                 </label>
                 <select
                   id="category"
-                  value={formData.categoryId}
+                  value={formData.category_id}
                   onChange={(e) =>
-                    setFormData({ ...formData, categoryId: e.target.value })
+                    setFormData({ ...formData, category_id: e.target.value })
                   }
                   className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-ring"
                 >
                   <option value="">Uncategorized</option>
-                  {/* TODO: Load categories from database */}
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -133,11 +156,17 @@ export function AddBookmarkSheet({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
                 className="flex-1"
+                disabled={createBookmark.isPending}
               >
                 Cancel
               </Button>
-              <Button type="submit" onClick={handleSubmit} className="flex-1">
-                Add Bookmark
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                className="flex-1"
+                disabled={createBookmark.isPending}
+              >
+                {createBookmark.isPending ? "Adding..." : "Add Bookmark"}
               </Button>
             </div>
           </div>
