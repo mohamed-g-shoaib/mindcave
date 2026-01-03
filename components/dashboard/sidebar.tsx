@@ -12,6 +12,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useCategories } from "@/hooks/use-categories";
 
 interface SidebarProps {
   isExpanded: boolean;
@@ -20,11 +21,7 @@ interface SidebarProps {
 
 export function Sidebar({ isExpanded, onToggle }: SidebarProps) {
   const pathname = usePathname();
-
-  const categories = [
-    { id: "all", name: "All", icon: Home01Icon, href: "/dashboard" },
-    // TODO: Load from database
-  ];
+  const { data: categories = [], isLoading } = useCategories();
 
   return (
     <aside
@@ -55,22 +52,41 @@ export function Sidebar({ isExpanded, onToggle }: SidebarProps) {
 
       {/* Categories */}
       <nav className="flex-1 space-y-1 p-2">
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            href={category.href}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
-              pathname === category.href
-                ? "bg-primary text-primary-foreground"
-                : "hover:bg-accent",
-              !isExpanded && "justify-center"
-            )}
-          >
-            <HugeiconsIcon icon={category.icon} className="h-5 w-5 shrink-0" />
-            {isExpanded && <span>{category.name}</span>}
-          </Link>
-        ))}
+        {/* All Bookmarks */}
+        <Link
+          href="/dashboard"
+          className={cn(
+            "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
+            pathname === "/dashboard"
+              ? "bg-primary text-primary-foreground"
+              : "hover:bg-accent",
+            !isExpanded && "justify-center"
+          )}
+        >
+          <HugeiconsIcon icon={Home01Icon} className="h-5 w-5 shrink-0" />
+          {isExpanded && <span>All Bookmarks</span>}
+        </Link>
+
+        {/* User Categories */}
+        {isLoading
+          ? isExpanded && (
+              <div className="px-3 py-2 text-sm text-muted-foreground">
+                Loading...
+              </div>
+            )
+          : categories.map((category) => (
+              <Link
+                key={category.id}
+                href={`/dashboard?category=${category.id}`}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-accent",
+                  !isExpanded && "justify-center"
+                )}
+              >
+                <HugeiconsIcon icon={Home01Icon} className="h-5 w-5 shrink-0" />
+                {isExpanded && <span>{category.name}</span>}
+              </Link>
+            ))}
 
         {/* Add Category Button */}
         <Button
