@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
+import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
 import { useBookmarks, useDeleteBookmark } from "@/hooks/use-bookmarks";
+import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -12,9 +15,14 @@ export default function DashboardPage() {
   const { data: bookmarks = [], isLoading } = useBookmarks(categoryId);
   const deleteBookmark = useDeleteBookmark();
 
+  const [editingBookmark, setEditingBookmark] =
+    useState<BookmarkWithCategory | null>(null);
+
   const handleEdit = (id: string) => {
-    // TODO: Open edit sheet
-    console.log("Edit bookmark:", id);
+    const bookmark = bookmarks.find((b) => b.id === id);
+    if (bookmark) {
+      setEditingBookmark(bookmark);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -46,38 +54,46 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">
-          {categoryId ? "Category" : "All Bookmarks"}
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          Manage your saved links and resources
-        </p>
+    <>
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold">
+            {categoryId ? "Category" : "All Bookmarks"}
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            Manage your saved links and resources
+          </p>
+        </div>
+
+        {bookmarks.length === 0 ? (
+          <div className="flex min-h-100 items-center justify-center rounded-lg border border-dashed">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold">No bookmarks yet</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Get started by adding your first bookmark
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {bookmarks.map((bookmark) => (
+              <BookmarkCard
+                key={bookmark.id}
+                bookmark={bookmark}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onCopy={handleCopy}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {bookmarks.length === 0 ? (
-        <div className="flex min-h-100 items-center justify-center rounded-lg border border-dashed">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold">No bookmarks yet</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Get started by adding your first bookmark
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {bookmarks.map((bookmark) => (
-            <BookmarkCard
-              key={bookmark.id}
-              bookmark={bookmark}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onCopy={handleCopy}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+      <EditBookmarkSheet
+        open={!!editingBookmark}
+        onOpenChange={(open) => !open && setEditingBookmark(null)}
+        bookmark={editingBookmark}
+      />
+    </>
   );
 }
