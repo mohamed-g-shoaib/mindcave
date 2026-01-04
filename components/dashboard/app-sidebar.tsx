@@ -72,25 +72,28 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <>
       <Sidebar collapsible="icon">
         {/* Header with Logo */}
-        <SidebarHeader className="border-b">
+        <SidebarHeader className="h-14 border-b p-1 flex justify-center">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton
                 size="lg"
                 render={<Link href="/dashboard" />}
-                tooltip="Mind Cave"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
               >
-                <MindCaveLogo className="h-6 w-6 shrink-0" />
-                <span className="font-bold">Mind Cave</span>
+                <MindCaveLogo className="size-6 shrink-0" />
+                <div className="grid flex-1 text-left text-sm leading-tight ml-1 group-data-[collapsible=icon]:hidden">
+                  <span className="truncate font-bold text-base">
+                    Mind Cave
+                  </span>
+                </div>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
 
         <SidebarContent>
-          {/* Main Navigation */}
           <SidebarGroup>
-            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+            <SidebarGroupLabel>Library</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -103,17 +106,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <span>All Bookmarks</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
 
-          <SidebarSeparator />
-
-          {/* Categories */}
-          <SidebarGroup>
-            <SidebarGroupLabel>Categories</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
                 {isLoading ? (
                   <>
                     {[1, 2, 3].map((i) => (
@@ -170,7 +163,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     <SidebarMenuButton
                       size="lg"
                       tooltip={user.name}
-                      className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground"
+                      className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
                     />
                   }
                 >
@@ -180,7 +173,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       {user.name?.charAt(0)?.toUpperCase() || "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-xs leading-tight">
+                  <div className="grid flex-1 text-left text-xs leading-tight group-data-[collapsible=icon]:hidden">
                     <span className="truncate font-medium">{user.name}</span>
                     <span className="truncate text-muted-foreground">
                       {user.email}
