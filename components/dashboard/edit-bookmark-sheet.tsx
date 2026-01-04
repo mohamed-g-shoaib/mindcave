@@ -71,7 +71,8 @@ export function EditBookmarkSheet({
         category_id: bookmark.category_id || "",
         og_image_url: bookmark.og_image_url || "",
         favicon_url: bookmark.favicon_url || "",
-        media_type: bookmark.media_type || "default",
+        media_type:
+          (bookmark.media_type as "youtube" | "vimeo" | "default") || "default",
         media_embed_id: bookmark.media_embed_id || "",
       });
       setInitialUrl(bookmark.url);
@@ -105,7 +106,8 @@ export function EditBookmarkSheet({
             ...prev,
             og_image_url: data.og_image_url || "",
             favicon_url: data.favicon_url || "",
-            media_type: data.media_type || "default",
+            media_type:
+              (data.media_type as "youtube" | "vimeo" | "default") || "default",
             media_embed_id: data.media_embed_id || "",
           }));
         }
