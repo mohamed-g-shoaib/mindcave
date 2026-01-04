@@ -12,41 +12,38 @@ import {
 
 export function Footer() {
   return (
-    <footer
-      className="border-t border-stone-800"
-      style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
-    >
+    <footer className="bg-background border-t border-border">
       <div className="mx-auto max-w-450 px-8 py-16">
         <div className="grid gap-12 md:grid-cols-5">
           {/* Brand */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-3">
               <MindCaveLogo className="h-8 w-8" />
-              <span className="text-xl font-bold text-stone-100">
+              <span className="text-xl font-bold text-foreground">
                 Mind Cave
               </span>
             </Link>
-            <p className="mt-4 text-base text-stone-500">
+            <p className="mt-4 text-base text-muted-foreground">
               Organize your digital life with ease
             </p>
-            <p className="mt-2 text-base text-stone-600">
+            <p className="mt-2 text-base text-muted-foreground/60">
               © 2026 Mind Cave. All rights reserved.
             </p>
           </div>
 
           {/* Product */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-stone-200">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
               Product
             </h3>
-            <ul className="space-y-4 text-base text-stone-500">
+            <ul className="space-y-4 text-base text-muted-foreground">
               <li>
-                <Link href="#features" className="hover:text-stone-300">
+                <Link href="#features" className="hover:text-foreground">
                   Features
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-stone-300">
+                <Link href="/login" className="hover:text-foreground">
                   Sign In
                 </Link>
               </li>
@@ -55,17 +52,17 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-stone-200">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
               Company
             </h3>
-            <ul className="space-y-4 text-base text-stone-500">
+            <ul className="space-y-4 text-base text-muted-foreground">
               <li>
-                <Link href="#" className="hover:text-stone-300">
+                <Link href="#" className="hover:text-foreground">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-stone-300">
+                <Link href="#" className="hover:text-foreground">
                   Blog
                 </Link>
               </li>
@@ -74,17 +71,17 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-stone-200">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
               Legal
             </h3>
-            <ul className="space-y-4 text-base text-stone-500">
+            <ul className="space-y-4 text-base text-muted-foreground">
               <li>
-                <Link href="#" className="hover:text-stone-300">
+                <Link href="#" className="hover:text-foreground">
                   Privacy
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-stone-300">
+                <Link href="#" className="hover:text-foreground">
                   Terms
                 </Link>
               </li>
@@ -93,37 +90,37 @@ export function Footer() {
 
           {/* Social Links - Right Side */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-stone-200">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
               Connect
             </h3>
             <div className="flex items-center gap-4">
               <Link
                 href="#"
-                className="text-stone-500 transition-colors hover:text-stone-300"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <HugeiconsIcon icon={NewTwitterIcon} className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
-                className="text-stone-500 transition-colors hover:text-stone-300"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <HugeiconsIcon icon={GithubIcon} className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
-                className="text-stone-500 transition-colors hover:text-stone-300"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <HugeiconsIcon icon={DiscordIcon} className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
-                className="text-stone-500 transition-colors hover:text-stone-300"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <HugeiconsIcon icon={Linkedin02Icon} className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
-                className="text-stone-500 transition-colors hover:text-stone-300"
+                className="text-muted-foreground transition-colors hover:text-foreground"
               >
                 <HugeiconsIcon icon={InstagramIcon} className="h-5 w-5" />
               </Link>
@@ -131,7 +128,7 @@ export function Footer() {
           </div>
         </div>
         {/* Mind Cave word - inside padded container */}
-        <div className="mt-16 w-full text-stone-800">
+        <div className="mt-16 w-full text-muted-foreground/30">
           <MindCaveWord className="h-auto w-full" />
         </div>
       </div>

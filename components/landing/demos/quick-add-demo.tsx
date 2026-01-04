@@ -27,7 +27,7 @@ export function QuickAddDemo() {
   }, []);
 
   return (
-    <div className="relative h-full min-h-56 overflow-hidden border border-stone-700 bg-stone-900 shadow-sm">
+    <div className="relative h-full min-h-56 overflow-hidden border border-border bg-card shadow-sm">
       <AnimatePresence>
         {!isAdding ? (
           <motion.div
@@ -39,7 +39,7 @@ export function QuickAddDemo() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-orange-500/20"
+              className="flex items-center gap-2 bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20"
             >
               <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4" />
               Add Bookmark
@@ -58,10 +58,10 @@ export function QuickAddDemo() {
                 animate={{ opacity: formStep >= 1 ? 1 : 0.3, x: 0 }}
                 className="space-y-1"
               >
-                <div className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Title
                 </div>
-                <div className="flex h-10 items-center border border-stone-700 bg-stone-800 px-3 text-stone-300 shadow-inner">
+                <div className="flex h-10 items-center border border-border bg-input px-3 text-foreground shadow-inner">
                   {formStep >= 1 && (
                     <motion.span
                       initial={{ opacity: 0 }}
@@ -79,10 +79,10 @@ export function QuickAddDemo() {
                 animate={{ opacity: formStep >= 2 ? 1 : 0.3, x: 0 }}
                 className="space-y-1"
               >
-                <div className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   URL
                 </div>
-                <div className="flex h-10 items-center border border-stone-700 bg-stone-800 px-3 text-stone-400 shadow-inner">
+                <div className="flex h-10 items-center border border-border bg-input px-3 text-muted-foreground shadow-inner">
                   {formStep >= 2 && (
                     <motion.span
                       initial={{ opacity: 0 }}

@@ -35,7 +35,7 @@ export function SmartMetadataDemo() {
   }, []);
 
   return (
-    <div className="flex h-full min-h-56 flex-col justify-center overflow-hidden border border-stone-700 bg-stone-900 p-6">
+    <div className="flex h-full min-h-56 flex-col justify-center overflow-hidden border border-border bg-card p-6">
       <AnimatePresence mode="wait">
         {state === "card" ? (
           <motion.div
@@ -43,18 +43,18 @@ export function SmartMetadataDemo() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="overflow-hidden border border-stone-700 bg-stone-800"
+            className="overflow-hidden border border-border bg-input"
           >
-            <div className="relative h-24 overflow-hidden bg-stone-700">
-              <div className="absolute inset-0 animate-pulse bg-stone-600/20" />
+            <div className="relative h-24 overflow-hidden bg-muted">
+              <div className="absolute inset-0 animate-pulse bg-secondary" />
               <HugeiconsIcon
                 icon={GlobalIcon}
-                className="absolute bottom-2 left-2 h-8 w-8 text-stone-400"
+                className="absolute bottom-2 left-2 h-8 w-8 text-muted-foreground"
               />
             </div>
             <div className="space-y-2 p-4">
-              <div className="h-4 w-3/4 bg-stone-600" />
-              <div className="h-3 w-1/2 bg-stone-700" />
+              <div className="h-4 w-3/4 bg-muted" />
+              <div className="h-3 w-1/2 bg-input" />
             </div>
           </motion.div>
         ) : (
@@ -65,17 +65,17 @@ export function SmartMetadataDemo() {
             exit={{ opacity: 0 }}
             className="relative"
           >
-            <div className="flex items-center gap-3 border-b-2 border-stone-700 py-2">
+            <div className="flex items-center gap-3 border-b-2 border-border py-2">
               <HugeiconsIcon
                 icon={PlusSignIcon}
-                className="h-5 w-5 text-stone-500"
+                className="h-5 w-5 text-muted-foreground"
               />
-              <span className="font-mono text-lg text-stone-300">{text}</span>
+              <span className="font-mono text-lg text-foreground">{text}</span>
               {state === "typing" && (
                 <motion.div
                   animate={{ opacity: [1, 0] }}
                   transition={{ repeat: Infinity, duration: 0.8 }}
-                  className="h-5 w-2 bg-orange-500"
+                  className="h-5 w-2 bg-primary"
                 />
               )}
             </div>
@@ -83,7 +83,7 @@ export function SmartMetadataDemo() {
               <motion.div
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-2 flex items-center gap-2 text-xs text-orange-400"
+                className="mt-2 flex items-center gap-2 text-xs text-primary"
               >
                 <HugeiconsIcon
                   icon={ZapIcon}

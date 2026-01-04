@@ -9,17 +9,13 @@ import { SmartTagsDemo } from "./demos/smart-tags-demo";
 
 export function FeaturesSection() {
   return (
-    <section
-      id="features"
-      className="py-28 md:py-40"
-      style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
-    >
+    <section id="features" className="bg-background py-28 md:py-40">
       <div className="mx-auto max-w-450 px-8">
         <div className="mb-20 text-center">
-          <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
+          <h2 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             Powerful Features
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-xl text-stone-400">
+          <p className="mx-auto mt-6 max-w-2xl text-xl text-muted-foreground">
             Everything you need to organize your digital life, built with care
           </p>
         </div>
@@ -31,13 +27,13 @@ export function FeaturesSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col border border-stone-800 bg-stone-900/50 p-8 lg:col-span-2"
+            className="flex flex-col border border-border bg-card p-8 lg:col-span-2"
           >
             <div className="mb-6">
-              <h3 className="text-2xl font-semibold text-stone-100">
+              <h3 className="text-2xl font-semibold text-foreground">
                 Quick Add
               </h3>
-              <p className="mt-2 text-stone-400">
+              <p className="mt-2 text-muted-foreground">
                 Add bookmarks instantly with automatic metadata fetching
               </p>
             </div>
@@ -52,13 +48,13 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="flex flex-col border border-stone-800 bg-stone-900/50 p-8"
+            className="flex flex-col border border-border bg-card p-8"
           >
             <div className="mb-6">
-              <h3 className="text-2xl font-semibold text-stone-100">
+              <h3 className="text-2xl font-semibold text-foreground">
                 Smart Categories
               </h3>
-              <p className="mt-2 text-stone-400">
+              <p className="mt-2 text-muted-foreground">
                 Organize with custom icons and counters
               </p>
             </div>
@@ -73,13 +69,15 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="flex flex-col border border-stone-800 bg-stone-900/50 p-8"
+            className="flex flex-col border border-border bg-card p-8"
           >
             <div className="mb-6">
-              <h3 className="text-2xl font-semibold text-stone-100">
+              <h3 className="text-2xl font-semibold text-foreground">
                 Instant Search
               </h3>
-              <p className="mt-2 text-stone-400">Find anything with ⌘K</p>
+              <p className="mt-2 text-muted-foreground">
+                Find anything with ⌘K
+              </p>
             </div>
             <div className="flex-1">
               <SearchDemo />
@@ -92,13 +90,13 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="flex flex-col border border-stone-800 bg-stone-900/50 p-8 lg:col-span-2"
+            className="flex flex-col border border-border bg-card p-8 lg:col-span-2"
           >
             <div className="mb-6">
-              <h3 className="text-2xl font-semibold text-stone-100">
+              <h3 className="text-2xl font-semibold text-foreground">
                 Smart Metadata
               </h3>
-              <p className="mt-2 text-stone-400">
+              <p className="mt-2 text-muted-foreground">
                 We automatically fetch titles, descriptions, and images for your
                 links
               </p>
@@ -114,13 +112,13 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="flex flex-col border border-stone-800 bg-stone-900/50 p-8 lg:col-span-2"
+            className="flex flex-col border border-border bg-card p-8 lg:col-span-2"
           >
             <div className="mb-6">
-              <h3 className="text-2xl font-semibold text-stone-100">
+              <h3 className="text-2xl font-semibold text-foreground">
                 Smart Tagging
               </h3>
-              <p className="mt-2 text-stone-400">
+              <p className="mt-2 text-muted-foreground">
                 Organize your links with powerful tagging system
               </p>
             </div>

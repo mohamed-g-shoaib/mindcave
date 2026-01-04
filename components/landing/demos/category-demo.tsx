@@ -27,7 +27,7 @@ export function CategoryDemo() {
   }, []);
 
   return (
-    <div className="h-full min-h-56 overflow-hidden border border-stone-700 bg-stone-900 p-4">
+    <div className="h-full min-h-56 overflow-hidden border border-border bg-card p-4">
       <div className="space-y-1">
         {categories.map((cat, i) => (
           <motion.div
@@ -48,14 +48,16 @@ export function CategoryDemo() {
               <HugeiconsIcon
                 icon={cat.icon}
                 className={`h-4 w-4 ${
-                  activeCategory === i ? "text-orange-400" : "text-stone-400"
+                  activeCategory === i
+                    ? "text-primary"
+                    : "text-muted-foreground"
                 }`}
               />
               <span
                 className={`text-sm ${
                   activeCategory === i
-                    ? "font-medium text-stone-100"
-                    : "text-stone-400"
+                    ? "font-medium text-foreground"
+                    : "text-muted-foreground"
                 }`}
               >
                 {cat.name}
@@ -63,7 +65,9 @@ export function CategoryDemo() {
             </div>
             <span
               className={`text-xs ${
-                activeCategory === i ? "text-orange-400" : "text-stone-600"
+                activeCategory === i
+                  ? "text-primary"
+                  : "text-muted-foreground/60"
               }`}
             >
               {cat.count}
@@ -71,9 +75,9 @@ export function CategoryDemo() {
           </motion.div>
         ))}
       </div>
-      <div className="mt-4 border-t border-stone-800 pt-4">
-        <button className="group flex w-full items-center gap-2 px-4 py-2 text-sm text-stone-400 hover:text-stone-200">
-          <div className="flex h-6 w-6 items-center justify-center bg-stone-800 text-stone-500 group-hover:bg-stone-700 group-hover:text-stone-300">
+      <div className="mt-4 border-t border-border pt-4">
+        <button className="group flex w-full items-center gap-2 px-4 py-2 text-sm text-muted-foreground hover:text-foreground">
+          <div className="flex h-6 w-6 items-center justify-center bg-input text-muted-foreground group-hover:bg-secondary group-hover:text-foreground">
             <HugeiconsIcon icon={PlusSignIcon} className="h-3 w-3" />
           </div>
           Create Category

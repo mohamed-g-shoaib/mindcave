@@ -38,15 +38,18 @@ function SaveDemo() {
   }, []);
 
   return (
-    <div className="h-32 border border-stone-700 bg-stone-900 p-4">
-      <div className="flex items-center gap-2 border-b border-stone-700 pb-2">
-        <HugeiconsIcon icon={Link01Icon} className="h-4 w-4 text-stone-500" />
-        <span className="text-sm text-stone-300 font-mono">{url}</span>
+    <div className="h-32 border border-border bg-card p-4">
+      <div className="flex items-center gap-2 border-b border-border pb-2">
+        <HugeiconsIcon
+          icon={Link01Icon}
+          className="h-4 w-4 text-muted-foreground"
+        />
+        <span className="text-sm text-foreground font-mono">{url}</span>
         {phase === "paste" && (
           <motion.span
             animate={{ opacity: [1, 0] }}
             transition={{ repeat: Infinity, duration: 0.8 }}
-            className="h-4 w-0.5 bg-orange-500"
+            className="h-4 w-0.5 bg-primary"
           />
         )}
       </div>
@@ -56,7 +59,7 @@ function SaveDemo() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="mt-2 text-xs text-orange-400"
+            className="mt-2 text-xs text-primary"
           >
             Fetching metadata...
           </motion.div>
@@ -67,8 +70,8 @@ function SaveDemo() {
             animate={{ opacity: 1, y: 0 }}
             className="mt-2 flex items-center gap-2"
           >
-            <div className="h-6 w-6 bg-stone-700" />
-            <div className="text-xs text-stone-300">React · GitHub</div>
+            <div className="h-6 w-6 bg-input" />
+            <div className="text-xs text-foreground">React · GitHub</div>
             <HugeiconsIcon
               icon={Tick02Icon}
               className="ml-auto h-3 w-3 text-green-400"
@@ -98,8 +101,8 @@ function OrganizeDemo() {
   }, []);
 
   return (
-    <div className="h-32 border border-stone-700 bg-stone-900 p-4">
-      <div className="mb-2 text-xs text-stone-500">SELECT CATEGORY</div>
+    <div className="h-32 border border-border bg-card p-4">
+      <div className="mb-2 text-xs text-muted-foreground">SELECT CATEGORY</div>
       <div className="flex gap-2">
         {categories.map((cat, i) => (
           <motion.button
@@ -112,7 +115,7 @@ function OrganizeDemo() {
               borderColor:
                 selected === i ? "rgb(249 115 22 / 0.5)" : "rgb(87 83 78)",
             }}
-            className="border px-3 py-1.5 text-xs text-stone-300"
+            className="border px-3 py-1.5 text-xs text-foreground"
           >
             {cat}
           </motion.button>
@@ -157,14 +160,17 @@ function FindDemo() {
   }, []);
 
   return (
-    <div className="h-32 border border-stone-700 bg-stone-900 p-4">
-      <div className="flex items-center gap-2 border-b border-stone-700 pb-2">
-        <HugeiconsIcon icon={Search01Icon} className="h-4 w-4 text-stone-500" />
-        <span className="text-sm text-stone-200">{query}</span>
+    <div className="h-32 border border-border bg-card p-4">
+      <div className="flex items-center gap-2 border-b border-border pb-2">
+        <HugeiconsIcon
+          icon={Search01Icon}
+          className="h-4 w-4 text-muted-foreground"
+        />
+        <span className="text-sm text-foreground">{query}</span>
         <motion.span
           animate={{ opacity: [1, 0] }}
           transition={{ repeat: Infinity, duration: 0.8 }}
-          className="h-4 w-0.5 bg-orange-500"
+          className="h-4 w-0.5 bg-primary"
         />
       </div>
       <AnimatePresence>
@@ -172,13 +178,10 @@ function FindDemo() {
           <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-2 flex items-center gap-2 bg-orange-500/10 p-2"
+            className="mt-2 flex items-center gap-2 bg-primary/10 p-2"
           >
-            <HugeiconsIcon
-              icon={GlobalIcon}
-              className="h-4 w-4 text-orange-400"
-            />
-            <span className="text-xs text-stone-200">GitHub React</span>
+            <HugeiconsIcon icon={GlobalIcon} className="h-4 w-4 text-primary" />
+            <span className="text-xs text-foreground">GitHub React</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -203,7 +206,7 @@ function AccessDemo() {
   }, []);
 
   return (
-    <div className="flex h-32 items-center justify-center border border-stone-700 bg-stone-900 p-4">
+    <div className="flex h-32 items-center justify-center border border-border bg-card p-4">
       <motion.div
         animate={{
           scale: clicked ? [1, 0.95, 1] : 1,
@@ -211,13 +214,16 @@ function AccessDemo() {
             ? "rgb(249 115 22 / 0.2)"
             : "rgb(68 64 60 / 0.5)",
         }}
-        className="flex items-center gap-2 border border-stone-600 px-4 py-2"
+        className="flex items-center gap-2 border border-border px-4 py-2"
       >
-        <HugeiconsIcon icon={GlobalIcon} className="h-4 w-4 text-stone-400" />
-        <span className="text-sm text-stone-200">Open Link</span>
+        <HugeiconsIcon
+          icon={GlobalIcon}
+          className="h-4 w-4 text-muted-foreground"
+        />
+        <span className="text-sm text-foreground">Open Link</span>
         <HugeiconsIcon
           icon={ArrowRight01Icon}
-          className="h-4 w-4 text-orange-400"
+          className="h-4 w-4 text-primary"
         />
       </motion.div>
       <AnimatePresence>
@@ -260,10 +266,7 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section
-      className="py-28 md:py-40"
-      style={{ backgroundColor: "oklch(0.200 0.006 56.043)" }}
-    >
+    <section className="bg-muted py-28 md:py-40">
       <div className="mx-auto max-w-450 px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -271,10 +274,10 @@ export function HowItWorksSection() {
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
-          <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
+          <h2 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             How It Works
           </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-xl text-stone-400">
+          <p className="mx-auto mt-6 max-w-2xl text-xl text-muted-foreground">
             Four simple steps to organize your digital life.
           </p>
         </motion.div>
@@ -287,19 +290,21 @@ export function HowItWorksSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="border border-stone-800 bg-stone-900/50"
+              className="border border-border bg-card"
             >
               <step.Demo />
               <div className="p-4">
                 <div className="mb-1 flex items-center gap-2">
-                  <span className="text-xl font-bold text-orange-500">
+                  <span className="text-xl font-bold text-primary">
                     {step.number}
                   </span>
-                  <span className="text-lg font-semibold text-stone-100">
+                  <span className="text-lg font-semibold text-foreground">
                     {step.title}
                   </span>
                 </div>
-                <p className="text-sm text-stone-400">{step.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {step.description}
+                </p>
               </div>
             </motion.div>
           ))}

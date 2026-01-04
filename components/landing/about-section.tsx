@@ -40,7 +40,7 @@ function VaultDemo() {
   ];
 
   return (
-    <div className="relative h-48 w-full overflow-hidden border border-stone-700 bg-stone-900">
+    <div className="relative h-48 w-full overflow-hidden border border-border bg-card">
       {[0, 1, 2, 3, 4, 5].map((i) => (
         <motion.div
           key={i}
@@ -56,19 +56,19 @@ function VaultDemo() {
               : scatteredPositions[i].rotate,
           }}
           transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          className="absolute h-16 w-14 border border-stone-600 bg-stone-800 p-2"
+          className="absolute h-16 w-14 border border-border bg-input p-2"
         >
-          <div className="h-2 w-8 bg-stone-600" />
-          <div className="mt-1 h-1.5 w-6 bg-stone-700" />
+          <div className="h-2 w-8 bg-muted" />
+          <div className="mt-1 h-1.5 w-6 bg-muted/50" />
           <HugeiconsIcon
             icon={GlobalIcon}
-            className="mt-2 h-4 w-4 text-stone-500"
+            className="mt-2 h-4 w-4 text-muted-foreground"
           />
         </motion.div>
       ))}
       <motion.div
         animate={{ opacity: isOrganized ? 1 : 0 }}
-        className="absolute bottom-2 right-2 text-xs font-medium text-orange-400"
+        className="absolute bottom-2 right-2 text-xs font-medium text-primary"
       >
         Organized ✓
       </motion.div>
@@ -89,8 +89,10 @@ function CategoriesDemo() {
   }, []);
 
   return (
-    <div className="h-48 w-full overflow-hidden border border-stone-700 bg-stone-900 p-4">
-      <div className="mb-3 text-xs font-medium text-stone-500">CATEGORIES</div>
+    <div className="h-48 w-full overflow-hidden border border-border bg-card p-4">
+      <div className="mb-3 text-xs font-medium text-muted-foreground">
+        CATEGORIES
+      </div>
       <div className="space-y-1">
         {categories.map((cat, i) => (
           <motion.div
@@ -105,14 +107,14 @@ function CategoriesDemo() {
           >
             <div
               className={`h-2 w-2 ${
-                i === activeIndex ? "bg-orange-400" : "bg-stone-600"
+                i === activeIndex ? "bg-primary" : "bg-muted-foreground/40"
               }`}
             />
             <span
               className={
                 i === activeIndex
-                  ? "font-medium text-stone-100"
-                  : "text-stone-400"
+                  ? "font-medium text-foreground"
+                  : "text-muted-foreground"
               }
             >
               {cat}
@@ -150,16 +152,19 @@ function AccessDemo() {
   }, []);
 
   return (
-    <div className="h-48 w-full overflow-hidden border border-stone-700 bg-stone-900 p-4">
-      <div className="flex items-center gap-2 border-b border-stone-700 pb-3">
-        <HugeiconsIcon icon={Search01Icon} className="h-4 w-4 text-stone-500" />
-        <span className="text-sm text-stone-300">{typing}</span>
+    <div className="h-48 w-full overflow-hidden border border-border bg-card p-4">
+      <div className="flex items-center gap-2 border-b border-border pb-3">
+        <HugeiconsIcon
+          icon={Search01Icon}
+          className="h-4 w-4 text-muted-foreground"
+        />
+        <span className="text-sm text-foreground">{typing}</span>
         <motion.span
           animate={{ opacity: [1, 0] }}
           transition={{ repeat: Infinity, duration: 0.8 }}
-          className="h-4 w-0.5 bg-orange-500"
+          className="h-4 w-0.5 bg-primary"
         />
-        <kbd className="ml-auto bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-500">
+        <kbd className="ml-auto bg-input px-1.5 py-0.5 text-[10px] text-muted-foreground">
           ⌘K
         </kbd>
       </div>
@@ -171,13 +176,15 @@ function AccessDemo() {
             exit={{ opacity: 0 }}
             className="mt-3 space-y-2"
           >
-            <div className="flex items-center gap-2 bg-stone-800/50 p-2">
-              <div className="h-6 w-6 bg-stone-700" />
+            <div className="flex items-center gap-2 bg-secondary p-2">
+              <div className="h-6 w-6 bg-input" />
               <div>
-                <div className="text-xs font-medium text-stone-200">
+                <div className="text-xs font-medium text-foreground">
                   React Docs
                 </div>
-                <div className="text-[10px] text-stone-500">reactjs.org</div>
+                <div className="text-[10px] text-muted-foreground">
+                  reactjs.org
+                </div>
               </div>
             </div>
           </motion.div>
@@ -207,10 +214,7 @@ const pillars = [
 
 export function AboutSection() {
   return (
-    <section
-      className="py-28 md:py-40"
-      style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
-    >
+    <section className="bg-background py-28 md:py-40">
       <div className="mx-auto max-w-450 px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -218,10 +222,10 @@ export function AboutSection() {
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
-          <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
+          <h2 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             Your Digital Vault
           </h2>
-          <p className="mx-auto mt-6 max-w-3xl text-xl text-stone-400">
+          <p className="mx-auto mt-6 max-w-3xl text-xl text-muted-foreground">
             More than bookmarks. A complete system to capture and organize the
             web.
           </p>
@@ -235,14 +239,14 @@ export function AboutSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="border border-stone-800 bg-stone-900/50"
+              className="border border-border bg-card"
             >
               <pillar.Demo />
               <div className="p-6">
-                <h3 className="mb-2 text-xl font-semibold text-stone-100">
+                <h3 className="mb-2 text-xl font-semibold text-foreground">
                   {pillar.title}
                 </h3>
-                <p className="text-stone-400">{pillar.description}</p>
+                <p className="text-muted-foreground">{pillar.description}</p>
               </div>
             </motion.div>
           ))}

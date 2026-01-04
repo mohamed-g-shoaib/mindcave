@@ -37,17 +37,13 @@ export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section
-      id="faq"
-      className="py-28 md:py-40"
-      style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
-    >
+    <section id="faq" className="bg-background py-28 md:py-40">
       <div className="mx-auto max-w-4xl px-8">
         <div className="mb-20 text-center">
-          <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
+          <h2 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             Frequently Asked Questions
           </h2>
-          <p className="mt-6 text-xl text-stone-400">
+          <p className="mt-6 text-xl text-muted-foreground">
             Everything you need to know about Mind Cave
           </p>
         </div>
@@ -56,18 +52,18 @@ export function FAQSection() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="overflow-hidden border border-stone-800 bg-stone-900"
+              className="overflow-hidden border border-border bg-card"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-stone-800/50"
+                className="flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-secondary"
               >
-                <span className="text-lg font-medium text-stone-200">
+                <span className="text-lg font-medium text-foreground">
                   {faq.question}
                 </span>
                 <HugeiconsIcon
                   icon={openIndex === index ? Remove01Icon : Add01Icon}
-                  className="h-5 w-5 shrink-0 text-orange-400"
+                  className="h-5 w-5 shrink-0 text-primary"
                 />
               </button>
 
@@ -79,8 +75,10 @@ export function FAQSection() {
                     exit={{ height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="border-t border-stone-800 px-6 py-5">
-                      <p className="text-base text-stone-400">{faq.answer}</p>
+                    <div className="border-t border-border px-6 py-5">
+                      <p className="text-base text-muted-foreground">
+                        {faq.answer}
+                      </p>
                     </div>
                   </motion.div>
                 )}

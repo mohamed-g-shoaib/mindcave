@@ -42,18 +42,12 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <nav
-      className="fixed top-0 z-60 w-full border-b border-stone-800"
-      style={{
-        backgroundColor: "oklch(0.216 0.006 56.043 / 0.95)",
-        backdropFilter: "blur(12px)",
-      }}
-    >
+    <nav className="fixed top-0 z-60 w-full border-b border-border bg-background/95 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-450 items-center justify-between px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <MindCaveLogo className="h-10 w-10" />
-          <span className="text-xl font-bold text-stone-100">Mind Cave</span>
+          <span className="text-xl font-bold text-foreground">Mind Cave</span>
         </Link>
 
         {/* Desktop Navigation Menu */}
@@ -61,10 +55,10 @@ export function Navbar() {
           <NavigationMenu>
             <NavigationMenuList className="gap-2">
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-stone-300 hover:bg-stone-800 hover:text-stone-100 data-open:bg-stone-800">
+                <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:bg-secondary hover:text-foreground data-open:bg-secondary">
                   Features
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="border border-stone-700 bg-stone-900 p-4">
+                <NavigationMenuContent className="border border-border bg-card p-4">
                   <ul className="grid w-100 gap-2 p-2">
                     {features.map((feature) => (
                       <ListItem
@@ -84,7 +78,7 @@ export function Navbar() {
                   render={<Link href="#testimonials" />}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    "bg-transparent text-stone-300 hover:bg-stone-800 hover:text-stone-100"
+                    "bg-transparent text-foreground/80 hover:bg-secondary hover:text-foreground"
                   )}
                 >
                   Testimonials
@@ -96,7 +90,7 @@ export function Navbar() {
                   render={<Link href="#faq" />}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    "bg-transparent text-stone-300 hover:bg-stone-800 hover:text-stone-100"
+                    "bg-transparent text-foreground/80 hover:bg-secondary hover:text-foreground"
                   )}
                 >
                   FAQ
@@ -113,7 +107,7 @@ export function Navbar() {
               <SheetTrigger
                 render={
                   <button
-                    className="relative flex h-6 w-6 flex-col items-center justify-center gap-1.5 text-stone-300 hover:text-stone-100"
+                    className="relative flex h-6 w-6 flex-col items-center justify-center gap-1.5 text-foreground/80 hover:text-foreground"
                     aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                   />
                 }
@@ -137,7 +131,7 @@ export function Navbar() {
               </SheetTrigger>
               <SheetContent
                 side="top"
-                className="top-20! h-[calc(100vh-5rem)]! w-full border-none bg-stone-900"
+                className="top-20! h-[calc(100vh-5rem)]! w-full border-none bg-card"
                 showCloseButton={false}
                 overlayClassName="top-20!"
               >
@@ -145,7 +139,7 @@ export function Navbar() {
                   <nav className="flex flex-1 flex-col justify-center gap-8">
                     {/* Features Section */}
                     <div className="space-y-4">
-                      <div className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                      <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                         Features
                       </div>
                       {features.map((feature) => (
@@ -153,12 +147,12 @@ export function Navbar() {
                           key={feature.title}
                           render={<Link href={feature.href} />}
                           nativeButton={false}
-                          className="block space-y-1 p-4 transition-colors hover:bg-stone-800"
+                          className="block space-y-1 p-4 transition-colors hover:bg-secondary"
                         >
-                          <div className="text-base font-medium text-stone-100">
+                          <div className="text-base font-medium text-foreground">
                             {feature.title}
                           </div>
-                          <p className="text-sm text-stone-500">
+                          <p className="text-sm text-muted-foreground">
                             {feature.description}
                           </p>
                         </SheetClose>
@@ -170,14 +164,14 @@ export function Navbar() {
                       <SheetClose
                         render={<Link href="#testimonials" />}
                         nativeButton={false}
-                        className="block p-4 text-base font-medium text-stone-300 transition-colors hover:bg-stone-800 hover:text-stone-100"
+                        className="block p-4 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
                       >
                         Testimonials
                       </SheetClose>
                       <SheetClose
                         render={<Link href="#faq" />}
                         nativeButton={false}
-                        className="block p-4 text-base font-medium text-stone-300 transition-colors hover:bg-stone-800 hover:text-stone-100"
+                        className="block p-4 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
                       >
                         FAQ
                       </SheetClose>
@@ -185,18 +179,18 @@ export function Navbar() {
                   </nav>
 
                   {/* Mobile Auth Buttons */}
-                  <div className="space-y-3 border-t border-stone-800 pt-8">
+                  <div className="space-y-3 border-t border-border pt-8">
                     <SheetClose
                       render={<Link href="/login" />}
                       nativeButton={false}
-                      className="block border border-stone-700 p-4 text-center text-base font-medium text-stone-300 transition-colors hover:bg-stone-800 hover:text-stone-100"
+                      className="block border border-border p-4 text-center text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
                     >
                       Sign In
                     </SheetClose>
                     <SheetClose
                       render={<Link href="/login" />}
                       nativeButton={false}
-                      className="block bg-orange-500 p-4 text-center text-base font-medium text-white hover:bg-orange-600"
+                      className="block bg-primary p-4 text-center text-base font-medium text-primary-foreground hover:bg-primary/90"
                     >
                       Get Started
                     </SheetClose>
@@ -207,16 +201,16 @@ export function Navbar() {
           </div>
 
           {/* Desktop Auth */}
-          <div className="hidden items-center gap-4 text-stone-100 md:flex">
+          <div className="hidden items-center gap-4 text-foreground md:flex">
             <Link
               href="/login"
-              className="text-sm font-medium text-stone-400 hover:text-stone-200"
+              className="text-sm font-medium text-muted-foreground hover:text-foreground"
             >
               Sign In
             </Link>
             <Link
               href="/login"
-              className="bg-orange-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-orange-600"
+              className="bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
               Get Started
             </Link>
@@ -243,14 +237,14 @@ function ListItem({
       <NavigationMenuLink
         render={<Link href={href} />}
         className={cn(
-          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-stone-800 hover:text-stone-100 focus:bg-stone-800 focus:text-stone-100",
+          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-secondary hover:text-foreground focus:bg-secondary focus:text-foreground",
           className
         )}
       >
-        <div className="text-sm font-medium leading-none text-stone-100">
+        <div className="text-sm font-medium leading-none text-foreground">
           {title}
         </div>
-        <p className="line-clamp-2 text-sm leading-snug text-stone-500">
+        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
           {children}
         </p>
       </NavigationMenuLink>

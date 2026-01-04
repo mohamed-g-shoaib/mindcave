@@ -39,15 +39,14 @@ export function TestimonialsSection() {
   return (
     <section
       id="testimonials"
-      className="overflow-hidden py-28 md:py-40"
-      style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
+      className="overflow-hidden bg-background py-28 md:py-40"
     >
       <div className="mx-auto max-w-450 px-8">
         <div className="mb-20 text-center">
-          <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
+          <h2 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             Loved by Users
           </h2>
-          <p className="mt-6 text-xl text-stone-400">
+          <p className="mt-6 text-xl text-muted-foreground">
             See what people are saying about Mind Cave
           </p>
         </div>
@@ -72,18 +71,18 @@ export function TestimonialsSection() {
               {[...testimonials, ...testimonials].map((testimonial, index) => (
                 <div
                   key={index}
-                  className="w-96 shrink-0 border border-stone-800 bg-stone-900 p-8"
+                  className="w-96 shrink-0 border border-border bg-card p-8"
                 >
-                  <p className="mb-6 text-base text-stone-300">
+                  <p className="mb-6 text-base text-foreground/80">
                     "{testimonial.content}"
                   </p>
                   <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 bg-orange-500/20" />
+                    <div className="h-12 w-12 bg-primary/20" />
                     <div>
-                      <p className="font-medium text-stone-200">
+                      <p className="font-medium text-foreground">
                         {testimonial.name}
                       </p>
-                      <p className="text-sm text-stone-500">
+                      <p className="text-sm text-muted-foreground">
                         {testimonial.role}
                       </p>
                     </div>
@@ -94,20 +93,8 @@ export function TestimonialsSection() {
           </div>
 
           {/* Gradient overlays */}
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-40"
-            style={{
-              background:
-                "linear-gradient(to right, oklch(0.216 0.006 56.043), rgba(0,0,0,0))",
-            }}
-          />
-          <div
-            className="pointer-events-none absolute inset-y-0 right-0 w-40"
-            style={{
-              background:
-                "linear-gradient(to left, oklch(0.216 0.006 56.043), rgba(0,0,0,0))",
-            }}
-          />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-40 bg-linear-to-r from-background to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-40 bg-linear-to-l from-background to-transparent" />
         </div>
       </div>
     </section>
