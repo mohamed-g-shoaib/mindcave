@@ -1,14 +1,37 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import MindCaveLogo from "@/components/mind-cave-logo";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
+import { cn } from "@/lib/utils";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+
+const features: { title: string; href: string; description: string }[] = [
+  {
+    title: "Quick Add",
+    href: "#features",
+    description: "Save any link instantly with our streamlined capture tool.",
+  },
+  {
+    title: "Smart Categories",
+    href: "#features",
+    description: "Automated organization with intelligent tagging and sorting.",
+  },
+  {
+    title: "Instant Search",
+    href: "#features",
+    description: "Find any resource in seconds with our lightning-fast search.",
+  },
+];
 
 export function Navbar() {
-  const [productsOpen, setProductsOpen] = useState(false);
-
   return (
     <nav
       className="fixed top-0 z-50 w-full border-b border-stone-800"
@@ -24,64 +47,58 @@ export function Navbar() {
           <span className="text-xl font-bold text-stone-100">Mind Cave</span>
         </Link>
 
-        {/* Navigation Links */}
-        <div className="hidden items-center gap-8 md:flex">
-          <div className="relative">
-            <button
-              onClick={() => setProductsOpen(!productsOpen)}
-              className="flex items-center gap-1 text-sm font-medium text-stone-300 hover:text-stone-100"
-            >
-              Features
-              <HugeiconsIcon icon={ArrowDown01Icon} className="h-4 w-4" />
-            </button>
-            {productsOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-40"
-                  onClick={() => setProductsOpen(false)}
-                />
-                <div className="absolute left-0 top-full z-50 mt-2 w-64 border border-stone-700 bg-stone-900 p-4 shadow-xl">
-                  <Link
-                    href="#features"
-                    onClick={() => setProductsOpen(false)}
-                    className="block py-2 text-sm text-stone-300 hover:text-orange-400"
-                  >
-                    Quick Add
-                  </Link>
-                  <Link
-                    href="#features"
-                    onClick={() => setProductsOpen(false)}
-                    className="block py-2 text-sm text-stone-300 hover:text-orange-400"
-                  >
-                    Smart Categories
-                  </Link>
-                  <Link
-                    href="#features"
-                    onClick={() => setProductsOpen(false)}
-                    className="block py-2 text-sm text-stone-300 hover:text-orange-400"
-                  >
-                    Instant Search
-                  </Link>
-                </div>
-              </>
-            )}
-          </div>
-          <Link
-            href="#testimonials"
-            className="text-sm font-medium text-stone-300 hover:text-stone-100"
-          >
-            Testimonials
-          </Link>
-          <Link
-            href="#faq"
-            className="text-sm font-medium text-stone-300 hover:text-stone-100"
-          >
-            FAQ
-          </Link>
+        {/* Navigation Menu */}
+        <div className="hidden md:block">
+          <NavigationMenu>
+            <NavigationMenuList className="gap-2">
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="bg-transparent text-stone-300 hover:bg-stone-800 hover:text-stone-100 data-open:bg-stone-800">
+                  Features
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="border border-stone-700 bg-stone-900 p-4">
+                  <ul className="grid w-100 gap-2 p-2">
+                    {features.map((feature) => (
+                      <ListItem
+                        key={feature.title}
+                        title={feature.title}
+                        href={feature.href}
+                      >
+                        {feature.description}
+                      </ListItem>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  render={<Link href="#testimonials" />}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "bg-transparent text-stone-300 hover:bg-stone-800 hover:text-stone-100"
+                  )}
+                >
+                  Testimonials
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  render={<Link href="#faq" />}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "bg-transparent text-stone-300 hover:bg-stone-800 hover:text-stone-100"
+                  )}
+                >
+                  FAQ
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
 
         {/* Auth */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 text-stone-100">
           <Link
             href="/login"
             className="text-sm font-medium text-stone-400 hover:text-stone-200"
@@ -97,5 +114,37 @@ export function Navbar() {
         </div>
       </div>
     </nav>
+  );
+}
+
+function ListItem({
+  title,
+  children,
+  href,
+  className,
+  ...props
+}: {
+  title: string;
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+} & React.ComponentPropsWithoutRef<"li">) {
+  return (
+    <li {...props}>
+      <NavigationMenuLink
+        render={<Link href={href} />}
+        className={cn(
+          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-stone-800 hover:text-stone-100 focus:bg-stone-800 focus:text-stone-100",
+          className
+        )}
+      >
+        <div className="text-sm font-medium leading-none text-stone-100">
+          {title}
+        </div>
+        <p className="line-clamp-2 text-sm leading-snug text-stone-500">
+          {children}
+        </p>
+      </NavigationMenuLink>
+    </li>
   );
 }
