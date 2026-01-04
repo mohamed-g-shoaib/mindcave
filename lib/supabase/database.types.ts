@@ -42,6 +42,7 @@ export interface Database {
           description: string | null;
           url: string;
           og_image_url: string | null;
+          favicon_url: string | null;
           media_type: string | null;
           media_embed_id: string | null;
           created_at: string;
@@ -55,6 +56,7 @@ export interface Database {
           description?: string | null;
           url: string;
           og_image_url?: string | null;
+          favicon_url?: string | null;
           media_type?: string | null;
           media_embed_id?: string | null;
           created_at?: string;
@@ -68,6 +70,7 @@ export interface Database {
           description?: string | null;
           url?: string;
           og_image_url?: string | null;
+          favicon_url?: string | null;
           media_type?: string | null;
           media_embed_id?: string | null;
           created_at?: string;
