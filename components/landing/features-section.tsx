@@ -5,14 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   PlusSignIcon,
-  FolderIcon,
   Search01Icon,
-  Link01Icon,
   Tick02Icon,
   Home01Icon,
   BookOpen01Icon,
   Briefcase01Icon,
-  Moon02Icon,
+  GlobalIcon,
+  Tag01Icon,
+  Zap01Icon,
 } from "@hugeicons/core-free-icons";
 
 // Quick Add Demo - Shows the add bookmark animation
@@ -38,18 +38,19 @@ function QuickAddDemo() {
   }, []);
 
   return (
-    <div className="relative h-full min-h-56 overflow-hidden border border-stone-700 bg-stone-900">
+    <div className="relative h-full min-h-56 overflow-hidden border border-stone-700 bg-stone-900 shadow-sm">
       <AnimatePresence>
         {!isAdding ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex h-full items-center justify-center"
+            className="flex h-full items-center justify-center bg-[url('/grid-pattern.svg')] bg-repeat opacity-50"
           >
             <motion.button
               whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 bg-orange-500 px-5 py-3 text-sm font-medium text-white"
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 bg-orange-500 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-orange-500/20"
             >
               <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4" />
               Add Bookmark
@@ -60,7 +61,7 @@ function QuickAddDemo() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="p-5"
+            className="flex h-full flex-col justify-center p-5"
           >
             <div className="space-y-4">
               <motion.div
@@ -68,13 +69,15 @@ function QuickAddDemo() {
                 animate={{ opacity: formStep >= 1 ? 1 : 0.3, x: 0 }}
                 className="space-y-1"
               >
-                <div className="text-xs text-stone-500">Title</div>
-                <div className="h-9 border border-stone-700 bg-stone-800 px-3 py-2">
+                <div className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                  Title
+                </div>
+                <div className="flex h-10 items-center border border-stone-700 bg-stone-800 px-3 text-stone-300 shadow-inner">
                   {formStep >= 1 && (
                     <motion.span
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-sm text-stone-300"
+                      className="text-sm"
                     >
                       Next.js Docs
                     </motion.span>
@@ -87,13 +90,15 @@ function QuickAddDemo() {
                 animate={{ opacity: formStep >= 2 ? 1 : 0.3, x: 0 }}
                 className="space-y-1"
               >
-                <div className="text-xs text-stone-500">URL</div>
-                <div className="h-9 border border-stone-700 bg-stone-800 px-3 py-2">
+                <div className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                  URL
+                </div>
+                <div className="flex h-10 items-center border border-stone-700 bg-stone-800 px-3 text-stone-400 shadow-inner">
                   {formStep >= 2 && (
                     <motion.span
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-sm text-stone-400"
+                      className="text-sm"
                     >
                       nextjs.org/docs
                     </motion.span>
@@ -105,10 +110,10 @@ function QuickAddDemo() {
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="flex items-center justify-center gap-2 bg-green-500/20 p-3 text-green-400"
+                  className="flex items-center justify-center gap-2 bg-green-500/10 p-2 text-green-400 border border-green-500/20"
                 >
                   <HugeiconsIcon icon={Tick02Icon} className="h-4 w-4" />
-                  <span className="text-sm font-medium">Saved!</span>
+                  <span className="text-xs font-medium">Saved to Library</span>
                 </motion.div>
               )}
             </div>
@@ -143,27 +148,45 @@ function CategoryDemo() {
             key={cat.name}
             animate={{
               backgroundColor:
-                activeCategory === i ? "rgb(249 115 22 / 0.2)" : "transparent",
+                activeCategory === i ? "rgb(249 115 22 / 0.15)" : "transparent",
               borderColor:
-                activeCategory === i ? "rgb(249 115 22 / 0.5)" : "transparent",
+                activeCategory === i ? "rgb(249 115 22 / 0.4)" : "transparent",
             }}
-            className="flex items-center justify-between border border-transparent px-4 py-2.5"
+            className="flex items-center justify-between border border-transparent px-4 py-3"
           >
             <div className="flex items-center gap-3">
               <HugeiconsIcon
                 icon={cat.icon}
-                className="h-4 w-4 text-stone-400"
+                className={`h-4 w-4 ${
+                  activeCategory === i ? "text-orange-400" : "text-stone-400"
+                }`}
               />
-              <span className="text-sm text-stone-300">{cat.name}</span>
+              <span
+                className={`text-sm ${
+                  activeCategory === i
+                    ? "text-stone-100 font-medium"
+                    : "text-stone-400"
+                }`}
+              >
+                {cat.name}
+              </span>
             </div>
-            <span className="text-xs text-stone-500">{cat.count}</span>
+            <span
+              className={`text-xs ${
+                activeCategory === i ? "text-orange-400" : "text-stone-600"
+              }`}
+            >
+              {cat.count}
+            </span>
           </motion.div>
         ))}
       </div>
-      <div className="mt-4 border-t border-stone-700 pt-4">
-        <button className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-stone-400 hover:bg-stone-800">
-          <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4" />
-          Add Category
+      <div className="mt-4 border-t border-stone-800 pt-4">
+        <button className="group flex w-full items-center gap-2 px-4 py-2 text-sm text-stone-400 hover:text-stone-200">
+          <div className="flex h-6 w-6 items-center justify-center bg-stone-800 text-stone-500 group-hover:bg-stone-700 group-hover:text-stone-300">
+            <HugeiconsIcon icon={PlusSignIcon} className="h-3 w-3" />
+          </div>
+          Create Category
         </button>
       </div>
     </div>
@@ -176,19 +199,19 @@ function SearchDemo() {
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    const chars = "next.js";
+    const chars = "docs";
     let i = 0;
     const typeInterval = setInterval(() => {
       if (i <= chars.length) {
         setQuery(chars.slice(0, i));
-        if (i >= 3) setShowResults(true);
+        if (i >= 1) setShowResults(true);
         i++;
       } else {
         setTimeout(() => {
           setQuery("");
           setShowResults(false);
           i = 0;
-        }, 1500);
+        }, 2000);
       }
     }, 200);
 
@@ -197,35 +220,167 @@ function SearchDemo() {
 
   return (
     <div className="h-full min-h-56 overflow-hidden border border-stone-700 bg-stone-900 p-5">
-      <div className="flex items-center gap-2 border border-stone-600 bg-stone-800 px-4 py-2.5">
-        <HugeiconsIcon icon={Search01Icon} className="h-4 w-4 text-stone-500" />
-        <span className="text-sm text-stone-300">{query}</span>
+      <div className="relative flex items-center gap-2 border-b border-stone-700 pb-4">
+        <HugeiconsIcon icon={Search01Icon} className="h-5 w-5 text-stone-500" />
+        <span className="text-lg text-stone-200">{query}</span>
         <motion.span
           animate={{ opacity: [1, 0] }}
           transition={{ repeat: Infinity, duration: 0.8 }}
-          className="h-5 w-0.5 bg-orange-400"
+          className="h-6 w-0.5 bg-orange-500"
         />
-        <span className="ml-auto text-xs text-stone-500">⌘K</span>
+        <div className="ml-auto flex items-center gap-1">
+          <kbd className="hidden h-5 items-center bg-stone-800 px-1.5 text-[10px] font-medium text-stone-500 sm:inline-flex">
+            CTRL
+          </kbd>
+          <kbd className="hidden h-5 items-center bg-stone-800 px-1.5 text-[10px] font-medium text-stone-500 sm:inline-flex">
+            K
+          </kbd>
+        </div>
       </div>
 
-      <AnimatePresence>
-        {showResults && (
+      <div className="mt-4 space-y-2">
+        <AnimatePresence>
+          {showResults ? (
+            <>
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                className="flex items-center gap-3 bg-stone-800/50 p-2"
+              >
+                <div className="flex h-8 w-8 items-center justify-center bg-stone-700">
+                  <HugeiconsIcon
+                    icon={BookOpen01Icon}
+                    className="h-4 w-4 text-stone-400"
+                  />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-stone-200">
+                    Documentation
+                  </div>
+                  <div className="text-xs text-stone-500">Category</div>
+                </div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ delay: 0.1 }}
+                className="flex items-center gap-3 p-2"
+              >
+                <div className="flex h-8 w-8 items-center justify-center bg-stone-800">
+                  <HugeiconsIcon
+                    icon={GlobalIcon}
+                    className="h-4 w-4 text-stone-400"
+                  />
+                </div>
+                <div>
+                  <div className="text-sm font-medium text-stone-400">
+                    Next.js Docs
+                  </div>
+                  <div className="text-xs text-stone-600">nextjs.org</div>
+                </div>
+              </motion.div>
+            </>
+          ) : (
+            <div className="py-8 text-center text-xs text-stone-600">
+              Type to search...
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// Smart Metadata Demo
+function SmartMetadataDemo() {
+  const [state, setState] = useState<"typing" | "loading" | "card">("typing");
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    const loop = async () => {
+      // Reset
+      setState("typing");
+      setText("");
+
+      // Type URL
+      const url = "github.com";
+      for (let i = 0; i <= url.length; i++) {
+        setText(url.slice(0, i));
+        await new Promise((r) => setTimeout(r, 100));
+      }
+
+      await new Promise((r) => setTimeout(r, 400));
+      setState("loading");
+      await new Promise((r) => setTimeout(r, 800));
+      setState("card");
+      await new Promise((r) => setTimeout(r, 3000));
+
+      // Loop
+      loop();
+    };
+    loop();
+  }, []);
+
+  return (
+    <div className="h-full min-h-56 overflow-hidden border border-stone-700 bg-stone-900 p-6 flex flex-col justify-center">
+      <AnimatePresence mode="wait">
+        {state === "card" ? (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
+            key="card"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="mt-4 space-y-2"
+            className="overflow-hidden border border-stone-700 bg-stone-800"
           >
-            <div className="bg-stone-800 p-3">
-              <div className="text-sm text-stone-300">
-                Next.js Documentation
-              </div>
-              <div className="text-xs text-stone-500">nextjs.org/docs</div>
+            <div className="h-24 bg-stone-700 relative overflow-hidden">
+              <div className="absolute inset-0 bg-stone-600/20 animate-pulse" />
+              <HugeiconsIcon
+                icon={GlobalIcon}
+                className="absolute bottom-2 left-2 h-8 w-8 text-stone-400"
+              />
             </div>
-            <div className="bg-stone-800/50 p-3">
-              <div className="text-sm text-stone-400">Next.js Tutorial</div>
-              <div className="text-xs text-stone-600">vercel.com/learn</div>
+            <div className="p-4 space-y-2">
+              <div className="h-4 w-3/4 bg-stone-600" />
+              <div className="h-3 w-1/2 bg-stone-700" />
             </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="input"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="relative"
+          >
+            <div className="flex items-center gap-3 border-b-2 border-stone-700 py-2">
+              <HugeiconsIcon
+                icon={PlusSignIcon}
+                className="h-5 w-5 text-stone-500"
+              />
+              <span className="text-lg text-stone-300 font-mono">{text}</span>
+              {state === "typing" && (
+                <motion.div
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ repeat: Infinity, duration: 0.8 }}
+                  className="h-5 w-2 bg-orange-500"
+                />
+              )}
+            </div>
+            {state === "loading" && (
+              <motion.div
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-2 flex items-center gap-2 text-xs text-orange-400"
+              >
+                <HugeiconsIcon
+                  icon={Zap01Icon}
+                  className="h-3 w-3 animate-pulse"
+                />
+                Fetching metadata...
+              </motion.div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -233,79 +388,69 @@ function SearchDemo() {
   );
 }
 
-// Card Preview Demo - Animated
-function CardPreviewDemo() {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+// Smart Tags Demo
+function SmartTagsDemo() {
+  const [tagsVisible, setTagsVisible] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setHoveredCard((prev) => (prev === null ? 0 : prev === 0 ? 1 : null));
-    }, 1500);
+      setTagsVisible((prev) => !prev);
+    }, 2000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="grid h-full min-h-56 gap-4 border border-stone-700 bg-stone-900 p-5 sm:grid-cols-2">
-      {[0, 1].map((i) => (
-        <motion.div
-          key={i}
-          animate={{
-            scale: hoveredCard === i ? 1.02 : 1,
-            borderColor:
-              hoveredCard === i ? "rgb(249 115 22 / 0.5)" : "rgb(68 64 60)",
-          }}
-          className="overflow-hidden border border-stone-700"
-        >
-          <motion.div
-            animate={{
-              opacity: hoveredCard === i ? 0.9 : 0.7,
-            }}
-            className="aspect-video bg-gradient-to-br from-stone-700 to-stone-800"
-          />
-          <div className="space-y-2 p-4">
-            <div className="h-3 w-3/4 bg-stone-600" />
-            <div className="h-2 w-1/2 bg-stone-700" />
+    <div className="h-full min-h-56 overflow-hidden border border-stone-700 bg-stone-900 p-6 flex flex-col justify-center">
+      <div className="border border-stone-700 bg-stone-800 p-4">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <div className="h-4 w-32 bg-stone-600" />
+            <div className="h-3 w-48 bg-stone-700" />
           </div>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
-// Dark Mode Demo
-function DarkModeDemo() {
-  const [isDark, setIsDark] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsDark((prev) => !prev);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="relative h-full min-h-56 overflow-hidden border border-stone-700">
-      <motion.div
-        animate={{
-          backgroundColor: isDark ? "rgb(28 25 23)" : "rgb(245 245 244)",
-        }}
-        className="flex h-full items-center justify-center"
-      >
-        <motion.div
-          animate={{
-            rotate: isDark ? 0 : 180,
-          }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center gap-3"
-        >
           <HugeiconsIcon
-            icon={Moon02Icon}
-            className={`h-10 w-10 ${
-              isDark ? "text-orange-400" : "text-stone-600"
+            icon={Tag01Icon}
+            className={`h-5 w-5 transition-colors duration-500 ${
+              tagsVisible ? "text-orange-500" : "text-stone-600"
             }`}
           />
-        </motion.div>
-      </motion.div>
+        </div>
+
+        <div className="mt-6 flex gap-2 flex-wrap min-h-[28px]">
+          <AnimatePresence>
+            {tagsVisible && (
+              <>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ delay: 0.1 }}
+                  className="px-2 py-1 bg-stone-700 text-stone-300 text-xs font-medium border border-stone-600"
+                >
+                  Design
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ delay: 0.2 }}
+                  className="px-2 py-1 bg-orange-500/10 text-orange-400 text-xs font-medium border border-orange-500/20"
+                >
+                  Inspiration
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ delay: 0.3 }}
+                  className="px-2 py-1 bg-stone-700 text-stone-300 text-xs font-medium border border-stone-600"
+                >
+                  Web
+                </motion.span>
+              </>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 }
@@ -359,9 +504,11 @@ export function FeaturesSection() {
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-stone-100">
-                Categories
+                Smart Categories
               </h3>
-              <p className="mt-2 text-stone-400">Organize with custom icons</p>
+              <p className="mt-2 text-stone-400">
+                Organize with custom icons and counters
+              </p>
             </div>
             <div className="flex-1">
               <CategoryDemo />
@@ -387,7 +534,7 @@ export function FeaturesSection() {
             </div>
           </motion.div>
 
-          {/* Card Previews - 2 col span */}
+          {/* Smart Metadata - 2 col span */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -397,18 +544,19 @@ export function FeaturesSection() {
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-stone-100">
-                Card Previews
+                Smart Metadata
               </h3>
               <p className="mt-2 text-stone-400">
-                Rich previews with OpenGraph images
+                We automatically fetch titles, descriptions, and images for your
+                links
               </p>
             </div>
             <div className="flex-1">
-              <CardPreviewDemo />
+              <SmartMetadataDemo />
             </div>
           </motion.div>
 
-          {/* Dark Mode - 2 col span */}
+          {/* Smart Tags - 2 col span */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -418,14 +566,14 @@ export function FeaturesSection() {
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-stone-100">
-                Dark Mode First
+                Smart Tagging
               </h3>
               <p className="mt-2 text-stone-400">
-                Easy on the eyes, beautiful everywhere
+                Organize your links with powerful tagging system
               </p>
             </div>
             <div className="flex-1">
-              <DarkModeDemo />
+              <SmartTagsDemo />
             </div>
           </motion.div>
         </div>

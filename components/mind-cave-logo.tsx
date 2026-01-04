@@ -8,6 +8,7 @@ const SvgIcon: React.FC<React.SVGProps<SVGElement>> = (props) => (
     height="512"
     version="1.1"
     viewBox="0 0 512 512"
+    {...props}
   >
     <g id="g1">
       <g
