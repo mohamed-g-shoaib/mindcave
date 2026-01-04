@@ -61,7 +61,7 @@ export function BookmarkCard({
   };
 
   return (
-    <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md">
+    <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md p-0">
       {/* Media Section */}
       {isYouTube ? (
         <div className="aspect-video w-full overflow-hidden bg-muted">
@@ -112,7 +112,7 @@ export function BookmarkCard({
       )}
 
       {/* Content */}
-      <CardHeader className="flex-1 pb-2">
+      <CardHeader className="flex-1 pb-2 px-4">
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="line-clamp-2 text-base">
             {bookmark.title}
@@ -156,7 +156,7 @@ export function BookmarkCard({
         )}
       </CardHeader>
 
-      <CardFooter className="flex items-center justify-between gap-2 pt-0">
+      <CardFooter className="flex items-center justify-between gap-2 pt-0 px-4">
         {bookmark.category ? (
           <Badge variant="secondary">{bookmark.category.name}</Badge>
         ) : (
