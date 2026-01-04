@@ -97,9 +97,9 @@ function CategoriesDemo() {
             key={cat}
             animate={{
               backgroundColor:
-                i === activeIndex ? "rgb(249 115 22 / 0.15)" : "transparent",
+                i === activeIndex ? "rgb(249 115 22 / 0.15)" : "rgba(0,0,0,0)",
               borderColor:
-                i === activeIndex ? "rgb(249 115 22 / 0.4)" : "transparent",
+                i === activeIndex ? "rgb(249 115 22 / 0.4)" : "rgba(0,0,0,0)",
             }}
             className="flex items-center gap-2 border border-transparent px-3 py-2 text-sm"
           >

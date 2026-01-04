@@ -34,9 +34,13 @@ export function CategoryDemo() {
             key={cat.name}
             animate={{
               backgroundColor:
-                activeCategory === i ? "rgb(249 115 22 / 0.15)" : "transparent",
+                activeCategory === i
+                  ? "rgb(249 115 22 / 0.15)"
+                  : "rgba(0,0,0,0)",
               borderColor:
-                activeCategory === i ? "rgb(249 115 22 / 0.4)" : "transparent",
+                activeCategory === i
+                  ? "rgb(249 115 22 / 0.4)"
+                  : "rgba(0,0,0,0)",
             }}
             className="flex items-center justify-between border border-transparent px-4 py-3"
           >

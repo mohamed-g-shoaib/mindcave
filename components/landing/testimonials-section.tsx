@@ -98,14 +98,14 @@ export function TestimonialsSection() {
             className="pointer-events-none absolute inset-y-0 left-0 w-40"
             style={{
               background:
-                "linear-gradient(to right, oklch(0.216 0.006 56.043), transparent)",
+                "linear-gradient(to right, oklch(0.216 0.006 56.043), rgba(0,0,0,0))",
             }}
           />
           <div
             className="pointer-events-none absolute inset-y-0 right-0 w-40"
             style={{
               background:
-                "linear-gradient(to left, oklch(0.216 0.006 56.043), transparent)",
+                "linear-gradient(to left, oklch(0.216 0.006 56.043), rgba(0,0,0,0))",
             }}
           />
         </div>
