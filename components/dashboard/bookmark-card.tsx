@@ -158,7 +158,21 @@ export function BookmarkCard({
 
       <CardFooter className="flex items-center justify-between gap-2 p-4">
         {bookmark.category ? (
-          <Badge variant="secondary">{bookmark.category.name}</Badge>
+          <Badge
+            variant="secondary"
+            style={
+              bookmark.category.color
+                ? {
+                    backgroundColor: bookmark.category.color + "20",
+                    color: bookmark.category.color,
+                    borderColor: bookmark.category.color + "40",
+                  }
+                : undefined
+            }
+            className={bookmark.category.color ? "border" : ""}
+          >
+            {bookmark.category.name}
+          </Badge>
         ) : (
           <span />
         )}
