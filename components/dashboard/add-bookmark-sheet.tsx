@@ -2,9 +2,26 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
+
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useCreateBookmark } from "@/hooks/use-bookmarks";
 import { useCategories } from "@/hooks/use-categories";
 
@@ -30,6 +47,11 @@ export function AddBookmarkSheet({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.title.trim() || !formData.url.trim()) {
+      toast.error("Title and URL are required");
+      return;
+    }
+
     try {
       await createBookmark.mutateAsync({
         title: formData.title,
@@ -47,131 +69,105 @@ export function AddBookmarkSheet({
     }
   };
 
-  if (!open) return null;
-
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm"
-        onClick={() => onOpenChange(false)}
-      />
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-full sm:max-w-md">
+        <SheetHeader>
+          <SheetTitle>Add Bookmark</SheetTitle>
+          <SheetDescription>
+            Save a new link to your collection.
+          </SheetDescription>
+        </SheetHeader>
 
-      {/* Sheet */}
-      <div className="fixed right-0 top-0 z-50 h-full w-full max-w-lg border-l bg-background shadow-lg sm:max-w-md">
-        <div className="flex h-full flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between border-b p-6">
-            <h2 className="text-lg font-semibold">Add Bookmark</h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onOpenChange(false)}
+        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+          {/* Title */}
+          <div className="space-y-2">
+            <Label htmlFor="title">Title *</Label>
+            <Input
+              id="title"
+              required
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+              placeholder="Enter bookmark title"
+            />
+          </div>
+
+          {/* URL */}
+          <div className="space-y-2">
+            <Label htmlFor="url">URL *</Label>
+            <Input
+              id="url"
+              type="url"
+              required
+              value={formData.url}
+              onChange={(e) =>
+                setFormData({ ...formData, url: e.target.value })
+              }
+              placeholder="https://example.com"
+            />
+          </div>
+
+          {/* Description */}
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              rows={3}
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              placeholder="Optional description"
+            />
+          </div>
+
+          {/* Category */}
+          <div className="space-y-2">
+            <Label htmlFor="category">Category</Label>
+            <Select
+              value={formData.category_id || "uncategorized"}
+              onValueChange={(value) =>
+                setFormData({
+                  ...formData,
+                  category_id: value === "uncategorized" ? "" : value ?? "",
+                })
+              }
             >
-              <HugeiconsIcon icon={Cancel01Icon} className="h-5 w-5" />
-            </Button>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="uncategorized">Uncategorized</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
+        </form>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="title" className="text-sm font-medium">
-                  Title *
-                </label>
-                <input
-                  id="title"
-                  type="text"
-                  required
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-ring"
-                  placeholder="Enter bookmark title"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="url" className="text-sm font-medium">
-                  URL *
-                </label>
-                <input
-                  id="url"
-                  type="url"
-                  required
-                  value={formData.url}
-                  onChange={(e) =>
-                    setFormData({ ...formData, url: e.target.value })
-                  }
-                  className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-ring"
-                  placeholder="https://example.com"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="description" className="text-sm font-medium">
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-ring"
-                  placeholder="Optional description"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="category" className="text-sm font-medium">
-                  Category
-                </label>
-                <select
-                  id="category"
-                  value={formData.category_id}
-                  onChange={(e) =>
-                    setFormData({ ...formData, category_id: e.target.value })
-                  }
-                  className="w-full rounded-md border bg-background px-3 py-2 text-sm outline-ring"
-                >
-                  <option value="">Uncategorized</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </form>
-
-          {/* Footer */}
-          <div className="border-t p-6">
-            <div className="flex gap-3">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                className="flex-1"
-                disabled={createBookmark.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                onClick={handleSubmit}
-                className="flex-1"
-                disabled={createBookmark.isPending}
-              >
-                {createBookmark.isPending ? "Adding..." : "Add Bookmark"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
+        <SheetFooter className="mt-6">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={createBookmark.isPending}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={createBookmark.isPending}
+          >
+            {createBookmark.isPending ? "Adding..." : "Add Bookmark"}
+          </Button>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
