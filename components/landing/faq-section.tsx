@@ -37,33 +37,36 @@ export function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="border-t border-primary-foreground/10 bg-primary-foreground/5 py-20 md:py-32">
+    <section
+      className="py-24 md:py-32"
+      style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
+    >
       <div className="container mx-auto max-w-3xl px-4">
         <div className="mb-16 text-center">
-          <h2 className="text-3xl font-bold text-primary-foreground md:text-4xl lg:text-5xl">
+          <h2 className="text-3xl font-bold text-stone-100 md:text-4xl lg:text-5xl">
             Frequently Asked Questions
           </h2>
-          <p className="mt-4 text-lg text-primary-foreground/70">
+          <p className="mt-4 text-lg text-stone-400">
             Everything you need to know about Mind Cave
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="overflow-hidden rounded-lg border border-primary-foreground/20 bg-primary"
+              className="overflow-hidden rounded-lg border border-stone-800 bg-stone-900"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-primary-foreground/5"
+                className="flex w-full items-center justify-between p-5 text-left transition-colors hover:bg-stone-800/50"
               >
-                <span className="font-medium text-primary-foreground">
+                <span className="font-medium text-stone-200">
                   {faq.question}
                 </span>
                 <HugeiconsIcon
                   icon={openIndex === index ? Remove01Icon : Add01Icon}
-                  className="h-5 w-5 shrink-0 text-accent"
+                  className="h-5 w-5 shrink-0 text-orange-400"
                 />
               </button>
 
@@ -75,10 +78,8 @@ export function FAQSection() {
                     exit={{ height: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="border-t border-primary-foreground/10 px-6 py-4">
-                      <p className="text-sm text-primary-foreground/70">
-                        {faq.answer}
-                      </p>
+                    <div className="border-t border-stone-800 px-5 py-4">
+                      <p className="text-sm text-stone-400">{faq.answer}</p>
                     </div>
                   </motion.div>
                 )}
