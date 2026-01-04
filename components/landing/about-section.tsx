@@ -22,21 +22,21 @@ function VaultDemo() {
   }, []);
 
   const scatteredPositions = [
-    { x: 10, y: 5, rotate: -12 },
-    { x: 60, y: 15, rotate: 8 },
-    { x: 25, y: 50, rotate: -5 },
-    { x: 70, y: 45, rotate: 15 },
-    { x: 40, y: 75, rotate: -8 },
-    { x: 5, y: 70, rotate: 10 },
+    { x: 25, y: 12, rotate: -12 },
+    { x: 60, y: 8, rotate: 8 },
+    { x: 45, y: 42, rotate: -5 },
+    { x: 70, y: 48, rotate: 15 },
+    { x: 25, y: 65, rotate: -8 },
+    { x: 55, y: 72, rotate: 10 },
   ];
 
   const organizedPositions = [
-    { x: 8, y: 8, rotate: 0 },
-    { x: 54, y: 8, rotate: 0 },
-    { x: 8, y: 40, rotate: 0 },
-    { x: 54, y: 40, rotate: 0 },
-    { x: 8, y: 72, rotate: 0 },
-    { x: 54, y: 72, rotate: 0 },
+    { x: 20, y: 15, rotate: 0 },
+    { x: 50, y: 15, rotate: 0 },
+    { x: 80, y: 15, rotate: 0 },
+    { x: 20, y: 55, rotate: 0 },
+    { x: 50, y: 55, rotate: 0 },
+    { x: 80, y: 55, rotate: 0 },
   ];
 
   return (
@@ -56,7 +56,7 @@ function VaultDemo() {
               : scatteredPositions[i].rotate,
           }}
           transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          className="absolute h-16 w-14 border border-border bg-secondary p-2"
+          className="absolute h-16 w-14 -translate-x-1/2 border border-border bg-secondary p-2"
         >
           <div className="h-2 w-8 bg-border" />
           <div className="mt-1 h-1.5 w-6 bg-border/50" />
@@ -66,12 +66,6 @@ function VaultDemo() {
           />
         </motion.div>
       ))}
-      <motion.div
-        animate={{ opacity: isOrganized ? 1 : 0 }}
-        className="absolute bottom-2 right-2 text-xs font-medium text-primary"
-      >
-        Organized ✓
-      </motion.div>
     </div>
   );
 }
