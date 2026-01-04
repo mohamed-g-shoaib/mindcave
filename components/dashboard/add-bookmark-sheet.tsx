@@ -71,86 +71,95 @@ export function AddBookmarkSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-md">
-        <SheetHeader>
+      <SheetContent
+        side="right"
+        className="flex flex-col w-full sm:max-w-lg p-0"
+      >
+        <SheetHeader className="px-6 py-4 border-b shrink-0">
           <SheetTitle>Add Bookmark</SheetTitle>
           <SheetDescription>
             Save a new link to your collection.
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Title */}
-          <div className="space-y-2">
-            <Label htmlFor="title">Title *</Label>
-            <Input
-              id="title"
-              required
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              placeholder="Enter bookmark title"
-            />
-          </div>
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <form
+            id="add-bookmark-form"
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title">Title *</Label>
+              <Input
+                id="title"
+                required
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                placeholder="Enter bookmark title"
+              />
+            </div>
 
-          {/* URL */}
-          <div className="space-y-2">
-            <Label htmlFor="url">URL *</Label>
-            <Input
-              id="url"
-              type="url"
-              required
-              value={formData.url}
-              onChange={(e) =>
-                setFormData({ ...formData, url: e.target.value })
-              }
-              placeholder="https://example.com"
-            />
-          </div>
+            {/* URL */}
+            <div className="space-y-2">
+              <Label htmlFor="url">URL *</Label>
+              <Input
+                id="url"
+                type="url"
+                required
+                value={formData.url}
+                onChange={(e) =>
+                  setFormData({ ...formData, url: e.target.value })
+                }
+                placeholder="https://example.com"
+              />
+            </div>
 
-          {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              rows={3}
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              placeholder="Optional description"
-            />
-          </div>
+            {/* Description */}
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
+              <Textarea
+                id="description"
+                rows={3}
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                placeholder="Optional description"
+              />
+            </div>
 
-          {/* Category */}
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Select
-              value={formData.category_id || "uncategorized"}
-              onValueChange={(value) =>
-                setFormData({
-                  ...formData,
-                  category_id: value === "uncategorized" ? "" : value ?? "",
-                })
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="uncategorized">Uncategorized</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </form>
+            {/* Category */}
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={formData.category_id || "uncategorized"}
+                onValueChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    category_id: value === "uncategorized" ? "" : value ?? "",
+                  })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="uncategorized">Uncategorized</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </form>
+        </div>
 
-        <SheetFooter className="mt-6">
+        <SheetFooter className="px-6 py-4 border-t shrink-0">
           <Button
             type="button"
             variant="outline"
@@ -160,8 +169,8 @@ export function AddBookmarkSheet({
             Cancel
           </Button>
           <Button
+            form="add-bookmark-form"
             type="submit"
-            onClick={handleSubmit}
             disabled={createBookmark.isPending}
           >
             {createBookmark.isPending ? "Adding..." : "Add Bookmark"}

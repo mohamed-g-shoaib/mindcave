@@ -65,75 +65,84 @@ export function AddCategorySheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-md">
-        <SheetHeader>
+      <SheetContent
+        side="right"
+        className="flex flex-col w-full sm:max-w-lg p-0"
+      >
+        <SheetHeader className="px-6 py-4 border-b shrink-0">
           <SheetTitle>Add Category</SheetTitle>
           <SheetDescription>
             Create a new category to organize your bookmarks.
           </SheetDescription>
         </SheetHeader>
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-          {/* Name */}
-          <div className="space-y-2">
-            <Label htmlFor="name">Name *</Label>
-            <Input
-              id="name"
-              required
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              placeholder="e.g., Tech, Learning, Jobs"
-            />
-          </div>
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <form
+            id="add-category-form"
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
+            {/* Name */}
+            <div className="space-y-2">
+              <Label htmlFor="name">Name *</Label>
+              <Input
+                id="name"
+                required
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                placeholder="e.g., Tech, Learning, Jobs"
+              />
+            </div>
 
-          {/* Icon Picker */}
-          <div className="space-y-2">
-            <Label>Icon</Label>
-            <div className="flex items-center gap-4 mb-3">
-              <div className="flex h-12 w-12 items-center justify-center border bg-muted">
-                <HugeiconsIcon
-                  icon={getCategoryIcon(formData.icon)}
-                  className="h-6 w-6"
+            {/* Icon Picker */}
+            <div className="space-y-2">
+              <Label>Icon</Label>
+              <div className="flex items-center gap-4 mb-3">
+                <div className="flex h-12 w-12 items-center justify-center border bg-muted">
+                  <HugeiconsIcon
+                    icon={getCategoryIcon(formData.icon)}
+                    className="h-6 w-6"
+                  />
+                </div>
+                <span className="text-sm text-muted-foreground">
+                  Select an icon for your category
+                </span>
+              </div>
+              <IconPicker
+                value={formData.icon}
+                onChange={(icon) => setFormData({ ...formData, icon })}
+              />
+            </div>
+
+            {/* Color */}
+            <div className="space-y-2">
+              <Label htmlFor="color">Color (Optional)</Label>
+              <div className="flex gap-2">
+                <input
+                  id="color"
+                  type="color"
+                  value={formData.color}
+                  onChange={(e) =>
+                    setFormData({ ...formData, color: e.target.value })
+                  }
+                  className="h-10 w-20 cursor-pointer border"
+                />
+                <Input
+                  value={formData.color}
+                  onChange={(e) =>
+                    setFormData({ ...formData, color: e.target.value })
+                  }
+                  placeholder="#ff6b35"
+                  className="flex-1"
                 />
               </div>
-              <span className="text-sm text-muted-foreground">
-                Select an icon for your category
-              </span>
             </div>
-            <IconPicker
-              value={formData.icon}
-              onChange={(icon) => setFormData({ ...formData, icon })}
-            />
-          </div>
+          </form>
+        </div>
 
-          {/* Color */}
-          <div className="space-y-2">
-            <Label htmlFor="color">Color (Optional)</Label>
-            <div className="flex gap-2">
-              <input
-                id="color"
-                type="color"
-                value={formData.color}
-                onChange={(e) =>
-                  setFormData({ ...formData, color: e.target.value })
-                }
-                className="h-10 w-20 cursor-pointer border"
-              />
-              <Input
-                value={formData.color}
-                onChange={(e) =>
-                  setFormData({ ...formData, color: e.target.value })
-                }
-                placeholder="#ff6b35"
-                className="flex-1"
-              />
-            </div>
-          </div>
-        </form>
-
-        <SheetFooter className="mt-6">
+        <SheetFooter className="px-6 py-4 border-t shrink-0">
           <Button
             type="button"
             variant="outline"
@@ -143,8 +152,8 @@ export function AddCategorySheet({
             Cancel
           </Button>
           <Button
+            form="add-category-form"
             type="submit"
-            onClick={handleSubmit}
             disabled={createCategory.isPending}
           >
             {createCategory.isPending ? "Creating..." : "Create Category"}
