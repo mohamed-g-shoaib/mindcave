@@ -48,7 +48,7 @@ function SaveDemo() {
           icon={Link01Icon}
           className="mr-2 h-4 w-4 shrink-0 text-muted-foreground"
         />
-        <div className="flex min-w-0 flex-1 items-center gap-px">
+        <div className="flex h-5 min-w-0 flex-1 items-center gap-px">
           <span className="truncate text-sm font-mono text-foreground">
             {url}
           </span>
@@ -192,7 +192,7 @@ function FindDemo() {
           icon={Search01Icon}
           className="mr-2 h-4 w-4 shrink-0 text-muted-foreground"
         />
-        <div className="flex items-center gap-px">
+        <div className="flex h-5 items-center gap-px">
           <span className="text-sm text-foreground">{query}</span>
           <motion.span
             animate={{ opacity: [1, 0] }}
