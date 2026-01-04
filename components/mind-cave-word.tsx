@@ -35,7 +35,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
           strokeWidth: 0.490762,
         }}
       >
-        {"mind cave"}
+        {"Mind Cave"}
       </tspan>
     </text>
   </svg>
