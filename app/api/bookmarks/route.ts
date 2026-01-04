@@ -59,6 +59,7 @@ export async function POST(request: Request) {
     description,
     category_id,
     og_image_url,
+    favicon_url,
     media_type,
     media_embed_id,
   } = body;
@@ -72,6 +73,7 @@ export async function POST(request: Request) {
       description,
       category_id,
       og_image_url,
+      favicon_url,
       media_type,
       media_embed_id,
     })
