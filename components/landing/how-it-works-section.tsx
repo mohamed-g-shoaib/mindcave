@@ -5,12 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Link01Icon,
-  FolderLibraryIcon,
   Search01Icon,
   ArrowRight01Icon,
   Tick02Icon,
-  GlobalIcon,
+  Quran01Icon,
+  Copy01Icon,
 } from "@hugeicons/core-free-icons";
+
+const YOUTUBE_LINK = "https://youtu.be/9B87lUEKLIw";
+const METADATA_TITLE = "Surah Al-Baqarah by Sheikh Badr Al-Turki";
 
 // Step 1: Paste URL and see metadata appear
 function SaveDemo() {
@@ -21,64 +24,83 @@ function SaveDemo() {
     const cycle = async () => {
       setPhase("paste");
       setUrl("");
-      const link = "github.com/react";
+      const link = "youtu.be/9B87lUEKLIw";
       for (let i = 0; i <= link.length; i++) {
         setUrl(link.slice(0, i));
-        await new Promise((r) => setTimeout(r, 60));
+        await new Promise((r) => setTimeout(r, 80));
       }
       await new Promise((r) => setTimeout(r, 400));
       setPhase("fetch");
       await new Promise((r) => setTimeout(r, 800));
       setPhase("done");
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 2500));
     };
-    const interval = setInterval(cycle, 5000);
+    const interval = setInterval(cycle, 5500);
     cycle();
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="h-32 border border-border bg-card p-4">
-      <div className="flex items-center gap-2 border-b border-border pb-2">
+    <div className="relative h-32 border border-border bg-card p-4">
+      {/* Input area with tight cursor positioning */}
+      <div className="flex items-center border-b border-border pb-2">
         <HugeiconsIcon
           icon={Link01Icon}
-          className="h-4 w-4 text-muted-foreground"
+          className="mr-2 h-4 w-4 shrink-0 text-muted-foreground"
         />
-        <span className="text-sm text-foreground font-mono">{url}</span>
-        {phase === "paste" && (
-          <motion.span
-            animate={{ opacity: [1, 0] }}
-            transition={{ repeat: Infinity, duration: 0.8 }}
-            className="h-4 w-0.5 bg-primary"
-          />
-        )}
-      </div>
-      <AnimatePresence mode="wait">
-        {phase === "fetch" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mt-2 text-xs text-primary"
-          >
-            Fetching metadata...
-          </motion.div>
-        )}
-        {phase === "done" && (
-          <motion.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-2 flex items-center gap-2"
-          >
-            <div className="h-6 w-6 bg-input" />
-            <div className="text-xs text-foreground">React · GitHub</div>
-            <HugeiconsIcon
-              icon={Tick02Icon}
-              className="ml-auto h-3 w-3 text-green-400"
+        <div className="flex h-5 min-w-0 flex-1 items-center gap-px">
+          <span className="truncate text-sm font-mono text-foreground">
+            {url}
+          </span>
+          {phase === "paste" && (
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ repeat: Infinity, duration: 0.8 }}
+              className="h-4 w-0.5 shrink-0 bg-primary"
             />
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </div>
+      </div>
+
+      {/* Fixed position container to prevent layout shift */}
+      <div className="absolute left-4 right-4 top-14">
+        <AnimatePresence mode="wait">
+          {phase === "fetch" && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ willChange: "opacity" }}
+              className="text-xs text-primary"
+            >
+              Fetching metadata...
+            </motion.div>
+          )}
+          {phase === "done" && (
+            <motion.a
+              href={YOUTUBE_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{ willChange: "opacity" }}
+              className="flex items-center gap-2 hover:bg-muted/50 transition-colors p-1 -m-1 rounded"
+            >
+              <HugeiconsIcon
+                icon={Quran01Icon}
+                className="h-5 w-5 shrink-0 text-primary"
+              />
+              <div className="min-w-0 flex-1 truncate text-xs text-foreground">
+                {METADATA_TITLE}
+              </div>
+              <HugeiconsIcon
+                icon={Tick02Icon}
+                className="h-3 w-3 shrink-0 text-green-400"
+              />
+            </motion.a>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
@@ -86,13 +108,13 @@ function SaveDemo() {
 // Step 2: Assign to category
 function OrganizeDemo() {
   const [selected, setSelected] = useState<number | null>(null);
-  const categories = ["Tech", "Learning", "Projects"];
+  const categories = ["Quran", "Learning", "Projects"];
 
   useEffect(() => {
     const cycle = async () => {
       setSelected(null);
       await new Promise((r) => setTimeout(r, 1000));
-      setSelected(0);
+      setSelected(0); // Select "Quran"
       await new Promise((r) => setTimeout(r, 2500));
     };
     const interval = setInterval(cycle, 4000);
@@ -101,36 +123,41 @@ function OrganizeDemo() {
   }, []);
 
   return (
-    <div className="h-32 border border-border bg-card p-4">
+    <div className="relative h-32 border border-border bg-card p-4">
       <div className="mb-2 text-xs text-muted-foreground">SELECT CATEGORY</div>
       <div className="flex gap-2">
         {categories.map((cat, i) => (
-          <motion.button
-            key={cat}
-            animate={{
-              backgroundColor:
-                selected === i ? "rgb(249 115 22 / 0.2)" : "transparent",
-              borderColor:
-                selected === i ? "rgb(249 115 22 / 0.5)" : "currentColor",
-            }}
-            className="border border-border px-3 py-1.5 text-xs text-foreground"
-          >
-            {cat}
-          </motion.button>
+          <div key={cat} className="relative">
+            {/* Performant opacity overlay */}
+            <motion.div
+              className="absolute inset-0 border border-primary/50 bg-primary/20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: selected === i ? 1 : 0 }}
+              transition={{ duration: 0.2 }}
+              style={{ willChange: "opacity" }}
+            />
+            <button className="relative z-10 border border-border px-3 py-1.5 text-xs text-foreground">
+              {cat}
+            </button>
+          </div>
         ))}
       </div>
-      <AnimatePresence>
-        {selected !== null && (
-          <motion.div
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-3 flex items-center gap-1 text-xs text-green-400"
-          >
-            <HugeiconsIcon icon={Tick02Icon} className="h-3 w-3" />
-            Added to {categories[selected]}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Fixed position for confirmation */}
+      <div className="absolute bottom-4 left-4">
+        <AnimatePresence>
+          {selected !== null && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{ willChange: "opacity" }}
+              className="flex items-center gap-1 text-xs text-green-400"
+            >
+              <HugeiconsIcon icon={Tick02Icon} className="h-3 w-3" />
+              Added to {categories[selected]}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
@@ -144,10 +171,10 @@ function FindDemo() {
     const cycle = async () => {
       setQuery("");
       setShowResult(false);
-      const text = "git";
+      const text = "Baqarah";
       for (let i = 0; i <= text.length; i++) {
         setQuery(text.slice(0, i));
-        await new Promise((r) => setTimeout(r, 150));
+        await new Promise((r) => setTimeout(r, 80));
       }
       setShowResult(true);
       await new Promise((r) => setTimeout(r, 2500));
@@ -158,79 +185,171 @@ function FindDemo() {
   }, []);
 
   return (
-    <div className="h-32 border border-border bg-card p-4">
-      <div className="flex items-center gap-2 border-b border-border pb-2">
+    <div className="relative h-32 border border-border bg-card p-4">
+      {/* Input with tight cursor positioning */}
+      <div className="flex items-center border-b border-border pb-2">
         <HugeiconsIcon
           icon={Search01Icon}
-          className="h-4 w-4 text-muted-foreground"
+          className="mr-2 h-4 w-4 shrink-0 text-muted-foreground"
         />
-        <span className="text-sm text-foreground">{query}</span>
-        <motion.span
-          animate={{ opacity: [1, 0] }}
-          transition={{ repeat: Infinity, duration: 0.8 }}
-          className="h-4 w-0.5 bg-primary"
-        />
+        <div className="flex h-5 items-center gap-px">
+          <span className="text-sm text-foreground">{query}</span>
+          <motion.span
+            animate={{ opacity: [1, 0] }}
+            transition={{ repeat: Infinity, duration: 0.8 }}
+            className="h-4 w-0.5 bg-primary"
+          />
+        </div>
       </div>
-      <AnimatePresence>
-        {showResult && (
-          <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-2 flex items-center gap-2 bg-primary/10 p-2"
-          >
-            <HugeiconsIcon icon={GlobalIcon} className="h-4 w-4 text-primary" />
-            <span className="text-xs text-foreground">GitHub React</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+      {/* Fixed position to prevent layout shift */}
+      <div className="absolute left-4 right-4 top-14">
+        <AnimatePresence>
+          {showResult && (
+            <motion.a
+              href={YOUTUBE_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              style={{ willChange: "opacity" }}
+              className="flex items-center gap-2 bg-primary/10 p-2 hover:bg-primary/20 transition-colors"
+            >
+              <HugeiconsIcon
+                icon={Quran01Icon}
+                className="h-4 w-4 shrink-0 text-primary"
+              />
+              <span className="truncate text-xs text-foreground">
+                Surah Al-Baqarah
+              </span>
+            </motion.a>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
 
-// Step 4: One click open
+// Step 4: One click open with browser window animation
 function AccessDemo() {
-  const [clicked, setClicked] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "opening" | "opened" | "copied">(
+    "idle"
+  );
 
   useEffect(() => {
     const cycle = async () => {
-      setClicked(false);
+      setPhase("idle");
+      await new Promise((r) => setTimeout(r, 1000));
+      setPhase("opening");
+      await new Promise((r) => setTimeout(r, 300));
+      setPhase("opened");
       await new Promise((r) => setTimeout(r, 1500));
-      setClicked(true);
-      await new Promise((r) => setTimeout(r, 2000));
+      setPhase("copied");
+      await new Promise((r) => setTimeout(r, 1500));
     };
-    const interval = setInterval(cycle, 4000);
+    const interval = setInterval(cycle, 5000);
     cycle();
     return () => clearInterval(interval);
   }, []);
 
+  const isOpened = phase === "opened" || phase === "copied";
+
   return (
-    <div className="flex h-32 items-center justify-center border border-border bg-card p-4">
-      <motion.div
-        animate={{
-          scale: clicked ? [1, 0.95, 1] : 1,
-          backgroundColor: clicked ? "rgb(249 115 22 / 0.2)" : "transparent",
-        }}
-        className="flex items-center gap-2 border border-border bg-secondary px-4 py-2"
-      >
-        <HugeiconsIcon
-          icon={GlobalIcon}
-          className="h-4 w-4 text-muted-foreground"
-        />
-        <span className="text-sm text-foreground">Open Link</span>
-        <HugeiconsIcon
-          icon={ArrowRight01Icon}
-          className="h-4 w-4 text-primary"
-        />
-      </motion.div>
+    <div className="relative h-32 overflow-hidden border border-border bg-card p-3">
+      {/* Buttons row */}
+      <div className="flex gap-2">
+        {/* Open Link Button */}
+        <motion.div
+          animate={{
+            scale: phase === "opening" ? [1, 0.95, 1] : 1,
+          }}
+          transition={{ duration: 0.2 }}
+          style={{ willChange: "transform" }}
+          className={`flex items-center gap-1.5 border px-2.5 py-1 transition-colors ${
+            isOpened
+              ? "border-green-500/50 bg-green-500/10"
+              : "border-border bg-secondary"
+          }`}
+        >
+          <HugeiconsIcon
+            icon={ArrowRight01Icon}
+            className={`h-3 w-3 ${
+              isOpened ? "text-green-400" : "text-primary"
+            }`}
+          />
+          <span className="text-xs text-foreground">
+            {isOpened ? "Opened" : "Open"}
+          </span>
+        </motion.div>
+
+        {/* Copy Link Button */}
+        <motion.div
+          animate={{
+            scale: phase === "copied" ? [1, 0.95, 1] : 1,
+          }}
+          transition={{ duration: 0.2 }}
+          style={{ willChange: "transform" }}
+          className={`flex items-center gap-1.5 border px-2.5 py-1 transition-colors ${
+            phase === "copied"
+              ? "border-green-500/50 bg-green-500/10"
+              : "border-border bg-secondary"
+          }`}
+        >
+          <HugeiconsIcon
+            icon={phase === "copied" ? Tick02Icon : Copy01Icon}
+            className={`h-3 w-3 ${
+              phase === "copied" ? "text-green-400" : "text-muted-foreground"
+            }`}
+          />
+          <span className="text-xs text-foreground">
+            {phase === "copied" ? "Copied" : "Copy"}
+          </span>
+        </motion.div>
+      </div>
+
+      {/* Browser window skeleton that slides open */}
       <AnimatePresence>
-        {clicked && (
+        {isOpened && (
           <motion.div
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 20 }}
-            exit={{ opacity: 0 }}
-            className="text-xs text-green-400"
+            initial={{
+              opacity: 0,
+              transform: "scale(0.3) translate(-40px, -20px)",
+            }}
+            animate={{ opacity: 1, transform: "scale(1) translate(0, 0)" }}
+            exit={{ opacity: 0, transform: "scale(0.5) translate(0, -10px)" }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            style={{ willChange: "transform, opacity" }}
+            className="absolute left-3 right-3 top-12 border border-border bg-secondary shadow-lg"
           >
-            ↗ Opened
+            {/* Browser title bar */}
+            <div className="flex items-center gap-1.5 border-b border-border bg-muted px-2 py-1.5">
+              {/* Traffic lights */}
+              <div className="flex gap-1">
+                <div className="h-2 w-2 rounded-full bg-red-400" />
+                <div className="h-2 w-2 rounded-full bg-yellow-400" />
+                <div className="h-2 w-2 rounded-full bg-green-400" />
+              </div>
+              {/* Address bar */}
+              <div className="ml-2 flex flex-1 items-center gap-1 rounded bg-background px-2 py-0.5">
+                <HugeiconsIcon
+                  icon={Quran01Icon}
+                  className="h-2.5 w-2.5 text-primary"
+                />
+                <span className="text-[9px] text-muted-foreground">
+                  youtu.be/9B87lUEKLIw
+                </span>
+              </div>
+            </div>
+            {/* Browser content skeleton */}
+            <div className="p-2">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 bg-primary/20" />
+                <div className="flex-1 space-y-1">
+                  <div className="h-2 w-3/4 bg-border" />
+                  <div className="h-1.5 w-1/2 bg-border/50" />
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -265,8 +384,8 @@ export function HowItWorksSection() {
     <section className="bg-muted py-28 md:py-40">
       <div className="mx-auto max-w-450 px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, transform: "translateY(20px)" }}
+          whileInView={{ opacity: 1, transform: "translateY(0)" }}
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
@@ -282,8 +401,8 @@ export function HowItWorksSection() {
           {steps.map((step, index) => (
             <motion.div
               key={step.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, transform: "translateY(30px)" }}
+              whileInView={{ opacity: 1, transform: "translateY(0)" }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               className="border border-border bg-card"
