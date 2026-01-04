@@ -76,6 +76,8 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
           key={name}
           type="button"
           onClick={() => onChange(name)}
+          aria-label={`Select ${name} icon`}
+          title={`Select ${name} icon`}
           className={`flex h-10 w-10 items-center justify-center border transition-colors ${
             value === name
               ? "border-primary bg-primary/10 text-primary"
