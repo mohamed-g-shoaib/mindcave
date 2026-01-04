@@ -311,9 +311,12 @@ function AccessDemo() {
       <AnimatePresence>
         {isOpened && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.3, y: -20, x: -40 }}
-            animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
-            exit={{ opacity: 0, scale: 0.5, y: -10 }}
+            initial={{
+              opacity: 0,
+              transform: "scale(0.3) translate(-40px, -20px)",
+            }}
+            animate={{ opacity: 1, transform: "scale(1) translate(0, 0)" }}
+            exit={{ opacity: 0, transform: "scale(0.5) translate(0, -10px)" }}
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             style={{ willChange: "transform, opacity" }}
             className="absolute left-3 right-3 top-12 border border-border bg-secondary shadow-lg"
@@ -381,8 +384,8 @@ export function HowItWorksSection() {
     <section className="bg-muted py-28 md:py-40">
       <div className="mx-auto max-w-450 px-8">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, transform: "translateY(20px)" }}
+          whileInView={{ opacity: 1, transform: "translateY(0)" }}
           viewport={{ once: true }}
           className="mb-20 text-center"
         >
@@ -398,8 +401,8 @@ export function HowItWorksSection() {
           {steps.map((step, index) => (
             <motion.div
               key={step.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, transform: "translateY(30px)" }}
+              whileInView={{ opacity: 1, transform: "translateY(0)" }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               className="border border-border bg-card"
