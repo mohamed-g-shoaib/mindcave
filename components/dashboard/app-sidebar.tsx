@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -51,6 +51,7 @@ interface AppSidebarProps {
 
 export function AppSidebar({ user }: AppSidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategoryId = searchParams.get("category");
   const { state } = useSidebar();
@@ -77,7 +78,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 size="lg"
-                render={<Link href="/dashboard" />}
+                onClick={() => router.push("/dashboard")}
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
               >
                 <MindCaveLogo className="size-6 shrink-0" />
@@ -98,7 +99,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
-                    render={<Link href="/dashboard" />}
+                    onClick={() => router.push("/dashboard")}
                     isActive={pathname === "/dashboard" && !currentCategoryId}
                     tooltip="All Bookmarks"
                   >
@@ -122,8 +123,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
                   categories.map((category) => (
                     <SidebarMenuItem key={category.id}>
                       <SidebarMenuButton
-                        render={
-                          <Link href={`/dashboard?category=${category.id}`} />
+                        onClick={() =>
+                          router.push(`/dashboard?category=${category.id}`)
                         }
                         isActive={currentCategoryId === category.id}
                         tooltip={category.name}
