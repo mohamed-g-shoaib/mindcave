@@ -1,46 +1,97 @@
-"use client";
+import { Suspense } from "react";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/dashboard/app-sidebar";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import { ReactNode, useState } from "react";
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { TopBar } from "@/components/dashboard/top-bar";
-import { CommandPalette } from "@/components/dashboard/command-palette";
-import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
-
-interface DashboardLayoutProps {
-  children: ReactNode;
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  avatar_url?: string;
 }
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [sidebarExpanded, setSidebarExpanded] = useState(true);
-  const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+async function getUser(): Promise<User> {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+
+  if (!data?.user) {
+    redirect("/login");
+  }
+
+  return {
+    id: data.user.id,
+    email: data.user.email || "",
+    name:
+      data.user.user_metadata?.full_name ||
+      data.user.email?.split("@")[0] ||
+      "User",
+    avatar_url: data.user.user_metadata?.avatar_url,
+  };
+}
+
+// Async component that fetches user data
+async function DashboardContent({ children }: { children: React.ReactNode }) {
+  const user = await getUser();
 
   return (
-    <div className="min-h-screen bg-background">
-      <Sidebar
-        isExpanded={sidebarExpanded}
-        onToggle={() => setSidebarExpanded(!sidebarExpanded)}
-      />
+    <SidebarProvider>
+      <AppSidebar user={user} />
+      <SidebarInset>
+        <Suspense
+          fallback={
+            <div className="flex h-14 items-center gap-2 border-b px-4">
+              <Skeleton className="h-6 w-6" />
+              <Skeleton className="h-4 w-32" />
+            </div>
+          }
+        >
+          <DashboardHeader />
+        </Suspense>
+        <main className="flex-1 p-4 md:p-6">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}
 
-      <div
-        className="transition-all duration-300"
-        style={{
-          marginLeft: sidebarExpanded ? "16rem" : "4rem",
-        }}
-      >
-        <TopBar
-          onAddBookmark={() => setAddBookmarkOpen(true)}
-          onOpenSearch={() => setSearchOpen(true)}
-        />
-
-        <main className="p-6">{children}</main>
+// Loading state for the entire dashboard
+function DashboardSkeleton({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-svh w-full">
+      {/* Sidebar skeleton */}
+      <div className="hidden w-64 border-r bg-sidebar md:block">
+        <div className="flex h-14 items-center gap-2 border-b px-4">
+          <Skeleton className="h-6 w-6" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+        <div className="space-y-2 p-4">
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-8 w-full" />
+          <Skeleton className="h-8 w-full" />
+        </div>
       </div>
-
-      <CommandPalette open={searchOpen} onOpenChange={setSearchOpen} />
-      <AddBookmarkSheet
-        open={addBookmarkOpen}
-        onOpenChange={setAddBookmarkOpen}
-      />
+      {/* Main content */}
+      <div className="flex flex-1 flex-col">
+        <div className="flex h-14 items-center gap-2 border-b px-4">
+          <Skeleton className="h-6 w-6" />
+          <Skeleton className="h-4 w-32" />
+        </div>
+        <main className="flex-1 p-4 md:p-6">{children}</main>
+      </div>
     </div>
+  );
+}
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={<DashboardSkeleton>{children}</DashboardSkeleton>}>
+      <DashboardContent>{children}</DashboardContent>
+    </Suspense>
   );
 }
