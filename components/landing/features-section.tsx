@@ -12,7 +12,7 @@ import {
   Briefcase01Icon,
   GlobalIcon,
   Tag01Icon,
-  Zap01Icon,
+  ZapIcon,
 } from "@hugeicons/core-free-icons";
 
 // Quick Add Demo - Shows the add bookmark animation
@@ -375,7 +375,7 @@ function SmartMetadataDemo() {
                 className="mt-2 flex items-center gap-2 text-xs text-orange-400"
               >
                 <HugeiconsIcon
-                  icon={Zap01Icon}
+                  icon={ZapIcon}
                   className="h-3 w-3 animate-pulse"
                 />
                 Fetching metadata...
