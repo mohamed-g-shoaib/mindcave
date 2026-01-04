@@ -28,7 +28,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuAction,
-  SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -102,29 +101,18 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <>
       <Sidebar collapsible="icon">
         {/* Header with Logo */}
-        <SidebarHeader className="h-14 border-b flex justify-center items-center p-0">
+        <SidebarHeader className="p-2">
           <SidebarMenu>
-            <SidebarMenuItem className="flex justify-center">
+            <SidebarMenuItem>
               <SidebarMenuButton
                 size="lg"
                 onClick={() => router.push("/dashboard")}
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-12 group-data-[collapsible=icon]:justify-center"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground [&_svg]:size-auto"
               >
-                <MindCaveLogo
-                  className="shrink-0"
-                  style={{
-                    width: isCollapsed ? "36px" : "48px",
-                    height: isCollapsed ? "36px" : "48px",
-                    transition: "all 0.3s ease-in-out",
-                  }}
-                />
-                {!isCollapsed && (
-                  <div className="grid flex-1 text-left text-sm leading-tight ml-2">
-                    <span className="truncate font-bold text-lg">
-                      Mind Cave
-                    </span>
-                  </div>
-                )}
+                <MindCaveLogo width={32} height={32} className="shrink-0" />
+                <span className="truncate font-bold text-lg group-data-[collapsible=icon]:hidden">
+                  Mind Cave
+                </span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
