@@ -1,31 +1,207 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  Link01Icon,
   FolderLibraryIcon,
-  GridViewIcon,
   Search01Icon,
+  GlobalIcon,
 } from "@hugeicons/core-free-icons";
+
+// Animated demo showing a scattered → organized transition
+function VaultDemo() {
+  const [isOrganized, setIsOrganized] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsOrganized((prev) => !prev);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const scatteredPositions = [
+    { x: 10, y: 5, rotate: -12 },
+    { x: 60, y: 15, rotate: 8 },
+    { x: 25, y: 50, rotate: -5 },
+    { x: 70, y: 45, rotate: 15 },
+    { x: 40, y: 75, rotate: -8 },
+    { x: 5, y: 70, rotate: 10 },
+  ];
+
+  const organizedPositions = [
+    { x: 8, y: 8, rotate: 0 },
+    { x: 54, y: 8, rotate: 0 },
+    { x: 8, y: 40, rotate: 0 },
+    { x: 54, y: 40, rotate: 0 },
+    { x: 8, y: 72, rotate: 0 },
+    { x: 54, y: 72, rotate: 0 },
+  ];
+
+  return (
+    <div className="relative h-48 w-full overflow-hidden border border-stone-700 bg-stone-900">
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <motion.div
+          key={i}
+          animate={{
+            left: `${
+              isOrganized ? organizedPositions[i].x : scatteredPositions[i].x
+            }%`,
+            top: `${
+              isOrganized ? organizedPositions[i].y : scatteredPositions[i].y
+            }%`,
+            rotate: isOrganized
+              ? organizedPositions[i].rotate
+              : scatteredPositions[i].rotate,
+          }}
+          transition={{ type: "spring", stiffness: 100, damping: 15 }}
+          className="absolute h-16 w-14 border border-stone-600 bg-stone-800 p-2"
+        >
+          <div className="h-2 w-8 bg-stone-600" />
+          <div className="mt-1 h-1.5 w-6 bg-stone-700" />
+          <HugeiconsIcon
+            icon={GlobalIcon}
+            className="mt-2 h-4 w-4 text-stone-500"
+          />
+        </motion.div>
+      ))}
+      <motion.div
+        animate={{ opacity: isOrganized ? 1 : 0 }}
+        className="absolute bottom-2 right-2 text-xs font-medium text-orange-400"
+      >
+        Organized ✓
+      </motion.div>
+    </div>
+  );
+}
+
+// Animated category sidebar demo
+function CategoriesDemo() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const categories = ["All", "Tech", "Design", "Learning"];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % categories.length);
+    }, 1500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="h-48 w-full overflow-hidden border border-stone-700 bg-stone-900 p-4">
+      <div className="mb-3 text-xs font-medium text-stone-500">CATEGORIES</div>
+      <div className="space-y-1">
+        {categories.map((cat, i) => (
+          <motion.div
+            key={cat}
+            animate={{
+              backgroundColor:
+                i === activeIndex ? "rgb(249 115 22 / 0.15)" : "transparent",
+              borderColor:
+                i === activeIndex ? "rgb(249 115 22 / 0.4)" : "transparent",
+            }}
+            className="flex items-center gap-2 border border-transparent px-3 py-2 text-sm"
+          >
+            <div
+              className={`h-2 w-2 ${
+                i === activeIndex ? "bg-orange-400" : "bg-stone-600"
+              }`}
+            />
+            <span
+              className={
+                i === activeIndex
+                  ? "font-medium text-stone-100"
+                  : "text-stone-400"
+              }
+            >
+              {cat}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Animated search demo
+function AccessDemo() {
+  const [isSearching, setIsSearching] = useState(false);
+  const [typing, setTyping] = useState("");
+
+  useEffect(() => {
+    const cycle = async () => {
+      setIsSearching(true);
+      setTyping("");
+      const text = "react";
+      for (let i = 0; i <= text.length; i++) {
+        setTyping(text.slice(0, i));
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      await new Promise((r) => setTimeout(r, 1500));
+      setIsSearching(false);
+      setTyping("");
+      await new Promise((r) => setTimeout(r, 2000));
+    };
+
+    const interval = setInterval(cycle, 5500);
+    cycle();
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="h-48 w-full overflow-hidden border border-stone-700 bg-stone-900 p-4">
+      <div className="flex items-center gap-2 border-b border-stone-700 pb-3">
+        <HugeiconsIcon icon={Search01Icon} className="h-4 w-4 text-stone-500" />
+        <span className="text-sm text-stone-300">{typing}</span>
+        <motion.span
+          animate={{ opacity: [1, 0] }}
+          transition={{ repeat: Infinity, duration: 0.8 }}
+          className="h-4 w-0.5 bg-orange-500"
+        />
+        <kbd className="ml-auto bg-stone-800 px-1.5 py-0.5 text-[10px] text-stone-500">
+          ⌘K
+        </kbd>
+      </div>
+      <AnimatePresence>
+        {isSearching && typing.length > 2 && (
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-3 space-y-2"
+          >
+            <div className="flex items-center gap-2 bg-stone-800/50 p-2">
+              <div className="h-6 w-6 bg-stone-700" />
+              <div>
+                <div className="text-xs font-medium text-stone-200">
+                  React Docs
+                </div>
+                <div className="text-[10px] text-stone-500">reactjs.org</div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 const pillars = [
   {
-    icon: FolderLibraryIcon,
     title: "Centralized",
-    description:
-      "All your important links in one secure place. No more scattered bookmarks across browsers and devices.",
+    description: "All your links in one organized vault",
+    Demo: VaultDemo,
   },
   {
-    icon: GridViewIcon,
     title: "Organized",
-    description:
-      "Custom categories with icons keep everything sorted. Find what you need instantly with smart search.",
+    description: "Custom categories to sort everything",
+    Demo: CategoriesDemo,
   },
   {
-    icon: Search01Icon,
     title: "Accessible",
-    description:
-      "Access your links from anywhere. Quick add, instant search, and one-click opens to your content.",
+    description: "Instant search finds anything fast",
+    Demo: AccessDemo,
   },
 ];
 
@@ -46,8 +222,8 @@ export function AboutSection() {
             Your Digital Vault
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-xl text-stone-400">
-            Mind Cave is more than bookmarks. It&apos;s a comprehensive system
-            to capture, organize, and access everything important on the web.
+            More than bookmarks. A complete system to capture and organize the
+            web.
           </p>
         </motion.div>
 
@@ -59,20 +235,15 @@ export function AboutSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group border border-stone-800 bg-stone-900/50 p-8 transition-colors hover:border-orange-500/30"
+              className="border border-stone-800 bg-stone-900/50"
             >
-              <div className="mb-6 flex h-14 w-14 items-center justify-center border border-stone-700 bg-stone-800 transition-colors group-hover:border-orange-500/50 group-hover:bg-orange-500/10">
-                <HugeiconsIcon
-                  icon={pillar.icon}
-                  className="h-7 w-7 text-stone-400 transition-colors group-hover:text-orange-400"
-                />
+              <pillar.Demo />
+              <div className="p-6">
+                <h3 className="mb-2 text-xl font-semibold text-stone-100">
+                  {pillar.title}
+                </h3>
+                <p className="text-stone-400">{pillar.description}</p>
               </div>
-              <h3 className="mb-3 text-2xl font-semibold text-stone-100">
-                {pillar.title}
-              </h3>
-              <p className="text-stone-400 leading-relaxed">
-                {pillar.description}
-              </p>
             </motion.div>
           ))}
         </div>
