@@ -27,7 +27,7 @@ function SaveDemo() {
       const link = "youtu.be/9B87lUEKLIw";
       for (let i = 0; i <= link.length; i++) {
         setUrl(link.slice(0, i));
-        await new Promise((r) => setTimeout(r, 50));
+        await new Promise((r) => setTimeout(r, 80));
       }
       await new Promise((r) => setTimeout(r, 400));
       setPhase("fetch");
