@@ -12,7 +12,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
         fontWeight: 700,
         fontStretch: "normal",
         fontSize: "94.078px",
-        fontFamily: "system-ui, sans-serif",
+        fontFamily: "var(--font-space-mono), monospace",
         textAlign: "center",
         writingMode: "horizontal-tb",
         direction: "ltr",
@@ -31,7 +31,7 @@ const SvgComponent = (props: SVGProps<SVGSVGElement>) => (
           fontWeight: 700,
           fontStretch: "normal",
           fontSize: "94.078px",
-          fontFamily: "system-ui, sans-serif",
+          fontFamily: "var(--font-space-mono), monospace",
           strokeWidth: 0.490762,
         }}
       >
