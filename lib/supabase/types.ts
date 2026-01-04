@@ -1,26 +1,22 @@
-import { Database } from "./database.types";
+import type { Database } from "./database.types";
 
-export type Category = Database["public"]["Tables"]["categories"]["Row"];
-export type CategoryInsert =
-  Database["public"]["Tables"]["categories"]["Insert"];
-export type CategoryUpdate =
-  Database["public"]["Tables"]["categories"]["Update"];
+type PublicSchema = Database["public"];
+type Tables = PublicSchema["Tables"];
 
-export type Bookmark = Database["public"]["Tables"]["bookmarks"]["Row"];
-export type BookmarkInsert =
-  Database["public"]["Tables"]["bookmarks"]["Insert"];
-export type BookmarkUpdate =
-  Database["public"]["Tables"]["bookmarks"]["Update"];
+export type Category = Tables["categories"]["Row"];
+export type CategoryInsert = Tables["categories"]["Insert"];
+export type CategoryUpdate = Tables["categories"]["Update"];
 
-export type UserPreferences =
-  Database["public"]["Tables"]["user_preferences"]["Row"];
-export type UserPreferencesInsert =
-  Database["public"]["Tables"]["user_preferences"]["Insert"];
-export type UserPreferencesUpdate =
-  Database["public"]["Tables"]["user_preferences"]["Update"];
+export type Bookmark = Tables["bookmarks"]["Row"];
+export type BookmarkInsert = Tables["bookmarks"]["Insert"];
+export type BookmarkUpdate = Tables["bookmarks"]["Update"];
+
+export type UserPreferences = Tables["user_preferences"]["Row"];
+export type UserPreferencesInsert = Tables["user_preferences"]["Insert"];
+export type UserPreferencesUpdate = Tables["user_preferences"]["Update"];
 
 export type MediaType = "youtube" | "vimeo" | "default";
 
-export interface BookmarkWithCategory extends Bookmark {
+export type BookmarkWithCategory = Bookmark & {
   category?: Category | null;
-}
+};
