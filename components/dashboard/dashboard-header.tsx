@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignIcon, Search01Icon } from "@hugeicons/core-free-icons";
@@ -27,6 +27,13 @@ export function DashboardHeader() {
 
   const [commandOpen, setCommandOpen] = useState(false);
   const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    setIsMac(/(Mac|iPhone|iPad|iPod)/i.test(navigator.platform));
+  }, []);
+
+  const shortcutKey = isMac ? "⌘" : "Ctrl";
 
   // Get current category name
   const currentCategory = categoryId
@@ -43,15 +50,25 @@ export function DashboardHeader() {
         {/* Breadcrumb */}
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>
-                {currentCategory || "All Bookmarks"}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
+            {currentCategory ? (
+              <>
+                <BreadcrumbItem className="hidden md:block">
+                  <BreadcrumbLink href="/dashboard">
+                    All Bookmarks
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>{currentCategory}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </>
+            ) : (
+              <BreadcrumbItem>
+                <BreadcrumbPage className="max-w-[120px] truncate">
+                  All Bookmarks
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            )}
           </BreadcrumbList>
         </Breadcrumb>
 
@@ -70,7 +87,7 @@ export function DashboardHeader() {
             <HugeiconsIcon icon={Search01Icon} className="h-4 w-4" />
             <span className="text-xs">Search...</span>
             <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 border bg-muted px-1.5 font-mono text-xs font-medium opacity-100 sm:flex">
-              <span className="text-xs">⌘</span>K
+              <span className="text-xs">{shortcutKey}</span>K
             </kbd>
           </Button>
 
