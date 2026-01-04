@@ -56,10 +56,10 @@ function VaultDemo() {
               : scatteredPositions[i].rotate,
           }}
           transition={{ type: "spring", stiffness: 100, damping: 15 }}
-          className="absolute h-16 w-14 border border-border bg-input p-2"
+          className="absolute h-16 w-14 border border-border bg-secondary p-2"
         >
-          <div className="h-2 w-8 bg-muted" />
-          <div className="mt-1 h-1.5 w-6 bg-muted/50" />
+          <div className="h-2 w-8 bg-border" />
+          <div className="mt-1 h-1.5 w-6 bg-border/50" />
           <HugeiconsIcon
             icon={GlobalIcon}
             className="mt-2 h-4 w-4 text-muted-foreground"

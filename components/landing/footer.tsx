@@ -33,7 +33,7 @@ export function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-primary">
               Product
             </h3>
             <ul className="space-y-4 text-base text-muted-foreground">
@@ -52,7 +52,7 @@ export function Footer() {
 
           {/* Company */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-primary">
               Company
             </h3>
             <ul className="space-y-4 text-base text-muted-foreground">
@@ -71,7 +71,7 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-primary">
               Legal
             </h3>
             <ul className="space-y-4 text-base text-muted-foreground">
@@ -90,7 +90,7 @@ export function Footer() {
 
           {/* Social Links - Right Side */}
           <div>
-            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-foreground">
+            <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-primary">
               Connect
             </h3>
             <div className="flex items-center gap-4">

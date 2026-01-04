@@ -109,13 +109,11 @@ function OrganizeDemo() {
             key={cat}
             animate={{
               backgroundColor:
-                selected === i
-                  ? "rgb(249 115 22 / 0.2)"
-                  : "rgb(68 64 60 / 0.5)",
+                selected === i ? "rgb(249 115 22 / 0.2)" : "transparent",
               borderColor:
-                selected === i ? "rgb(249 115 22 / 0.5)" : "rgb(87 83 78)",
+                selected === i ? "rgb(249 115 22 / 0.5)" : "currentColor",
             }}
-            className="border px-3 py-1.5 text-xs text-foreground"
+            className="border border-border px-3 py-1.5 text-xs text-foreground"
           >
             {cat}
           </motion.button>
@@ -210,11 +208,9 @@ function AccessDemo() {
       <motion.div
         animate={{
           scale: clicked ? [1, 0.95, 1] : 1,
-          backgroundColor: clicked
-            ? "rgb(249 115 22 / 0.2)"
-            : "rgb(68 64 60 / 0.5)",
+          backgroundColor: clicked ? "rgb(249 115 22 / 0.2)" : "transparent",
         }}
-        className="flex items-center gap-2 border border-border px-4 py-2"
+        className="flex items-center gap-2 border border-border bg-secondary px-4 py-2"
       >
         <HugeiconsIcon
           icon={GlobalIcon}
