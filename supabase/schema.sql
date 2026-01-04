@@ -27,6 +27,7 @@ create table if not exists public.bookmarks (
   description text,
   url text not null,
   og_image_url text, -- Cached OpenGraph image
+  favicon_url text, -- Website favicon
   media_type text check (media_type in ('youtube', 'vimeo', 'default')),
   media_embed_id text, -- YouTube video ID or Vimeo ID
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
