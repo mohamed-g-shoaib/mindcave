@@ -38,24 +38,25 @@ const testimonials = [
 export function TestimonialsSection() {
   return (
     <section
-      className="overflow-hidden py-24 md:py-32"
+      id="testimonials"
+      className="overflow-hidden py-28 md:py-40"
       style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
     >
-      <div className="container mx-auto px-4">
-        <div className="mb-16 text-center">
-          <h2 className="text-3xl font-bold text-stone-100 md:text-4xl lg:text-5xl">
+      <div className="mx-auto max-w-[1800px] px-8">
+        <div className="mb-20 text-center">
+          <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
             Loved by Users
           </h2>
-          <p className="mt-4 text-lg text-stone-400">
+          <p className="mt-6 text-xl text-stone-400">
             See what people are saying about Mind Cave
           </p>
         </div>
 
         {/* Marquee */}
         <div className="relative">
-          <div className="flex gap-6 overflow-hidden">
+          <div className="flex gap-8 overflow-hidden">
             <motion.div
-              className="flex shrink-0 gap-6"
+              className="flex shrink-0 gap-8"
               animate={{
                 x: [0, -1920],
               }}
@@ -71,13 +72,13 @@ export function TestimonialsSection() {
               {[...testimonials, ...testimonials].map((testimonial, index) => (
                 <div
                   key={index}
-                  className="w-80 shrink-0 rounded-lg border border-stone-800 bg-stone-900 p-6"
+                  className="w-96 shrink-0 border border-stone-800 bg-stone-900 p-8"
                 >
-                  <p className="mb-4 text-sm text-stone-300">
+                  <p className="mb-6 text-base text-stone-300">
                     "{testimonial.content}"
                   </p>
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-orange-500/20" />
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 bg-orange-500/20" />
                     <div>
                       <p className="font-medium text-stone-200">
                         {testimonial.name}
@@ -94,14 +95,14 @@ export function TestimonialsSection() {
 
           {/* Gradient overlays */}
           <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-32"
+            className="pointer-events-none absolute inset-y-0 left-0 w-40"
             style={{
               background:
                 "linear-gradient(to right, oklch(0.216 0.006 56.043), transparent)",
             }}
           />
           <div
-            className="pointer-events-none absolute inset-y-0 right-0 w-32"
+            className="pointer-events-none absolute inset-y-0 right-0 w-40"
             style={{
               background:
                 "linear-gradient(to left, oklch(0.216 0.006 56.043), transparent)",
