@@ -14,7 +14,7 @@ export function FeaturesSection() {
       className="py-28 md:py-40"
       style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
     >
-      <div className="mx-auto max-w-[1800px] px-8">
+      <div className="mx-auto max-w-450 px-8">
         <div className="mb-20 text-center">
           <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
             Powerful Features

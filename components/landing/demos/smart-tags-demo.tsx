@@ -31,7 +31,7 @@ export function SmartTagsDemo() {
           />
         </div>
 
-        <div className="mt-6 flex min-h-[28px] flex-wrap gap-2">
+        <div className="mt-6 flex min-h-7 flex-wrap gap-2">
           <AnimatePresence>
             {tagsVisible && (
               <>

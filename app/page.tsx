@@ -1,5 +1,7 @@
 import { Navbar } from "@/components/landing/navbar";
 import { HeroSection } from "@/components/landing/hero-section";
+import { AboutSection } from "@/components/landing/about-section";
+import { HowItWorksSection } from "@/components/landing/how-it-works-section";
 import { FeaturesSection } from "@/components/landing/features-section";
 import { TestimonialsSection } from "@/components/landing/testimonials-section";
 import { FAQSection } from "@/components/landing/faq-section";
@@ -16,6 +18,8 @@ export default function LandingPage() {
 
       <main className="pt-20">
         <HeroSection />
+        <AboutSection />
+        <HowItWorksSection />
         <FeaturesSection />
         <TestimonialsSection />
         <FAQSection />
