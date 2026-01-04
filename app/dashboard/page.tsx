@@ -8,6 +8,7 @@ import { Link01Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
 import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
+import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useBookmarks, useDeleteBookmark } from "@/hooks/use-bookmarks";
@@ -25,6 +26,7 @@ function DashboardContent() {
 
   const [editingBookmark, setEditingBookmark] =
     useState<BookmarkWithCategory | null>(null);
+  const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
 
   // Get current category name
   const currentCategory = categoryId
@@ -104,7 +106,7 @@ function DashboardContent() {
                 Get started by adding your first bookmark
               </p>
             </div>
-            <Button className="mt-2">
+            <Button className="mt-2" onClick={() => setAddBookmarkOpen(true)}>
               <HugeiconsIcon icon={PlusSignIcon} className="mr-2 h-4 w-4" />
               Add Bookmark
             </Button>
@@ -124,6 +126,10 @@ function DashboardContent() {
         )}
       </div>
 
+      <AddBookmarkSheet
+        open={addBookmarkOpen}
+        onOpenChange={setAddBookmarkOpen}
+      />
       <EditBookmarkSheet
         open={!!editingBookmark}
         onOpenChange={(open) => !open && setEditingBookmark(null)}
