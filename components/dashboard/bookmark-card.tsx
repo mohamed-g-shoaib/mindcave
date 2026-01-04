@@ -1,11 +1,32 @@
+"use client";
+
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Link01Icon,
   Edit02Icon,
   Delete02Icon,
   Copy01Icon,
+  MoreVerticalIcon,
+  ArrowUpRight01Icon,
 } from "@hugeicons/core-free-icons";
+
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
 interface BookmarkCardProps {
@@ -25,10 +46,24 @@ export function BookmarkCard({
     window.open(bookmark.url, "_blank", "noopener,noreferrer");
   };
 
+  // Check if it's a YouTube video
+  const isYouTube =
+    bookmark.media_type === "youtube" && bookmark.media_embed_id;
+
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-lg border bg-card transition-shadow hover:shadow-md">
-      {/* OG Image */}
-      {bookmark.og_image_url ? (
+    <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md">
+      {/* Media Section */}
+      {isYouTube ? (
+        <div className="aspect-video w-full overflow-hidden bg-muted">
+          <iframe
+            src={`https://www.youtube.com/embed/${bookmark.media_embed_id}`}
+            title={bookmark.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="h-full w-full"
+          />
+        </div>
+      ) : bookmark.og_image_url ? (
         <div className="aspect-video w-full overflow-hidden bg-muted">
           <img
             src={bookmark.og_image_url}
@@ -37,7 +72,7 @@ export function BookmarkCard({
           />
         </div>
       ) : (
-        <div className="aspect-video w-full bg-muted flex items-center justify-center">
+        <div className="flex aspect-video w-full items-center justify-center bg-muted">
           <HugeiconsIcon
             icon={Link01Icon}
             className="h-12 w-12 text-muted-foreground"
@@ -46,54 +81,61 @@ export function BookmarkCard({
       )}
 
       {/* Content */}
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="font-semibold line-clamp-2">{bookmark.title}</h3>
-        {bookmark.description && (
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-            {bookmark.description}
-          </p>
-        )}
-
-        {/* Category Badge */}
-        {bookmark.category && (
-          <div className="mt-3">
-            <span className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-              {bookmark.category.name}
-            </span>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="mt-4 flex items-center gap-2">
-          <Button onClick={handleOpen} size="sm" className="flex-1">
-            Open
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onEdit(bookmark.id)}
-            title="Edit"
-          >
-            <HugeiconsIcon icon={Edit02Icon} className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onCopy(bookmark.url)}
-            title="Copy Link"
-          >
-            <HugeiconsIcon icon={Copy01Icon} className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => onDelete(bookmark.id)}
-            title="Delete"
-          >
-            <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
-          </Button>
+      <CardHeader className="flex-1 pb-2">
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="line-clamp-2 text-base">
+            {bookmark.title}
+          </CardTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+                />
+              }
+            >
+              <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onEdit(bookmark.id)}>
+                <HugeiconsIcon icon={Edit02Icon} className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onCopy(bookmark.url)}>
+                <HugeiconsIcon icon={Copy01Icon} className="mr-2 h-4 w-4" />
+                Copy Link
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => onDelete(bookmark.id)}
+                className="text-destructive focus:text-destructive"
+              >
+                <HugeiconsIcon icon={Delete02Icon} className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-      </div>
-    </article>
+        {bookmark.description && (
+          <CardDescription className="line-clamp-2">
+            {bookmark.description}
+          </CardDescription>
+        )}
+      </CardHeader>
+
+      <CardFooter className="flex items-center justify-between gap-2 pt-0">
+        {bookmark.category ? (
+          <Badge variant="secondary">{bookmark.category.name}</Badge>
+        ) : (
+          <span />
+        )}
+        <Button onClick={handleOpen} size="sm" className="gap-1">
+          Open
+          <HugeiconsIcon icon={ArrowUpRight01Icon} className="h-3 w-3" />
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
