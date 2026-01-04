@@ -9,8 +9,12 @@ import {
   Home01Icon,
   LogoutIcon,
   Settings01Icon,
+  Edit02Icon,
+  Delete02Icon,
+  MoreVerticalIcon,
 } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
+import { toast } from "sonner";
 
 import {
   Sidebar,
@@ -23,6 +27,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuAction,
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -36,9 +41,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import MindCaveLogo from "@/components/mind-cave-logo";
-import { useCategories } from "@/hooks/use-categories";
+import { useCategories, useDeleteCategory } from "@/hooks/use-categories";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
 import { AddCategorySheet } from "@/components/dashboard/add-category-sheet";
+import { EditCategorySheet } from "@/components/dashboard/edit-category-sheet";
+import type { Category } from "@/lib/supabase/types";
 
 interface AppSidebarProps {
   user: {
@@ -59,8 +66,30 @@ export function AppSidebar({ user }: AppSidebarProps) {
 
   const { data: categories = [], isLoading } = useCategories();
   const [addCategoryOpen, setAddCategoryOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const deleteCategory = useDeleteCategory();
 
   const isCollapsed = state === "collapsed";
+
+  const handleDeleteCategory = async (id: string, name: string) => {
+    if (
+      !confirm(
+        `Are you sure you want to delete "${name}"? Bookmarks in this category will become uncategorized.`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      await deleteCategory.mutateAsync(id);
+      toast.success("Category deleted successfully");
+      if (currentCategoryId === id) {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Failed to delete category");
+    }
+  };
 
   const handleSignOut = async () => {
     const res = await fetch("/api/auth/signout", { method: "POST" });
@@ -73,20 +102,29 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <>
       <Sidebar collapsible="icon">
         {/* Header with Logo */}
-        <SidebarHeader className="h-14 border-b p-1 flex justify-center">
+        <SidebarHeader className="h-14 border-b flex justify-center items-center p-0">
           <SidebarMenu>
-            <SidebarMenuItem>
+            <SidebarMenuItem className="flex justify-center">
               <SidebarMenuButton
                 size="lg"
                 onClick={() => router.push("/dashboard")}
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:justify-center"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-12 group-data-[collapsible=icon]:justify-center"
               >
-                <MindCaveLogo className="size-6 shrink-0" />
-                <div className="grid flex-1 text-left text-sm leading-tight ml-1 group-data-[collapsible=icon]:hidden">
-                  <span className="truncate font-bold text-base">
-                    Mind Cave
-                  </span>
-                </div>
+                <MindCaveLogo
+                  className="shrink-0"
+                  style={{
+                    width: isCollapsed ? "36px" : "48px",
+                    height: isCollapsed ? "36px" : "48px",
+                    transition: "all 0.3s ease-in-out",
+                  }}
+                />
+                {!isCollapsed && (
+                  <div className="grid flex-1 text-left text-sm leading-tight ml-2">
+                    <span className="truncate font-bold text-lg">
+                      Mind Cave
+                    </span>
+                  </div>
+                )}
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -132,9 +170,50 @@ export function AppSidebar({ user }: AppSidebarProps) {
                         <HugeiconsIcon
                           icon={getCategoryIcon(category.icon)}
                           className="h-4 w-4"
+                          style={
+                            category.color
+                              ? { color: category.color }
+                              : undefined
+                          }
                         />
                         <span>{category.name}</span>
                       </SidebarMenuButton>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger
+                          render={
+                            <SidebarMenuAction showOnHover tooltip="Actions" />
+                          }
+                        >
+                          <HugeiconsIcon
+                            icon={MoreVerticalIcon}
+                            className="h-4 w-4"
+                          />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right" align="start">
+                          <DropdownMenuItem
+                            onClick={() => setEditingCategory(category)}
+                          >
+                            <HugeiconsIcon
+                              icon={Edit02Icon}
+                              className="mr-2 h-4 w-4"
+                            />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleDeleteCategory(category.id, category.name)
+                            }
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <HugeiconsIcon
+                              icon={Delete02Icon}
+                              className="mr-2 h-4 w-4"
+                            />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </SidebarMenuItem>
                   ))
                 )}
@@ -220,6 +299,11 @@ export function AppSidebar({ user }: AppSidebarProps) {
       <AddCategorySheet
         open={addCategoryOpen}
         onOpenChange={setAddCategoryOpen}
+      />
+      <EditCategorySheet
+        open={!!editingCategory}
+        onOpenChange={(open) => !open && setEditingCategory(null)}
+        category={editingCategory}
       />
     </>
   );
