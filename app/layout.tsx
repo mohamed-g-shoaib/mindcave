@@ -42,7 +42,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${spaceMono.variable}`}
     >
-      <body className={`${spaceMono.className} antialiased`}>
+      <body
+        suppressHydrationWarning
+        className={`${spaceMono.className} antialiased`}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
