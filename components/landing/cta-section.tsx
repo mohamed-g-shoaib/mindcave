@@ -9,7 +9,7 @@ export function CTASection() {
       style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
     >
       <div className="mx-auto max-w-[1800px] px-8">
-        <div className="relative overflow-hidden border border-orange-500/20 bg-gradient-to-br from-orange-500/10 to-orange-900/5 p-16 text-center md:p-24">
+        <div className="relative overflow-hidden border border-orange-500/20 bg-linear-to-br from-orange-500/10 to-orange-900/5 p-16 text-center md:p-24">
           <div className="relative z-10 mx-auto max-w-3xl">
             <h2 className="text-4xl font-bold text-stone-100 md:text-5xl lg:text-6xl">
               Start Organizing Today

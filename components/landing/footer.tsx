@@ -7,7 +7,7 @@ export function Footer() {
       className="border-t border-stone-800 py-16"
       style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
     >
-      <div className="mx-auto max-w-[1800px] px-8">
+      <div className="mx-auto max-w-450 px-8">
         <div className="grid gap-12 md:grid-cols-4">
           {/* Brand */}
           <div className="md:col-span-1">
@@ -81,7 +81,7 @@ export function Footer() {
         </div>
 
         <div className="mt-16 border-t border-stone-800 pt-10 text-center text-base text-stone-600">
-          <p>© {new Date().getFullYear()} Mind Cave. All rights reserved.</p>
+          <p>© 2026 Mind Cave. All rights reserved.</p>
         </div>
       </div>
     </footer>

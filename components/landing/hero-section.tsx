@@ -9,7 +9,7 @@ export function HeroSection() {
       className="py-28 md:py-40"
       style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
     >
-      <div className="mx-auto max-w-[1800px] px-8">
+      <div className="mx-auto max-w-450 px-8">
         <div className="mx-auto max-w-5xl text-center">
           <h1 className="text-5xl font-bold leading-tight text-stone-100 md:text-6xl lg:text-7xl xl:text-8xl">
             Your Digital Library,
@@ -113,7 +113,7 @@ export function HeroSection() {
                       key={i}
                       className="overflow-hidden border border-stone-700"
                     >
-                      <div className="aspect-video bg-gradient-to-br from-stone-700 to-stone-800" />
+                      <div className="aspect-video bg-linear-to-br from-stone-700 to-stone-800" />
                       <div className="p-4">
                         <div className="h-4 w-3/4 bg-stone-600" />
                         <div className="mt-2 h-3 w-1/2 bg-stone-700" />

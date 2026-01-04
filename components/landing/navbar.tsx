@@ -17,7 +17,7 @@ export function Navbar() {
         backdropFilter: "blur(12px)",
       }}
     >
-      <div className="mx-auto flex h-20 max-w-[1800px] items-center justify-between px-8">
+      <div className="mx-auto flex h-20 max-w-450 items-center justify-between px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <MindCaveLogo className="h-10 w-10" />
