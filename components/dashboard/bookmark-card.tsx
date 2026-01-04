@@ -156,7 +156,7 @@ export function BookmarkCard({
         )}
       </CardHeader>
 
-      <CardFooter className="flex items-center justify-between gap-2 pt-0 px-4">
+      <CardFooter className="flex items-center justify-between gap-2 p-4">
         {bookmark.category ? (
           <Badge variant="secondary">{bookmark.category.name}</Badge>
         ) : (
