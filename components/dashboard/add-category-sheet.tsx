@@ -119,7 +119,7 @@ export function AddCategorySheet({
             {/* Color */}
             <div className="space-y-2">
               <Label htmlFor="color">Color (Optional)</Label>
-              <div className="flex gap-2">
+              <div className="flex gap-0 border">
                 <input
                   id="color"
                   type="color"
@@ -127,7 +127,7 @@ export function AddCategorySheet({
                   onChange={(e) =>
                     setFormData({ ...formData, color: e.target.value })
                   }
-                  className="h-10 w-20 cursor-pointer border"
+                  className="h-8 w-16 cursor-pointer"
                 />
                 <Input
                   value={formData.color}
@@ -135,7 +135,7 @@ export function AddCategorySheet({
                     setFormData({ ...formData, color: e.target.value })
                   }
                   placeholder="#ff6b35"
-                  className="flex-1"
+                  className="flex-1 border-0"
                 />
               </div>
             </div>
