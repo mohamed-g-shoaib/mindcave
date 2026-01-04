@@ -127,6 +127,8 @@ export function AddCategorySheet({
                   onChange={(e) =>
                     setFormData({ ...formData, color: e.target.value })
                   }
+                  aria-label="Category color picker"
+                  title="Category color picker"
                   className="h-8 w-16 cursor-pointer"
                 />
                 <Input
