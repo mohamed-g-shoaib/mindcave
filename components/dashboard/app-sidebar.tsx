@@ -180,9 +180,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       </SidebarMenuButton>
                       <DropdownMenu>
                         <DropdownMenuTrigger
-                          render={
-                            <SidebarMenuAction showOnHover tooltip="Actions" />
-                          }
+                          render={<SidebarMenuAction showOnHover />}
                         >
                           <HugeiconsIcon
                             icon={MoreVerticalIcon}
