@@ -144,7 +144,12 @@ export function AddBookmarkSheet({
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue />
+                  <SelectValue>
+                    {formData.category_id
+                      ? categories.find((c) => c.id === formData.category_id)
+                          ?.name
+                      : "Uncategorized"}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="uncategorized">Uncategorized</SelectItem>
