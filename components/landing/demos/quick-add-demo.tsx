@@ -34,7 +34,7 @@ export function QuickAddDemo() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex h-full items-center justify-center bg-[url('/grid-pattern.svg')] bg-repeat opacity-50"
+            className="flex h-full items-center justify-center"
           >
             <motion.button
               whileHover={{ scale: 1.05 }}
