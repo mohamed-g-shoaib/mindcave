@@ -5,110 +5,173 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Search01Icon,
-  BookOpen01Icon,
-  GlobalIcon,
+  WhatsappIcon,
+  MessengerIcon,
 } from "@hugeicons/core-free-icons";
 
 export function SearchDemo() {
+  const [phase, setPhase] = useState<"hint" | "opening" | "typing" | "results">(
+    "hint"
+  );
   const [query, setQuery] = useState("");
-  const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    const chars = "docs";
-    let i = 0;
-    const typeInterval = setInterval(() => {
-      if (i <= chars.length) {
-        setQuery(chars.slice(0, i));
-        if (i >= 1) setShowResults(true);
-        i++;
-      } else {
-        setTimeout(() => {
-          setQuery("");
-          setShowResults(false);
-          i = 0;
-        }, 2000);
-      }
-    }, 200);
+    const cycle = async () => {
+      // Reset
+      setPhase("hint");
+      setQuery("");
+      await new Promise((r) => setTimeout(r, 1200));
 
-    return () => clearInterval(typeInterval);
+      // Open command box
+      setPhase("opening");
+      await new Promise((r) => setTimeout(r, 400));
+
+      // Type
+      setPhase("typing");
+      const text = "socials";
+      for (let i = 0; i <= text.length; i++) {
+        setQuery(text.slice(0, i));
+        await new Promise((r) => setTimeout(r, 80));
+      }
+      await new Promise((r) => setTimeout(r, 300));
+
+      // Show results
+      setPhase("results");
+      await new Promise((r) => setTimeout(r, 2500));
+    };
+
+    const interval = setInterval(cycle, 6000);
+    cycle();
+    return () => clearInterval(interval);
   }, []);
 
-  return (
-    <div className="h-full min-h-56 overflow-hidden border border-border bg-card p-5">
-      <div className="relative flex items-center gap-2 border-b border-border pb-4">
-        <HugeiconsIcon
-          icon={Search01Icon}
-          className="h-5 w-5 text-muted-foreground"
-        />
-        <span className="text-lg text-foreground">{query}</span>
-        <motion.span
-          animate={{ opacity: [1, 0] }}
-          transition={{ repeat: Infinity, duration: 0.8 }}
-          className="h-6 w-0.5 bg-primary"
-        />
-        <div className="ml-auto flex items-center gap-1">
-          <kbd className="hidden h-5 items-center bg-input px-1.5 text-[10px] font-medium text-muted-foreground sm:inline-flex">
-            CTRL
-          </kbd>
-          <kbd className="hidden h-5 items-center bg-input px-1.5 text-[10px] font-medium text-muted-foreground sm:inline-flex">
-            K
-          </kbd>
-        </div>
-      </div>
+  const isOpen = phase !== "hint";
 
-      <div className="mt-4 space-y-2">
-        <AnimatePresence>
-          {showResults ? (
-            <>
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center gap-3 bg-secondary p-2"
-              >
-                <div className="flex h-8 w-8 items-center justify-center bg-input">
-                  <HugeiconsIcon
-                    icon={BookOpen01Icon}
-                    className="h-4 w-4 text-muted-foreground"
+  return (
+    <div className="relative flex h-full min-h-56 items-center justify-center overflow-hidden border border-border bg-card p-5">
+      {/* Keyboard shortcut hint (centered initially) */}
+      <AnimatePresence>
+        {phase === "hint" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transform: "scale(0.8)" }}
+            transition={{ duration: 0.2 }}
+            style={{ willChange: "transform, opacity" }}
+            className="flex items-center gap-1"
+          >
+            <kbd className="flex h-6 items-center bg-input px-2 text-xs font-medium text-muted-foreground">
+              ⌘
+            </kbd>
+            <kbd className="flex h-6 items-center bg-input px-2 text-xs font-medium text-muted-foreground">
+              K
+            </kbd>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Command box */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, transform: "scale(0.9) translateY(10px)" }}
+            animate={{ opacity: 1, transform: "scale(1) translateY(0)" }}
+            exit={{ opacity: 0, transform: "scale(0.9)" }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            style={{ willChange: "transform, opacity" }}
+            className="absolute inset-4 flex flex-col border border-border bg-card shadow-lg"
+          >
+            {/* Search input */}
+            <div className="flex items-center border-b border-border px-4 py-3">
+              <HugeiconsIcon
+                icon={Search01Icon}
+                className="mr-3 h-5 w-5 text-muted-foreground lg:hidden xl:block"
+              />
+              <div className="flex h-5 flex-1 items-center gap-px lg:justify-center xl:justify-start">
+                <span className="text-base text-foreground">{query}</span>
+                {(phase === "typing" || phase === "opening") && (
+                  <motion.span
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ repeat: Infinity, duration: 0.8 }}
+                    className="h-5 w-0.5 bg-primary"
                   />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-foreground">
-                    Documentation
-                  </div>
-                  <div className="text-xs text-muted-foreground">Category</div>
-                </div>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ delay: 0.1 }}
-                className="flex items-center gap-3 p-2"
-              >
-                <div className="flex h-8 w-8 items-center justify-center bg-input">
-                  <HugeiconsIcon
-                    icon={GlobalIcon}
-                    className="h-4 w-4 text-muted-foreground"
-                  />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-muted-foreground">
-                    Next.js Docs
-                  </div>
-                  <div className="text-xs text-muted-foreground/60">
-                    nextjs.org
-                  </div>
-                </div>
-              </motion.div>
-            </>
-          ) : (
-            <div className="py-8 text-center text-xs text-muted-foreground/60">
-              Type to search...
+                )}
+              </div>
+              <kbd className="flex h-5 items-center bg-input px-1.5 text-[10px] font-medium text-muted-foreground lg:hidden xl:flex">
+                ESC
+              </kbd>
             </div>
-          )}
-        </AnimatePresence>
-      </div>
+
+            {/* Results area */}
+            <div className="flex-1 overflow-hidden p-2">
+              <AnimatePresence>
+                {phase === "results" && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    style={{ willChange: "opacity" }}
+                    className="space-y-1"
+                  >
+                    <div className="px-2 py-1 text-xs text-muted-foreground">
+                      Results
+                    </div>
+                    <motion.div
+                      initial={{ opacity: 0, transform: "translateX(-10px)" }}
+                      animate={{ opacity: 1, transform: "translateX(0)" }}
+                      transition={{ delay: 0.1 }}
+                      style={{ willChange: "transform, opacity" }}
+                      className="flex items-center gap-2 bg-primary/10 p-2"
+                    >
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-green-500/20 lg:h-8 lg:w-8">
+                        <HugeiconsIcon
+                          icon={WhatsappIcon}
+                          className="h-3.5 w-3.5 text-green-500 lg:h-4 lg:w-4"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-medium text-foreground">
+                          WhatsApp
+                        </div>
+                        <div className="truncate text-xs text-muted-foreground">
+                          whatsapp.com
+                        </div>
+                      </div>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, transform: "translateX(-10px)" }}
+                      animate={{ opacity: 1, transform: "translateX(0)" }}
+                      transition={{ delay: 0.2 }}
+                      style={{ willChange: "transform, opacity" }}
+                      className="flex items-center gap-2 p-2"
+                    >
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-blue-500/20 lg:h-8 lg:w-8">
+                        <HugeiconsIcon
+                          icon={MessengerIcon}
+                          className="h-3.5 w-3.5 text-blue-500 lg:h-4 lg:w-4"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm text-muted-foreground">
+                          Messenger
+                        </div>
+                        <div className="truncate text-xs text-muted-foreground/60">
+                          messenger.com
+                        </div>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+                {(phase === "opening" || phase === "typing") &&
+                  query === "" && (
+                    <div className="flex h-full items-center justify-center py-8 text-xs text-muted-foreground/60">
+                      Type to search...
+                    </div>
+                  )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
