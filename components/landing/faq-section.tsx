@@ -67,7 +67,7 @@ export function FAQSection() {
 
   return (
     <section id="faq" className="bg-background py-28 md:py-40">
-      <div className="mx-auto max-w-4xl px-8">
+      <div className="mx-auto max-w-4xl px-4 sm:px-8">
         <div className="mb-20 text-center">
           <h2 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             Frequently Asked Questions
