@@ -14,7 +14,7 @@ const mockBookmark = {
 
 export function QuickAddDemo() {
   const [phase, setPhase] = useState<
-    "idle" | "click" | "popup" | "saving" | "saved"
+    "idle" | "click" | "popup" | "saving" | "saved" | "success"
   >("idle");
 
   useEffect(() => {
@@ -28,14 +28,16 @@ export function QuickAddDemo() {
       setPhase("saving");
       await new Promise((r) => setTimeout(r, 800));
       setPhase("saved");
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 1000));
+      setPhase("success");
+      await new Promise((r) => setTimeout(r, 1000));
     };
     const interval = setInterval(cycle, 6500);
     cycle();
     return () => clearInterval(interval);
   }, []);
 
-  const showCard = phase === "saved";
+  const showCard = phase === "saved" || phase === "success";
 
   return (
     <div className="relative h-full min-h-56 overflow-hidden border border-border bg-card">
@@ -104,11 +106,16 @@ export function QuickAddDemo() {
           ) : (
             <motion.div
               key="card"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{ willChange: "opacity" }}
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{
+                duration: 0.4,
+                type: "spring",
+                stiffness: 100,
+                damping: 15,
+              }}
+              style={{ willChange: "opacity, transform" }}
               className="space-y-3"
             >
               <div className="text-xs font-medium text-muted-foreground">
