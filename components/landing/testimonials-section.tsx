@@ -62,7 +62,7 @@ export function TestimonialsSection() {
       id="testimonials"
       className="overflow-hidden bg-background py-28 md:py-40"
     >
-      <div className="mx-auto max-w-450 px-8">
+      <div className="mx-auto max-w-350 px-4 sm:px-8">
         <div className="mb-20 text-center">
           <h2 className="text-4xl font-bold text-foreground md:text-5xl lg:text-6xl">
             Loved by Users
