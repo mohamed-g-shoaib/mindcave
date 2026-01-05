@@ -60,7 +60,7 @@ export function QuickAddDemo() {
         {/* Extension Icon */}
         <motion.div
           animate={{
-            scale: phase === "click" ? [1, 0.8, 1] : 1,
+            transform: phase === "click" ? "scale(0.8)" : "scale(1)",
           }}
           transition={{ duration: 0.2 }}
           style={{ willChange: "transform" }}
