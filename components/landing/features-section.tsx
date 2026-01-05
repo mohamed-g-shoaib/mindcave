@@ -71,7 +71,11 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+              <LazyRender
+                minHeight={224}
+                placeholder={<AnimationSkeleton />}
+                className="h-full"
+              >
                 <QuickAddDemo />
               </LazyRender>
             </div>
@@ -94,7 +98,11 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+              <LazyRender
+                minHeight={224}
+                placeholder={<AnimationSkeleton />}
+                className="h-full"
+              >
                 <CategoryDemo />
               </LazyRender>
             </div>
@@ -117,7 +125,11 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+              <LazyRender
+                minHeight={224}
+                placeholder={<AnimationSkeleton />}
+                className="h-full"
+              >
                 <SearchDemo />
               </LazyRender>
             </div>
@@ -140,7 +152,11 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+              <LazyRender
+                minHeight={224}
+                placeholder={<AnimationSkeleton />}
+                className="h-full"
+              >
                 <SmartMetadataDemo />
               </LazyRender>
             </div>
@@ -163,7 +179,11 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+              <LazyRender
+                minHeight={224}
+                placeholder={<AnimationSkeleton />}
+                className="h-full"
+              >
                 <ViewModesDemo />
               </LazyRender>
             </div>
