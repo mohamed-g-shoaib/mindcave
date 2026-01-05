@@ -1,6 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, animate } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { QuoteUpIcon, QuoteDownIcon } from "@hugeicons/core-free-icons";
 
 const testimonials = [
   {
@@ -36,6 +39,24 @@ const testimonials = [
 ];
 
 export function TestimonialsSection() {
+  const x = useMotionValue(0);
+  const animationRef = useRef<any>(null);
+
+  useEffect(() => {
+    animationRef.current = animate(x, -1920, {
+      duration: 40,
+      ease: "linear",
+      repeat: Infinity,
+      repeatType: "loop",
+      repeatDelay: 0,
+    });
+
+    return () => animationRef.current?.stop();
+  }, [x]);
+
+  const handleMouseEnter = () => animationRef.current?.pause();
+  const handleMouseLeave = () => animationRef.current?.play();
+
   return (
     <section
       id="testimonials"
@@ -56,28 +77,37 @@ export function TestimonialsSection() {
           <div className="flex gap-8 overflow-hidden">
             <motion.div
               className="flex shrink-0 gap-8"
-              animate={{
-                x: [0, -1920],
-              }}
-              transition={{
-                x: {
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 40,
-                  ease: "linear",
-                },
-              }}
+              style={{ x, willChange: "transform" }}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onTouchStart={handleMouseEnter}
+              onTouchEnd={handleMouseLeave}
             >
               {[...testimonials, ...testimonials].map((testimonial, index) => (
                 <div
                   key={index}
-                  className="w-96 shrink-0 border border-border bg-card p-8"
+                  className="flex h-64 w-96 shrink-0 flex-col border border-border bg-card p-8 transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:shadow-sm dark:hover:bg-primary/2"
                 >
-                  <p className="mb-6 text-base text-foreground/80">
-                    "{testimonial.content}"
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 bg-primary/20" />
+                  {/* Quote content - takes available space */}
+                  <div className="flex-1">
+                    <div className="flex items-start gap-1">
+                      <HugeiconsIcon
+                        icon={QuoteUpIcon}
+                        className="h-4 w-4 shrink-0 text-primary/50"
+                      />
+                      <p className="text-base text-foreground/80">
+                        {testimonial.content}
+                      </p>
+                      <HugeiconsIcon
+                        icon={QuoteDownIcon}
+                        className="h-4 w-4 shrink-0 self-end text-primary/50"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Avatar, name, role - always at bottom */}
+                  <div className="mt-auto flex items-center gap-4">
+                    <div className="h-12 w-12 shrink-0 bg-primary/20" />
                     <div>
                       <p className="font-medium text-foreground">
                         {testimonial.name}
