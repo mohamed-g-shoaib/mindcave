@@ -62,6 +62,7 @@ export function ViewModesDemo() {
                 layoutId="activeView"
                 className="absolute inset-0 bg-background border border-border shadow-sm"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                style={{ willChange: "transform" }}
               />
             )}
             <HugeiconsIcon
@@ -81,6 +82,7 @@ export function ViewModesDemo() {
                 layoutId="activeView"
                 className="absolute inset-0 bg-background border border-border shadow-sm"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                style={{ willChange: "transform" }}
               />
             )}
             <HugeiconsIcon
@@ -97,10 +99,11 @@ export function ViewModesDemo() {
           {!isListView ? (
             <motion.div
               key="grid"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
+              initial={{ opacity: 0, transform: "scale(0.98)" }}
+              animate={{ opacity: 1, transform: "scale(1)" }}
+              exit={{ opacity: 0, transform: "scale(0.98)" }}
               transition={{ duration: 0.3 }}
+              style={{ willChange: "transform, opacity" }}
               className="grid h-full grid-cols-3 gap-2"
             >
               {bookmarks.map((bookmark, i) => (
@@ -192,10 +195,11 @@ export function ViewModesDemo() {
           ) : (
             <motion.div
               key="list"
-              initial={{ opacity: 0, x: 10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -10 }}
+              initial={{ opacity: 0, transform: "translateX(10px)" }}
+              animate={{ opacity: 1, transform: "translateX(0)" }}
+              exit={{ opacity: 0, transform: "translateX(-10px)" }}
               transition={{ duration: 0.2 }}
+              style={{ willChange: "transform, opacity" }}
               className="space-y-1.5 h-full"
             >
               {bookmarks.map((bookmark, i) => (
