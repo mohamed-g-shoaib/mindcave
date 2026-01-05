@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Tick02Icon,
@@ -20,6 +20,11 @@ const iconOptions = [
 const colorOptions = ["#f97316", "#3b82f6", "#22c55e", "#a855f7"];
 
 export function CategoryDemo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.5 });
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const [phase, setPhase] = useState<
     | "idle"
     | "typing"
@@ -36,71 +41,121 @@ export function CategoryDemo() {
   const [hoveredColor, setHoveredColor] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<number | null>(null);
 
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+  };
+
   useEffect(() => {
-    const cycle = async () => {
-      // Reset
+    if (!isInView) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+      return;
+    }
+
+    // Reset state on viewport entry
+    setPhase("idle");
+    setCategoryName("");
+    setHoveredIcon(null);
+    setSelectedIcon(null);
+    setHoveredColor(null);
+    setSelectedColor(null);
+
+    const cycle = () => {
+      clearAllTimeouts();
       setPhase("idle");
       setCategoryName("");
       setHoveredIcon(null);
       setSelectedIcon(null);
       setHoveredColor(null);
       setSelectedColor(null);
-      await new Promise((r) => setTimeout(r, 600));
 
-      // 1. Type name first
-      setPhase("typing");
       const name = "Design";
+      let delay = 600;
+
+      // Type name character by character
+      timeoutsRef.current.push(setTimeout(() => setPhase("typing"), delay));
       for (let i = 0; i <= name.length; i++) {
-        setCategoryName(name.slice(0, i));
-        await new Promise((r) => setTimeout(r, 80));
+        timeoutsRef.current.push(
+          setTimeout(() => setCategoryName(name.slice(0, i)), delay + i * 80)
+        );
       }
-      setPhase("typed");
-      await new Promise((r) => setTimeout(r, 500));
+      delay += name.length * 80;
+      timeoutsRef.current.push(setTimeout(() => setPhase("typed"), delay));
+      delay += 500;
 
-      // 2. Hover over icons then select (slower)
-      setPhase("iconHover");
-      setHoveredIcon(0);
-      await new Promise((r) => setTimeout(r, 350));
-      setHoveredIcon(1);
-      await new Promise((r) => setTimeout(r, 350));
-      setHoveredIcon(2);
-      await new Promise((r) => setTimeout(r, 350));
-      setHoveredIcon(3); // PaintBoard
-      await new Promise((r) => setTimeout(r, 500));
-      setSelectedIcon(3);
-      setHoveredIcon(null);
-      setPhase("iconSelected");
-      await new Promise((r) => setTimeout(r, 600));
+      // Icon hover sequence
+      timeoutsRef.current.push(
+        setTimeout(() => {
+          setPhase("iconHover");
+          setHoveredIcon(0);
+        }, delay)
+      );
+      delay += 350;
+      timeoutsRef.current.push(setTimeout(() => setHoveredIcon(1), delay));
+      delay += 350;
+      timeoutsRef.current.push(setTimeout(() => setHoveredIcon(2), delay));
+      delay += 350;
+      timeoutsRef.current.push(setTimeout(() => setHoveredIcon(3), delay));
+      delay += 500;
+      timeoutsRef.current.push(
+        setTimeout(() => {
+          setSelectedIcon(3);
+          setHoveredIcon(null);
+          setPhase("iconSelected");
+        }, delay)
+      );
+      delay += 600;
 
-      // 3. Hover over colors then select (slower)
-      setPhase("colorHover");
-      setHoveredColor(1);
-      await new Promise((r) => setTimeout(r, 350));
-      setHoveredColor(2);
-      await new Promise((r) => setTimeout(r, 350));
-      setHoveredColor(0); // Orange
-      await new Promise((r) => setTimeout(r, 500));
-      setSelectedColor(0);
-      setHoveredColor(null);
-      setPhase("colorSelected");
-      await new Promise((r) => setTimeout(r, 400));
+      // Color hover sequence
+      timeoutsRef.current.push(
+        setTimeout(() => {
+          setPhase("colorHover");
+          setHoveredColor(1);
+        }, delay)
+      );
+      delay += 350;
+      timeoutsRef.current.push(setTimeout(() => setHoveredColor(2), delay));
+      delay += 350;
+      timeoutsRef.current.push(setTimeout(() => setHoveredColor(0), delay));
+      delay += 500;
+      timeoutsRef.current.push(
+        setTimeout(() => {
+          setSelectedColor(0);
+          setHoveredColor(null);
+          setPhase("colorSelected");
+        }, delay)
+      );
+      delay += 400;
 
-      // 4. Done - show success inline
-      setPhase("done");
-      await new Promise((r) => setTimeout(r, 2000));
+      // Done
+      timeoutsRef.current.push(setTimeout(() => setPhase("done"), delay));
     };
 
-    const interval = setInterval(cycle, 9000);
     cycle();
-    return () => clearInterval(interval);
-  }, []);
+    intervalRef.current = setInterval(cycle, 9000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+    };
+  }, [isInView]);
 
   const isDone = phase === "done";
   const activeColor =
     selectedColor !== null ? colorOptions[selectedColor] : "#888";
 
   return (
-    <div className="relative h-full min-h-56 overflow-hidden border border-border bg-card p-4">
+    <div
+      ref={containerRef}
+      className="relative h-full min-h-56 overflow-hidden border border-border bg-card p-4"
+    >
       <div className="space-y-3">
         {/* Header */}
         <div className="text-xs font-medium text-muted-foreground">

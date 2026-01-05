@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Link01Icon,
@@ -19,6 +19,11 @@ function VercelLogo({ className }: { className?: string }) {
 }
 
 export function SmartMetadataDemo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.5 });
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const [phase, setPhase] = useState<
     | "typing"
     | "analyzing"
@@ -30,41 +35,67 @@ export function SmartMetadataDemo() {
   >("typing");
   const [text, setText] = useState("");
 
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+  };
+
   useEffect(() => {
-    const loop = async () => {
-      // Reset
+    if (!isInView) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+      return;
+    }
+
+    setPhase("typing");
+    setText("");
+
+    const cycle = () => {
+      clearAllTimeouts();
       setPhase("typing");
       setText("");
 
-      // Type URL
       const url = "vercel.com/home";
+      let delay = 0;
+
+      // Type URL character by character
       for (let i = 0; i <= url.length; i++) {
-        setText(url.slice(0, i));
-        await new Promise((r) => setTimeout(r, 80));
+        timeoutsRef.current.push(
+          setTimeout(() => setText(url.slice(0, i)), delay + i * 80)
+        );
       }
-      await new Promise((r) => setTimeout(r, 400));
+      delay += url.length * 80 + 400;
 
-      // Analyzing
-      setPhase("analyzing");
-      await new Promise((r) => setTimeout(r, 600));
-
-      // Progressive reveal
-      setPhase("favicon");
-      await new Promise((r) => setTimeout(r, 400));
-      setPhase("title");
-      await new Promise((r) => setTimeout(r, 400));
-      setPhase("description");
-      await new Promise((r) => setTimeout(r, 400));
-      setPhase("image");
-      await new Promise((r) => setTimeout(r, 400));
-      setPhase("done");
-      await new Promise((r) => setTimeout(r, 1800));
+      // Progressive reveal phases
+      timeoutsRef.current.push(setTimeout(() => setPhase("analyzing"), delay));
+      delay += 600;
+      timeoutsRef.current.push(setTimeout(() => setPhase("favicon"), delay));
+      delay += 400;
+      timeoutsRef.current.push(setTimeout(() => setPhase("title"), delay));
+      delay += 400;
+      timeoutsRef.current.push(
+        setTimeout(() => setPhase("description"), delay)
+      );
+      delay += 400;
+      timeoutsRef.current.push(setTimeout(() => setPhase("image"), delay));
+      delay += 400;
+      timeoutsRef.current.push(setTimeout(() => setPhase("done"), delay));
     };
 
-    const interval = setInterval(loop, 7500);
-    loop();
-    return () => clearInterval(interval);
-  }, []);
+    cycle();
+    intervalRef.current = setInterval(cycle, 7500);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+    };
+  }, [isInView]);
 
   const showCard = [
     "favicon",
@@ -85,7 +116,10 @@ export function SmartMetadataDemo() {
   const showImage = ["image", "done"].includes(phase);
 
   return (
-    <div className="flex h-full min-h-56 flex-col justify-center overflow-hidden border border-border bg-card p-4 sm:p-6">
+    <div
+      ref={containerRef}
+      className="flex h-full min-h-56 flex-col justify-center overflow-hidden border border-border bg-card p-4 sm:p-6"
+    >
       {/* URL Input */}
       <div className="flex items-center gap-3 border-b-2 border-border pb-3">
         <HugeiconsIcon

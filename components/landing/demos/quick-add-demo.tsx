@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PuzzleIcon, Tick02Icon, ShadcnIcon } from "@hugeicons/core-free-icons";
 import MindCaveLogo from "@/components/mind-cave-logo";
@@ -13,34 +13,61 @@ const mockBookmark = {
 };
 
 export function QuickAddDemo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.5 });
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const [phase, setPhase] = useState<
     "idle" | "click" | "popup" | "saving" | "saved" | "success"
   >("idle");
 
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+  };
+
   useEffect(() => {
+    if (!isInView) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+      return;
+    }
+
+    setPhase("idle");
+
     const cycle = async () => {
+      clearAllTimeouts();
       setPhase("idle");
-      await new Promise((r) => setTimeout(r, 1000));
-      setPhase("click");
-      await new Promise((r) => setTimeout(r, 300));
-      setPhase("popup");
-      await new Promise((r) => setTimeout(r, 1200));
-      setPhase("saving");
-      await new Promise((r) => setTimeout(r, 800));
-      setPhase("saved");
-      await new Promise((r) => setTimeout(r, 1000));
-      setPhase("success");
-      await new Promise((r) => setTimeout(r, 1000));
+      timeoutsRef.current.push(setTimeout(() => setPhase("click"), 1000));
+      timeoutsRef.current.push(setTimeout(() => setPhase("popup"), 1300));
+      timeoutsRef.current.push(setTimeout(() => setPhase("saving"), 2500));
+      timeoutsRef.current.push(setTimeout(() => setPhase("saved"), 3300));
+      timeoutsRef.current.push(setTimeout(() => setPhase("success"), 4300));
     };
-    const interval = setInterval(cycle, 6500);
+
     cycle();
-    return () => clearInterval(interval);
-  }, []);
+    intervalRef.current = setInterval(cycle, 6500);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+    };
+  }, [isInView]);
 
   const showCard = phase === "saved" || phase === "success";
 
   return (
-    <div className="relative h-full min-h-56 overflow-hidden border border-border bg-card">
+    <div
+      ref={containerRef}
+      className="relative h-full min-h-56 overflow-hidden border border-border bg-card"
+    >
       {/* Browser Title Bar - similar to Access demo */}
       <div className="flex items-center gap-2 border-b border-border bg-muted px-4 py-2">
         {/* Traffic lights */}

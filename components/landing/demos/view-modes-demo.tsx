@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   GridViewIcon,
@@ -33,17 +33,40 @@ const bookmarks = [
 ];
 
 export function ViewModesDemo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.5 });
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const [isListView, setIsListView] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (!isInView) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
+    }
+
+    setIsListView(false);
+
+    intervalRef.current = setInterval(() => {
       setIsListView((prev) => !prev);
     }, 3500);
-    return () => clearInterval(interval);
-  }, []);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isInView]);
 
   return (
-    <div className="flex h-full min-h-56 flex-col overflow-hidden border border-border bg-card p-4">
+    <div
+      ref={containerRef}
+      className="flex h-full min-h-56 flex-col overflow-hidden border border-border bg-card p-4"
+    >
       {/* Toggle Header */}
       <div className="mb-3 flex shrink-0 items-center justify-between">
         <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
