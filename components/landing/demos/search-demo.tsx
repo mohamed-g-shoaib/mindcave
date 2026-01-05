@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Search01Icon,
@@ -10,45 +10,78 @@ import {
 } from "@hugeicons/core-free-icons";
 
 export function SearchDemo() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef, { amount: 0.5 });
+  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const [phase, setPhase] = useState<"hint" | "opening" | "typing" | "results">(
     "hint"
   );
   const [query, setQuery] = useState("");
 
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(clearTimeout);
+    timeoutsRef.current = [];
+  };
+
   useEffect(() => {
-    const cycle = async () => {
-      // Reset
+    if (!isInView) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+      return;
+    }
+
+    setPhase("hint");
+    setQuery("");
+
+    const cycle = () => {
+      clearAllTimeouts();
       setPhase("hint");
       setQuery("");
-      await new Promise((r) => setTimeout(r, 1200));
+
+      const text = "socials";
+      let delay = 1200;
 
       // Open command box
-      setPhase("opening");
-      await new Promise((r) => setTimeout(r, 400));
+      timeoutsRef.current.push(setTimeout(() => setPhase("opening"), delay));
+      delay += 400;
 
-      // Type
-      setPhase("typing");
-      const text = "socials";
+      // Type characters
+      timeoutsRef.current.push(setTimeout(() => setPhase("typing"), delay));
       for (let i = 0; i <= text.length; i++) {
-        setQuery(text.slice(0, i));
-        await new Promise((r) => setTimeout(r, 80));
+        timeoutsRef.current.push(
+          setTimeout(() => setQuery(text.slice(0, i)), delay + i * 80)
+        );
       }
-      await new Promise((r) => setTimeout(r, 300));
+      delay += text.length * 80 + 300;
 
       // Show results
-      setPhase("results");
-      await new Promise((r) => setTimeout(r, 2500));
+      timeoutsRef.current.push(setTimeout(() => setPhase("results"), delay));
     };
 
-    const interval = setInterval(cycle, 6000);
     cycle();
-    return () => clearInterval(interval);
-  }, []);
+    intervalRef.current = setInterval(cycle, 6000);
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      clearAllTimeouts();
+    };
+  }, [isInView]);
 
   const isOpen = phase !== "hint";
 
   return (
-    <div className="relative flex h-full min-h-56 items-center justify-center overflow-hidden border border-border bg-card p-5">
+    <div
+      ref={containerRef}
+      className="relative flex h-full min-h-56 items-center justify-center overflow-hidden border border-border bg-card p-5"
+    >
       {/* Keyboard shortcut hint (centered initially) */}
       <AnimatePresence>
         {phase === "hint" && (

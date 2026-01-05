@@ -1,11 +1,39 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { QuickAddDemo } from "./demos/quick-add-demo";
-import { CategoryDemo } from "./demos/category-demo";
-import { SearchDemo } from "./demos/search-demo";
-import { SmartMetadataDemo } from "./demos/smart-metadata-demo";
-import { ViewModesDemo } from "./demos/view-modes-demo";
+import { LazyRender } from "@/components/ui/lazy-render";
+
+// Animation skeleton placeholder
+const AnimationSkeleton = () => (
+  <div className="h-full min-h-56 animate-pulse bg-muted/30" />
+);
+
+// Dynamic imports for code splitting - only load when rendered
+const QuickAddDemo = dynamic(
+  () => import("./demos/quick-add-demo").then((m) => m.QuickAddDemo),
+  { ssr: false, loading: () => <AnimationSkeleton /> }
+);
+
+const CategoryDemo = dynamic(
+  () => import("./demos/category-demo").then((m) => m.CategoryDemo),
+  { ssr: false, loading: () => <AnimationSkeleton /> }
+);
+
+const SearchDemo = dynamic(
+  () => import("./demos/search-demo").then((m) => m.SearchDemo),
+  { ssr: false, loading: () => <AnimationSkeleton /> }
+);
+
+const SmartMetadataDemo = dynamic(
+  () => import("./demos/smart-metadata-demo").then((m) => m.SmartMetadataDemo),
+  { ssr: false, loading: () => <AnimationSkeleton /> }
+);
+
+const ViewModesDemo = dynamic(
+  () => import("./demos/view-modes-demo").then((m) => m.ViewModesDemo),
+  { ssr: false, loading: () => <AnimationSkeleton /> }
+);
 
 export function FeaturesSection() {
   return (
@@ -43,7 +71,9 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <QuickAddDemo />
+              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+                <QuickAddDemo />
+              </LazyRender>
             </div>
           </motion.div>
 
@@ -64,7 +94,9 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <CategoryDemo />
+              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+                <CategoryDemo />
+              </LazyRender>
             </div>
           </motion.div>
 
@@ -85,7 +117,9 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <SearchDemo />
+              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+                <SearchDemo />
+              </LazyRender>
             </div>
           </motion.div>
 
@@ -106,7 +140,9 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <SmartMetadataDemo />
+              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+                <SmartMetadataDemo />
+              </LazyRender>
             </div>
           </motion.div>
 
@@ -127,7 +163,9 @@ export function FeaturesSection() {
               </p>
             </div>
             <div className="flex-1">
-              <ViewModesDemo />
+              <LazyRender minHeight={224} placeholder={<AnimationSkeleton />}>
+                <ViewModesDemo />
+              </LazyRender>
             </div>
           </motion.div>
         </div>
