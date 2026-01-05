@@ -85,7 +85,7 @@ export function SmartMetadataDemo() {
   const showImage = ["image", "done"].includes(phase);
 
   return (
-    <div className="flex h-full min-h-56 flex-col justify-center overflow-hidden border border-border bg-card p-6">
+    <div className="flex h-full min-h-56 flex-col justify-center overflow-hidden border border-border bg-card p-4 sm:p-6">
       {/* URL Input */}
       <div className="flex items-center gap-3 border-b-2 border-border pb-3">
         <HugeiconsIcon
@@ -140,7 +140,7 @@ export function SmartMetadataDemo() {
               className="flex h-full gap-3 border border-border bg-secondary"
             >
               {/* Left side - OG Image */}
-              <div className="relative w-32 shrink-0 overflow-hidden border-r border-border md:w-28 lg:w-48">
+              <div className="relative w-16 shrink-0 overflow-hidden border-r border-border sm:w-32 lg:w-48">
                 {!showImage && (
                   <div className="h-full w-full animate-pulse bg-muted" />
                 )}
@@ -153,19 +153,19 @@ export function SmartMetadataDemo() {
                       className="relative h-full w-full bg-white"
                     >
                       {/* Vercel logo in corner */}
-                      <div className="absolute left-2 top-2">
-                        <VercelLogo className="h-3 w-3 text-black" />
+                      <div className="absolute left-1.5 top-1.5 sm:left-2 sm:top-2">
+                        <VercelLogo className="h-2 w-2 sm:h-3 sm:w-3 text-black" />
                       </div>
                       {/* Colorful gradient blob in bottom right */}
                       <div
-                        className="absolute -bottom-4 -right-4 h-20 w-20 opacity-70 blur-sm"
+                        className="absolute -bottom-4 -right-4 h-16 w-16 opacity-70 blur-sm sm:h-20 sm:w-20"
                         style={{
                           background:
                             "conic-gradient(from 180deg, #ff6b6b, #ffa94d, #ffe066, #69db7c, #4dabf7, #9775fa, #ff6b6b)",
                         }}
                       />
                       {/* Text */}
-                      <div className="absolute bottom-2 left-2 text-[10px] font-semibold leading-tight text-black">
+                      <div className="absolute bottom-1.5 left-1.5 text-[8px] font-semibold leading-tight text-black sm:bottom-2 sm:left-2 sm:text-[10px]">
                         What will
                         <br />
                         you ship?

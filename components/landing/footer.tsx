@@ -13,10 +13,10 @@ import {
 export function Footer() {
   return (
     <footer className="bg-background border-t border-border">
-      <div className="mx-auto max-w-450 px-8 py-16">
-        <div className="grid gap-12 md:grid-cols-5">
+      <div className="mx-auto max-w-350 px-4 sm:px-8 py-16">
+        <div className="grid grid-cols-2 gap-12 md:grid-cols-3 lg:grid-cols-5">
           {/* Brand */}
-          <div className="md:col-span-1">
+          <div className="col-span-2 md:col-span-3 lg:col-span-1">
             <Link href="/" className="flex items-center gap-3">
               <MindCaveLogo className="h-8 w-8" />
               <span className="text-xl font-bold text-foreground">
@@ -89,11 +89,11 @@ export function Footer() {
           </div>
 
           {/* Social Links - Right Side */}
-          <div>
+          <div className="col-span-2 md:col-span-1">
             <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-primary">
               Connect
             </h3>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="#"
                 className="text-muted-foreground transition-colors hover:text-foreground"

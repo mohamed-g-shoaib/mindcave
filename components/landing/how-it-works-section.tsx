@@ -41,7 +41,7 @@ function SaveDemo() {
   }, []);
 
   return (
-    <div className="relative h-32 border border-border bg-card p-4">
+    <div className="relative h-32 bg-secondary/30 p-4">
       {/* Input area with tight cursor positioning */}
       <div className="flex items-center border-b border-border pb-2">
         <HugeiconsIcon
@@ -123,7 +123,7 @@ function OrganizeDemo() {
   }, []);
 
   return (
-    <div className="relative h-32 overflow-hidden border border-border bg-card p-4">
+    <div className="relative h-32 overflow-hidden bg-secondary/30 p-4">
       <div className="mb-2 text-xs text-muted-foreground">SELECT CATEGORY</div>
       <div className="flex flex-wrap gap-2">
         {categories.map((cat, i) => (
@@ -143,22 +143,19 @@ function OrganizeDemo() {
         ))}
       </div>
       {/* Fixed position for confirmation - bottom left, text hidden at lg breakpoint */}
-      <div className="absolute bottom-4 left-4 lg:left-auto lg:right-4 xl:left-4 xl:right-auto">
+      {/* Fixed position for confirmation - bottom right */}
+      <div className="absolute bottom-3 right-3">
         <AnimatePresence>
           {selected !== null && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              style={{ willChange: "opacity" }}
-              className="flex items-center gap-1 text-xs text-green-400"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              style={{ willChange: "opacity, transform" }}
+              className="flex items-center gap-1.5 bg-green-500/10 px-2.5 py-1 text-[10px] font-medium text-green-500 border border-green-500/20 shadow-sm"
             >
-              <HugeiconsIcon
-                icon={Tick02Icon}
-                className="h-3 w-3 lg:h-5 lg:w-5 xl:h-3 xl:w-3"
-              />
-              <span className="lg:hidden xl:inline">
-                Added to {categories[selected]}
-              </span>
+              <HugeiconsIcon icon={Tick02Icon} className="h-3 w-3" />
+              <span>Saved</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -190,7 +187,7 @@ function FindDemo() {
   }, []);
 
   return (
-    <div className="relative h-32 border border-border bg-card p-4">
+    <div className="relative h-32 bg-secondary/30 p-4">
       {/* Input with tight cursor positioning */}
       <div className="flex items-center border-b border-border pb-2">
         <HugeiconsIcon
@@ -260,7 +257,7 @@ function AccessDemo() {
   const isOpened = phase === "opened" || phase === "copied";
 
   return (
-    <div className="relative h-32 overflow-hidden border border-border bg-card p-3">
+    <div className="relative h-32 overflow-hidden bg-secondary/30 p-3">
       {/* Buttons row */}
       <div className="flex gap-2">
         {/* Open Link Button */}
@@ -330,12 +327,12 @@ function AccessDemo() {
             <div className="flex items-center gap-1.5 border-b border-border bg-muted px-2 py-1.5">
               {/* Traffic lights */}
               <div className="flex gap-1">
-                <div className="h-2 w-2 rounded-full bg-red-400" />
-                <div className="h-2 w-2 rounded-full bg-yellow-400" />
-                <div className="h-2 w-2 rounded-full bg-green-400" />
+                <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
               </div>
               {/* Address bar */}
-              <div className="ml-2 flex min-w-0 flex-1 items-center gap-1 rounded bg-background px-2 py-0.5">
+              <div className="ml-2 flex min-w-0 flex-1 items-center gap-1 bg-background px-2 py-0.5">
                 <HugeiconsIcon
                   icon={Quran01Icon}
                   className="h-2.5 w-2.5 shrink-0 text-primary"
@@ -386,8 +383,8 @@ const steps = [
 
 export function HowItWorksSection() {
   return (
-    <section className="bg-muted py-28 md:py-40">
-      <div className="mx-auto max-w-450 px-8">
+    <section id="how-it-works" className="bg-muted py-28 md:py-40">
+      <div className="mx-auto max-w-350 px-4 sm:px-8">
         <motion.div
           initial={{ opacity: 0, transform: "translateY(20px)" }}
           whileInView={{ opacity: 1, transform: "translateY(0)" }}
@@ -413,7 +410,7 @@ export function HowItWorksSection() {
               className="border border-border bg-card"
             >
               <step.Demo />
-              <div className="p-4">
+              <div className="p-3 sm:p-4">
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-xl font-bold text-primary">
                     {step.number}

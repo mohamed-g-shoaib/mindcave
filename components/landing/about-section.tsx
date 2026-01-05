@@ -46,7 +46,7 @@ function VaultDemo() {
   ];
 
   return (
-    <div className="relative h-48 w-full overflow-hidden border border-border bg-card">
+    <div className="relative h-48 w-full overflow-hidden bg-secondary/30">
       {[0, 1, 2, 3, 4, 5].map((i) => (
         <motion.div
           key={i}
@@ -95,7 +95,7 @@ function CategoriesDemo() {
   }, []);
 
   return (
-    <div className="h-48 w-full overflow-hidden border border-border bg-card p-3">
+    <div className="h-48 w-full overflow-hidden bg-secondary/30 p-3">
       <div className="mb-2 text-xs font-medium text-muted-foreground">
         CATEGORIES
       </div>
@@ -170,23 +170,33 @@ function AccessDemo() {
   }, []);
 
   return (
-    <div className="relative h-48 w-full overflow-hidden border border-border bg-card p-4">
-      <div className="flex items-center border-b border-border pb-3">
-        <HugeiconsIcon
-          icon={Search01Icon}
-          className="mr-2 h-4 w-4 text-muted-foreground"
-        />
-        <div className="flex items-center gap-[1px]">
-          <span className="text-sm text-foreground">{typing}</span>
-          <motion.span
-            animate={{ opacity: [1, 0] }}
-            transition={{ repeat: Infinity, duration: 0.8 }}
-            className="h-4 w-0.5 bg-primary"
-          />
+    <div className="relative h-48 w-full overflow-hidden bg-secondary/30">
+      {/* Browser Title Bar */}
+      <div className="flex items-center gap-2 border-b border-border bg-muted px-4 py-2">
+        {/* Traffic lights */}
+        <div className="flex gap-1.5">
+          <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+          <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+          <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
         </div>
-        <kbd className="ml-auto bg-input px-1.5 py-0.5 text-[10px] text-muted-foreground">
-          ⌘K
-        </kbd>
+        {/* Address bar */}
+        <div className="flex flex-1 items-center gap-1.5 bg-background px-2 py-1">
+          <HugeiconsIcon
+            icon={Search01Icon}
+            className="h-3 w-3 shrink-0 text-muted-foreground"
+          />
+          <div className="flex items-center gap-[1px]">
+            <span className="text-[10px] text-foreground">{typing}</span>
+            <motion.span
+              animate={{ opacity: [1, 0] }}
+              transition={{ repeat: Infinity, duration: 0.8 }}
+              className="h-3 w-0.5 bg-primary"
+            />
+          </div>
+          <kbd className="ml-auto bg-input px-1.5 py-0.5 text-[10px] text-muted-foreground">
+            ⌘K
+          </kbd>
+        </div>
       </div>
       <AnimatePresence>
         {isSearching && typing.length > 1 && (
@@ -252,8 +262,8 @@ const pillars = [
 
 export function AboutSection() {
   return (
-    <section className="bg-background py-28 md:py-40">
-      <div className="mx-auto max-w-450 px-8">
+    <section id="about" className="bg-background py-28 md:py-40">
+      <div className="mx-auto max-w-350 px-4 sm:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -280,7 +290,7 @@ export function AboutSection() {
               className="border border-border bg-card"
             >
               <pillar.Demo />
-              <div className="p-6">
+              <div className="p-3 sm:p-6">
                 <h3 className="mb-2 text-xl font-semibold text-foreground">
                   {pillar.title}
                 </h3>

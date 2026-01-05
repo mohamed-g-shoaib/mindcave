@@ -26,7 +26,7 @@ const bookmarks = [
   },
   {
     title: "Dribbble",
-    description: "Inspiration",
+    description: "Inspire",
     icon: DribbbleIcon,
     color: "#ea4c89",
   },

@@ -20,30 +20,12 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 
-const features: { title: string; href: string; description: string }[] = [
-  {
-    title: "Quick Add",
-    href: "#features",
-    description: "Save any link instantly with our streamlined capture tool.",
-  },
-  {
-    title: "Smart Categories",
-    href: "#features",
-    description: "Automated organization with intelligent tagging and sorting.",
-  },
-  {
-    title: "Instant Search",
-    href: "#features",
-    description: "Find any resource in seconds with our lightning-fast search.",
-  },
-];
-
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 z-60 w-full border-b border-border bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex h-20 max-w-450 items-center justify-between px-8">
+      <div className="mx-auto flex h-20 max-w-350 items-center justify-between px-4 sm:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <MindCaveLogo className="h-10 w-10" />
@@ -51,26 +33,43 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation Menu */}
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <NavigationMenu>
-            <NavigationMenuList className="gap-2">
+            <NavigationMenuList className="gap-1">
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:bg-secondary hover:text-foreground data-open:bg-secondary">
+                <NavigationMenuLink
+                  render={<Link href="#about" />}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
+                  )}
+                >
+                  About
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  render={<Link href="#how-it-works" />}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
+                  )}
+                >
+                  How It Works
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  render={<Link href="#features" />}
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
+                  )}
+                >
                   Features
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="border border-border bg-card p-4">
-                  <ul className="grid w-100 gap-2 p-2">
-                    {features.map((feature) => (
-                      <ListItem
-                        key={feature.title}
-                        title={feature.title}
-                        href={feature.href}
-                      >
-                        {feature.description}
-                      </ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
@@ -78,7 +77,7 @@ export function Navbar() {
                   render={<Link href="#testimonials" />}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    "bg-transparent text-foreground/80 hover:bg-secondary hover:text-foreground"
+                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
                   )}
                 >
                   Testimonials
@@ -90,7 +89,7 @@ export function Navbar() {
                   render={<Link href="#faq" />}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    "bg-transparent text-foreground/80 hover:bg-secondary hover:text-foreground"
+                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
                   )}
                 >
                   FAQ
@@ -102,7 +101,7 @@ export function Navbar() {
 
         {/* Mobile Menu Toggle */}
         <div className="flex items-center gap-4">
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger
                 render={
@@ -135,58 +134,50 @@ export function Navbar() {
                 showCloseButton={false}
                 overlayClassName="top-20!"
               >
-                <div className="mx-auto flex h-full max-w-md flex-col px-8 py-8">
-                  <nav className="flex flex-1 flex-col justify-center gap-8">
-                    {/* Features Section */}
-                    <div className="space-y-4">
-                      <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <div className="flex h-full flex-col overflow-y-auto px-8 pt-8 pb-24 custom-scrollbar">
+                  <nav className="flex flex-col gap-6 pb-8">
+                    {/* Section Links */}
+                    <div className="space-y-1">
+                      <SheetClose
+                        render={<Link href="#about" />}
+                        nativeButton={false}
+                        className="block p-4 text-lg font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
+                      >
+                        About
+                      </SheetClose>
+                      <SheetClose
+                        render={<Link href="#how-it-works" />}
+                        nativeButton={false}
+                        className="block p-4 text-lg font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
+                      >
+                        How It Works
+                      </SheetClose>
+                      <SheetClose
+                        render={<Link href="#features" />}
+                        nativeButton={false}
+                        className="block p-4 text-lg font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
+                      >
                         Features
-                      </div>
-                      {features.map((feature) => (
-                        <SheetClose
-                          key={feature.title}
-                          render={<Link href={feature.href} />}
-                          nativeButton={false}
-                          className="block space-y-1 p-4 transition-colors hover:bg-secondary"
-                        >
-                          <div className="text-base font-medium text-foreground">
-                            {feature.title}
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            {feature.description}
-                          </p>
-                        </SheetClose>
-                      ))}
-                    </div>
-
-                    {/* Other Links */}
-                    <div className="space-y-3">
+                      </SheetClose>
                       <SheetClose
                         render={<Link href="#testimonials" />}
                         nativeButton={false}
-                        className="block p-4 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
+                        className="block p-4 text-lg font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
                       >
                         Testimonials
                       </SheetClose>
                       <SheetClose
                         render={<Link href="#faq" />}
                         nativeButton={false}
-                        className="block p-4 text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
+                        className="block p-4 text-lg font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
                       >
                         FAQ
                       </SheetClose>
                     </div>
                   </nav>
 
-                  {/* Mobile Auth Buttons */}
-                  <div className="space-y-3 border-t border-border pt-8">
-                    <SheetClose
-                      render={<Link href="/login" />}
-                      nativeButton={false}
-                      className="block border border-border p-4 text-center text-base font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-foreground"
-                    >
-                      Sign In
-                    </SheetClose>
+                  {/* Mobile Auth Button */}
+                  <div className="border-t border-border pt-8">
                     <SheetClose
                       render={<Link href="/login" />}
                       nativeButton={false}
@@ -201,13 +192,7 @@ export function Navbar() {
           </div>
 
           {/* Desktop Auth */}
-          <div className="hidden items-center gap-4 text-foreground md:flex">
-            <Link
-              href="/login"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground"
-            >
-              Sign In
-            </Link>
+          <div className="hidden items-center lg:flex">
             <Link
               href="/login"
               className="bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"

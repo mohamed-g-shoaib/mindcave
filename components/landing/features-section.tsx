@@ -10,7 +10,7 @@ import { ViewModesDemo } from "./demos/view-modes-demo";
 export function FeaturesSection() {
   return (
     <section id="features" className="bg-background py-28 md:py-40">
-      <div className="mx-auto max-w-450 px-8">
+      <div className="mx-auto max-w-350 px-4 sm:px-8">
         <motion.div
           initial={{ opacity: 0, transform: "translateY(20px)" }}
           whileInView={{ opacity: 1, transform: "translateY(0)" }}
@@ -32,7 +32,7 @@ export function FeaturesSection() {
             initial={{ opacity: 0, transform: "translateY(20px)" }}
             whileInView={{ opacity: 1, transform: "translateY(0)" }}
             viewport={{ once: true }}
-            className="flex flex-col border border-border bg-card p-8 lg:col-span-2"
+            className="flex flex-col border border-border bg-card p-4 sm:p-8 lg:col-span-2"
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-foreground">
@@ -47,17 +47,17 @@ export function FeaturesSection() {
             </div>
           </motion.div>
 
-          {/* Custom Categories */}
+          {/* Add Categories */}
           <motion.div
             initial={{ opacity: 0, transform: "translateY(20px)" }}
             whileInView={{ opacity: 1, transform: "translateY(0)" }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="flex flex-col border border-border bg-card p-8"
+            className="flex flex-col border border-border bg-card p-4 sm:p-8"
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-foreground">
-                Custom Categories
+                Add Categories
               </h3>
               <p className="mt-2 text-muted-foreground">
                 Customize icons and colors
@@ -74,7 +74,7 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, transform: "translateY(0)" }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="flex flex-col border border-border bg-card p-8"
+            className="flex flex-col border border-border bg-card p-4 sm:p-8"
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-foreground">
@@ -95,7 +95,7 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, transform: "translateY(0)" }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="flex flex-col border border-border bg-card p-8 lg:col-span-2"
+            className="flex flex-col border border-border bg-card p-4 sm:p-8 lg:col-span-2"
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-foreground">
@@ -116,7 +116,7 @@ export function FeaturesSection() {
             whileInView={{ opacity: 1, transform: "translateY(0)" }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="flex flex-col border border-border bg-card p-8 lg:col-span-2"
+            className="flex flex-col border border-border bg-card p-4 sm:p-8 lg:col-span-2"
           >
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-foreground">
