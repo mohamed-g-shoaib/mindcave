@@ -123,9 +123,9 @@ function OrganizeDemo() {
   }, []);
 
   return (
-    <div className="relative h-32 border border-border bg-card p-4">
+    <div className="relative h-32 overflow-hidden border border-border bg-card p-4">
       <div className="mb-2 text-xs text-muted-foreground">SELECT CATEGORY</div>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {categories.map((cat, i) => (
           <div key={cat} className="relative">
             {/* Performant opacity overlay */}
@@ -142,8 +142,8 @@ function OrganizeDemo() {
           </div>
         ))}
       </div>
-      {/* Fixed position for confirmation */}
-      <div className="absolute bottom-4 left-4">
+      {/* Fixed position for confirmation - bottom left, text hidden at lg breakpoint */}
+      <div className="absolute bottom-4 left-4 lg:left-auto lg:right-4 xl:left-4 xl:right-auto">
         <AnimatePresence>
           {selected !== null && (
             <motion.div
@@ -152,8 +152,13 @@ function OrganizeDemo() {
               style={{ willChange: "opacity" }}
               className="flex items-center gap-1 text-xs text-green-400"
             >
-              <HugeiconsIcon icon={Tick02Icon} className="h-3 w-3" />
-              Added to {categories[selected]}
+              <HugeiconsIcon
+                icon={Tick02Icon}
+                className="h-3 w-3 lg:h-5 lg:w-5 xl:h-3 xl:w-3"
+              />
+              <span className="lg:hidden xl:inline">
+                Added to {categories[selected]}
+              </span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -330,12 +335,12 @@ function AccessDemo() {
                 <div className="h-2 w-2 rounded-full bg-green-400" />
               </div>
               {/* Address bar */}
-              <div className="ml-2 flex flex-1 items-center gap-1 rounded bg-background px-2 py-0.5">
+              <div className="ml-2 flex min-w-0 flex-1 items-center gap-1 rounded bg-background px-2 py-0.5">
                 <HugeiconsIcon
                   icon={Quran01Icon}
-                  className="h-2.5 w-2.5 text-primary"
+                  className="h-2.5 w-2.5 shrink-0 text-primary"
                 />
-                <span className="text-[9px] text-muted-foreground">
+                <span className="truncate text-[9px] text-muted-foreground">
                   youtu.be/9B87lUEKLIw
                 </span>
               </div>
