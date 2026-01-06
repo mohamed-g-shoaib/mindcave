@@ -2,7 +2,19 @@ import Link from "next/link";
 import MindCaveLogo from "@/components/mind-cave-logo";
 import { cn } from "@/lib/utils";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
+import {
+  ArrowRight01Icon,
+  Search01Icon,
+  GridViewIcon,
+  ListViewIcon,
+  ArrowDown01Icon,
+  Home01Icon,
+  BookOpen01Icon,
+  Briefcase02Icon,
+  Folder01Icon,
+  PlusSignIcon,
+  SidebarLeftIcon,
+} from "@hugeicons/core-free-icons";
 
 export function HeroSection() {
   return (
@@ -50,16 +62,16 @@ export function HeroSection() {
         <div className="relative mx-auto mt-20">
           <div className="overflow-hidden border border-border bg-card">
             {/* Mock Browser Chrome */}
-            <div className="flex items-center gap-2 border-b border-border bg-muted px-4 py-3">
+            <div className="flex items-center gap-4 border-b border-border bg-muted/50 px-4 py-3 sm:gap-2">
               <div className="flex gap-1.5">
-                <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                <div className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
-                <div className="h-2.5 w-2.5 rounded-full bg-green-400" />
+                <div className="h-2.5 w-2.5 rounded-full bg-red-400/60" />
+                <div className="h-2.5 w-2.5 rounded-full bg-yellow-400/60" />
+                <div className="h-2.5 w-2.5 rounded-full bg-green-400/60" />
               </div>
               <div className="mx-auto w-full max-w-xs flex-1 sm:max-w-md">
-                <div className="flex items-center gap-2 bg-background px-4 py-1.5 text-xs text-muted-foreground sm:text-sm">
-                  <MindCaveLogo className="h-3.5 w-3.5" />
-                  <span>mindcave/dashboard</span>
+                <div className="flex items-center gap-2 border border-border bg-background px-4 py-1.5 text-[10px] text-muted-foreground sm:text-xs">
+                  <MindCaveLogo className="h-3 w-3" />
+                  <span>mindcave.app/dashboard</span>
                 </div>
               </div>
             </div>
@@ -67,60 +79,159 @@ export function HeroSection() {
             {/* Mock Dashboard */}
             <div className="flex">
               {/* Sidebar */}
-              <div className="hidden w-64 shrink-0 border-r border-border bg-input p-6 lg:block">
-                <div className="mb-8 flex items-center gap-3">
-                  <MindCaveLogo className="h-8 w-8" />
-                  <span className="text-lg font-bold text-foreground">
-                    Mind Cave
-                  </span>
+              <div className="hidden w-56 shrink-0 flex-col border-r border-border bg-muted/20 p-4 lg:flex">
+                <div className="flex-1">
+                  <div className="mb-6 flex items-center gap-2 px-2">
+                    <MindCaveLogo className="h-6 w-6" />
+                    <span className="text-base font-bold text-foreground">
+                      Mind Cave
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-3 bg-secondary px-3 py-2 text-xs font-medium text-foreground">
+                      <HugeiconsIcon
+                        icon={Home01Icon}
+                        className="h-3.5 w-3.5"
+                      />
+                      All Bookmarks
+                    </div>
+                    <div className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
+                      <HugeiconsIcon
+                        icon={BookOpen01Icon}
+                        className="h-3.5 w-3.5 text-blue-500"
+                      />
+                      Learning
+                    </div>
+                    <div className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
+                      <HugeiconsIcon
+                        icon={Briefcase02Icon}
+                        className="h-3.5 w-3.5 text-orange-500"
+                      />
+                      Work
+                    </div>
+                    <div className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
+                      <HugeiconsIcon
+                        icon={Folder01Icon}
+                        className="h-3.5 w-3.5 text-purple-500"
+                      />
+                      Projects
+                    </div>
+                    <div className="mt-4 flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground/60">
+                      <HugeiconsIcon
+                        icon={PlusSignIcon}
+                        className="h-3.5 w-3.5"
+                      />
+                      Add Category
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <div className="flex items-center gap-3 bg-primary/20 px-4 py-3 text-sm text-primary">
-                    <div className="h-4 w-4 bg-primary/30" />
-                    All Bookmarks
-                  </div>
-                  <div className="flex items-center gap-3 px-4 py-3 text-sm text-muted-foreground">
-                    <div className="h-4 w-4 bg-muted-foreground/40" />
-                    Learning
-                  </div>
-                  <div className="flex items-center gap-3 px-4 py-3 text-sm text-muted-foreground">
-                    <div className="h-4 w-4 bg-muted-foreground/40" />
-                    Work
-                  </div>
-                  <div className="flex items-center gap-3 px-4 py-3 text-sm text-muted-foreground">
-                    <div className="h-4 w-4 bg-muted-foreground/40" />
-                    Projects
+
+                {/* Sidebar Footer (Avatar Area) */}
+                <div className="mt-auto border-t border-border -mx-4 px-4 pt-4">
+                  <div className="flex items-center gap-2 px-2">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-secondary text-[10px] font-bold text-secondary-foreground">
+                      JD
+                    </div>
+                    <div className="flex flex-1 flex-col overflow-hidden leading-tight">
+                      <span className="truncate text-[10px] font-semibold text-foreground">
+                        John Doe
+                      </span>
+                      <span className="truncate text-[8px] text-muted-foreground">
+                        john@mindcave.app
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 p-4 sm:p-8">
-                <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
-                  <h2 className="text-xl font-semibold text-foreground sm:text-2xl">
-                    All Bookmarks
-                  </h2>
-                  <div className="inline-flex h-9 w-fit whitespace-nowrap items-center justify-center bg-primary px-4 text-sm font-medium text-primary-foreground sm:h-10">
-                    + Add Bookmark
+              {/* Content Area */}
+              <div className="flex flex-1 flex-col pb-8">
+                {/* Global Header (Realistic) */}
+                <div className="flex h-12 items-center gap-2 border-b border-border bg-card px-4">
+                  <HugeiconsIcon
+                    icon={SidebarLeftIcon}
+                    className="h-4 w-4 text-muted-foreground mr-1"
+                  />
+                  <div className="h-3 w-px bg-border mx-1" />
+                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <span>All Bookmarks</span>
+                  </div>
+                  <div className="flex-1" />
+                  <div className="flex items-center gap-2">
+                    {/* Command Search Bar (Realistic) */}
+                    <div className="hidden items-center gap-2 border border-border bg-muted/40 px-2 py-1 text-muted-foreground sm:flex">
+                      <HugeiconsIcon icon={Search01Icon} className="h-3 w-3" />
+                      <span className="text-[10px] pr-2">Search...</span>
+                      <kbd className="text-[8px] bg-muted px-1 border border-border">
+                        ⌘K
+                      </kbd>
+                    </div>
+                    {/* Add Bookmark (Placement matching realism) */}
+                    <div className="flex h-7 items-center bg-primary px-3 text-[10px] font-bold text-primary-foreground">
+                      <HugeiconsIcon
+                        icon={PlusSignIcon}
+                        className="h-3 w-3 mr-1"
+                      />
+                      Add Bookmark
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((i, index) => (
-                    <div
-                      key={i}
-                      className={cn(
-                        "overflow-hidden border border-border bg-background",
-                        index >= 2 && "hidden md:block"
-                      )}
-                    >
-                      <div className="aspect-video bg-linear-to-br from-muted to-input" />
-                      <div className="p-4">
-                        <div className="h-3 w-3/4 bg-muted" />
-                        <div className="mt-2 h-2 w-1/2 bg-muted/50" />
+                <div className="flex-1 px-4 pt-6 sm:px-8">
+                  {/* Content Header (Realistic) */}
+                  <div className="mb-6 flex items-center justify-between">
+                    <div>
+                      <h2 className="text-lg font-bold text-foreground">
+                        All Bookmarks
+                      </h2>
+                      <p className="mt-0.5 text-[10px] text-muted-foreground">
+                        8 bookmarks in total
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <div className="flex h-7 w-7 items-center justify-center bg-secondary text-foreground">
+                          <HugeiconsIcon
+                            icon={GridViewIcon}
+                            className="h-3.5 w-3.5"
+                          />
+                        </div>
+                        <div className="flex h-7 w-7 items-center justify-center text-muted-foreground hover:bg-muted/50">
+                          <HugeiconsIcon
+                            icon={ListViewIcon}
+                            className="h-3.5 w-3.5"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex h-7 items-center gap-1 border border-border px-2 text-[10px] text-muted-foreground">
+                        <span className="sm:hidden">1 column</span>
+                        <span className="hidden sm:inline">4 columns</span>
+                        <HugeiconsIcon
+                          icon={ArrowDown01Icon}
+                          className="h-3 w-3"
+                        />
                       </div>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i, index) => (
+                      <div
+                        key={i}
+                        className={cn(
+                          "group overflow-hidden border border-border bg-background transition-shadow hover:shadow-md",
+                          index >= 4 && "hidden xl:block",
+                          index >= 2 && index < 4 && "hidden md:block"
+                        )}
+                      >
+                        <div className="aspect-video bg-linear-to-br from-secondary/50 to-muted/50" />
+                        <div className="p-3">
+                          <div className="h-3 w-3/4 bg-border/60" />
+                          <div className="mt-2 h-2 w-1/2 bg-border/30" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
