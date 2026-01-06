@@ -1,14 +1,54 @@
+"use client";
+
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import MindCaveLogo from "@/components/mind-cave-logo";
 import MindCaveWord from "@/components/mind-cave-word";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   NewTwitterIcon,
   GithubIcon,
-  DiscordIcon,
   Linkedin02Icon,
-  InstagramIcon,
+  Sun01Icon,
+  Moon02Icon,
+  ComputerIcon,
 } from "@hugeicons/core-free-icons";
+
+function ThemeToggle() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const options = [
+    { value: "light", icon: Sun01Icon },
+    { value: "dark", icon: Moon02Icon },
+    { value: "system", icon: ComputerIcon },
+  ];
+
+  return (
+    <div className="inline-flex border border-border overflow-hidden">
+      {options.map((option) => (
+        <button
+          key={option.value}
+          onClick={() => setTheme(option.value)}
+          className={`px-2 py-1 transition-colors ${
+            theme === option.value
+              ? "bg-primary text-primary-foreground"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+          }`}
+        >
+          <HugeiconsIcon icon={option.icon} className="h-4 w-4" />
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export function Footer() {
   return (
@@ -26,9 +66,12 @@ export function Footer() {
             <p className="mt-4 text-base text-muted-foreground">
               Organize your digital life with ease
             </p>
-            <p className="mt-2 text-base text-muted-foreground/60">
+            <p className="mt-4 text-base text-muted-foreground/60">
               © 2026 Mind Cave. All rights reserved.
             </p>
+            <div className="mt-4">
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Product */}
@@ -43,8 +86,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="#how-it-works" className="hover:text-foreground">
+                  How It Works
+                </Link>
+              </li>
+              <li>
                 <Link href="/login" className="hover:text-foreground">
-                  Sign In
+                  Get Started
                 </Link>
               </li>
             </ul>
@@ -57,13 +105,8 @@ export function Footer() {
             </h3>
             <ul className="space-y-4 text-base text-muted-foreground">
               <li>
-                <Link href="#" className="hover:text-foreground">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="#" className="hover:text-foreground">
-                  Blog
+                <Link href="/story" className="hover:text-foreground">
+                  Our Story
                 </Link>
               </li>
             </ul>
@@ -93,38 +136,34 @@ export function Footer() {
             <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-primary">
               Connect
             </h3>
-            <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <HugeiconsIcon icon={NewTwitterIcon} className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <HugeiconsIcon icon={GithubIcon} className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <HugeiconsIcon icon={DiscordIcon} className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <HugeiconsIcon icon={Linkedin02Icon} className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
-                className="text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <HugeiconsIcon icon={InstagramIcon} className="h-5 w-5" />
-              </Link>
-            </div>
+            <ul className="space-y-4 text-base text-muted-foreground">
+              <li>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2 hover:text-foreground"
+                >
+                  <HugeiconsIcon icon={NewTwitterIcon} className="h-5 w-5" />X
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2 hover:text-foreground"
+                >
+                  <HugeiconsIcon icon={GithubIcon} className="h-5 w-5" />
+                  GitHub
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2 hover:text-foreground"
+                >
+                  <HugeiconsIcon icon={Linkedin02Icon} className="h-5 w-5" />
+                  LinkedIn
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
         {/* Mind Cave word - inside padded container */}
