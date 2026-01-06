@@ -2,7 +2,16 @@ import Link from "next/link";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 
-export function CTASection() {
+interface CTASectionProps {
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    avatar_url?: string;
+  } | null;
+}
+
+export function CTASection({ user }: CTASectionProps) {
   return (
     <section className="bg-background py-28 md:py-40">
       <div className="mx-auto max-w-350 px-4 sm:px-8">
@@ -18,10 +27,10 @@ export function CTASection() {
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Link
-                href="/login"
+                href={user ? "/dashboard" : "/login"}
                 className="inline-flex items-center justify-center gap-2 bg-background px-10 py-5 text-lg font-medium text-foreground hover:bg-background/90"
               >
-                Get Started
+                {user ? "Dashboard" : "Get Started"}
                 <HugeiconsIcon icon={ArrowRight01Icon} className="h-5 w-5" />
               </Link>
             </div>

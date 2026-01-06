@@ -38,6 +38,21 @@ async function NavbarWithUser() {
   return <Navbar user={user} />;
 }
 
+async function HeroWithUser() {
+  const user = await getUser();
+  return <HeroSection user={user} />;
+}
+
+async function CTAWithUser() {
+  const user = await getUser();
+  return <CTASection user={user} />;
+}
+
+async function FooterWithUser() {
+  const user = await getUser();
+  return <Footer user={user} />;
+}
+
 export default function LandingPage() {
   return (
     <div
@@ -49,16 +64,22 @@ export default function LandingPage() {
       </Suspense>
 
       <main className="pt-20">
-        <HeroSection />
+        <Suspense fallback={<HeroSection />}>
+          <HeroWithUser />
+        </Suspense>
         <AboutSection />
         <HowItWorksSection />
         <FeaturesSection />
         <TestimonialsSection />
         <FAQSection />
-        <CTASection />
+        <Suspense fallback={<CTASection />}>
+          <CTAWithUser />
+        </Suspense>
       </main>
 
-      <Footer />
+      <Suspense fallback={<Footer />}>
+        <FooterWithUser />
+      </Suspense>
     </div>
   );
 }

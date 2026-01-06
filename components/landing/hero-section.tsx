@@ -17,7 +17,16 @@ import {
 import { MOCK_CATEGORIES, MOCK_BOOKMARKS } from "./hero-mock-data";
 import { OGPreview } from "./og-preview";
 
-export function HeroSection() {
+interface HeroSectionProps {
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    avatar_url?: string;
+  } | null;
+}
+
+export function HeroSection({ user }: HeroSectionProps) {
   return (
     <section className="bg-background py-28 md:py-40">
       <div className="mx-auto max-w-350 px-4 sm:px-8">
@@ -33,10 +42,10 @@ export function HeroSection() {
 
           <div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row">
             <Link
-              href="/login"
+              href={user ? "/dashboard" : "/login"}
               className="inline-flex items-center justify-center gap-2 bg-primary px-10 py-5 text-lg font-medium text-primary-foreground hover:bg-primary/90"
             >
-              Get Started
+              {user ? "Dashboard" : "Get Started"}
               <HugeiconsIcon icon={ArrowRight01Icon} className="h-5 w-5" />
             </Link>
             <Link

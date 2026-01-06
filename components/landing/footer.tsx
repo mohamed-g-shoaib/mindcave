@@ -15,6 +15,15 @@ import {
   ComputerIcon,
 } from "@hugeicons/core-free-icons";
 
+interface FooterProps {
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    avatar_url?: string;
+  } | null;
+}
+
 function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -50,7 +59,7 @@ function ThemeToggle() {
   );
 }
 
-export function Footer() {
+export function Footer({ user }: FooterProps) {
   return (
     <footer className="bg-background border-t border-border">
       <div className="mx-auto max-w-350 px-4 sm:px-8 py-16">
@@ -91,8 +100,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-foreground">
-                  Get Started
+                <Link
+                  href={user ? "/dashboard" : "/login"}
+                  className="hover:text-foreground"
+                >
+                  {user ? "Dashboard" : "Get Started"}
                 </Link>
               </li>
             </ul>
