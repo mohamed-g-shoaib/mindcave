@@ -4,9 +4,15 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Link01Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
+import {
+  Link01Icon,
+  PlusSignIcon,
+  GridViewIcon,
+  ListViewIcon,
+} from "@hugeicons/core-free-icons";
 
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
+import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
 import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
 import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,6 +33,7 @@ function DashboardContent() {
   const [editingBookmark, setEditingBookmark] =
     useState<BookmarkWithCategory | null>(null);
   const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"card" | "list">("card");
 
   // Get current category name
   const currentCategory = categoryId
@@ -78,17 +85,37 @@ function DashboardContent() {
     <>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold md:text-3xl">
-            {currentCategory || "All Bookmarks"}
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground md:mt-2 md:text-base">
-            {bookmarks.length === 0
-              ? "No bookmarks yet. Add your first one!"
-              : `${bookmarks.length} bookmark${
-                  bookmarks.length === 1 ? "" : "s"
-                }`}
-          </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold md:text-3xl">
+              {currentCategory || "All Bookmarks"}
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground md:mt-2 md:text-base">
+              {bookmarks.length === 0
+                ? "No bookmarks yet. Add your first one!"
+                : `${bookmarks.length} bookmark${
+                    bookmarks.length === 1 ? "" : "s"
+                  }`}
+            </p>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button
+              variant={viewMode === "card" ? "secondary" : "ghost"}
+              size="icon-sm"
+              onClick={() => setViewMode("card")}
+              aria-label="Card view"
+            >
+              <HugeiconsIcon icon={GridViewIcon} className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "secondary" : "ghost"}
+              size="icon-sm"
+              onClick={() => setViewMode("list")}
+              aria-label="List view"
+            >
+              <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
         {/* Content */}
@@ -111,10 +138,22 @@ function DashboardContent() {
               Add Bookmark
             </Button>
           </div>
-        ) : (
+        ) : viewMode === "card" ? (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {bookmarks.map((bookmark) => (
               <BookmarkCard
+                key={bookmark.id}
+                bookmark={bookmark}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onCopy={handleCopy}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="overflow-hidden border">
+            {bookmarks.map((bookmark) => (
+              <BookmarkListItem
                 key={bookmark.id}
                 bookmark={bookmark}
                 onEdit={handleEdit}
