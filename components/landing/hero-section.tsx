@@ -188,7 +188,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                       </kbd>
                     </div>
                     {/* Add Bookmark (Placement matching realism) */}
-                    <div className="flex h-7 items-center bg-primary px-3 text-[10px] font-bold text-primary-foreground">
+                    <div className="flex h-7 items-center bg-primary px-3 text-[10px] font-medium text-primary-foreground">
                       <HugeiconsIcon
                         icon={PlusSignIcon}
                         className="h-3 w-3 mr-1"
