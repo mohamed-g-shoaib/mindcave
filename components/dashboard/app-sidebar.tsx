@@ -37,6 +37,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import MindCaveLogo from "@/components/mind-cave-logo";
@@ -148,24 +154,51 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 ) : (
                   categories.map((category) => (
                     <SidebarMenuItem key={category.id}>
-                      <SidebarMenuButton
-                        onClick={() =>
-                          router.push(`/dashboard?category=${category.id}`)
-                        }
-                        isActive={currentCategoryId === category.id}
-                        tooltip={category.name}
-                      >
-                        <HugeiconsIcon
-                          icon={getCategoryIcon(category.icon)}
-                          className="h-4 w-4"
-                          style={
-                            category.color
-                              ? { color: category.color }
-                              : undefined
-                          }
-                        />
-                        <span>{category.name}</span>
-                      </SidebarMenuButton>
+                      <ContextMenu>
+                        <ContextMenuTrigger className="flex flex-1 items-center overflow-hidden">
+                          <SidebarMenuButton
+                            onClick={() =>
+                              router.push(`/dashboard?category=${category.id}`)
+                            }
+                            isActive={currentCategoryId === category.id}
+                            tooltip={category.name}
+                          >
+                            <HugeiconsIcon
+                              icon={getCategoryIcon(category.icon)}
+                              className="h-4 w-4"
+                              style={
+                                category.color
+                                  ? { color: category.color }
+                                  : undefined
+                              }
+                            />
+                            <span>{category.name}</span>
+                          </SidebarMenuButton>
+                        </ContextMenuTrigger>
+                        <ContextMenuContent side="right" align="start">
+                          <ContextMenuItem
+                            onClick={() => setEditingCategory(category)}
+                          >
+                            <HugeiconsIcon
+                              icon={Edit02Icon}
+                              className="mr-2 h-4 w-4"
+                            />
+                            Edit
+                          </ContextMenuItem>
+                          <ContextMenuItem
+                            onClick={() =>
+                              handleDeleteCategory(category.id, category.name)
+                            }
+                            variant="destructive"
+                          >
+                            <HugeiconsIcon
+                              icon={Delete02Icon}
+                              className="mr-2 h-4 w-4"
+                            />
+                            Delete
+                          </ContextMenuItem>
+                        </ContextMenuContent>
+                      </ContextMenu>
                       <DropdownMenu>
                         <DropdownMenuTrigger
                           render={<SidebarMenuAction showOnHover />}
@@ -190,7 +223,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                             onClick={() =>
                               handleDeleteCategory(category.id, category.name)
                             }
-                            className="text-destructive focus:text-destructive"
+                            variant="destructive"
                           >
                             <HugeiconsIcon
                               icon={Delete02Icon}
