@@ -39,14 +39,24 @@ export function BookmarkListItem({
   };
 
   return (
-    <div className="group flex items-center gap-4 border-b p-3 transition-colors hover:bg-muted/50 last:border-b-0">
+    <div
+      className="group flex cursor-pointer items-center gap-3 border-b p-3 transition-colors hover:bg-muted/50 last:border-b-0 md:cursor-default md:gap-4"
+      onClick={(e) => {
+        // On mobile, clicking the row (not buttons) opens the bookmark
+        const target = e.target as HTMLElement;
+        const isButton = target.closest("button");
+        if (window.innerWidth < 768 && !isButton) {
+          handleOpen();
+        }
+      }}
+    >
       {/* Favicon */}
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10">
         {bookmark.favicon_url ? (
           <img
             src={bookmark.favicon_url}
             alt=""
-            className="h-6 w-6 object-contain"
+            className="h-5 w-5 object-contain md:h-6 md:w-6"
             onError={(e) => {
               e.currentTarget.style.display = "none";
             }}
@@ -54,16 +64,18 @@ export function BookmarkListItem({
         ) : (
           <HugeiconsIcon
             icon={Link01Icon}
-            className="h-5 w-5 text-muted-foreground"
+            className="h-4 w-4 text-muted-foreground md:h-5 md:w-5"
           />
         )}
       </div>
 
       {/* Content */}
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="truncate font-medium">{bookmark.title}</span>
+        <span className="truncate text-sm font-medium md:text-base">
+          {bookmark.title}
+        </span>
         {bookmark.description && (
-          <span className="truncate text-sm text-muted-foreground">
+          <span className="hidden truncate text-sm text-muted-foreground md:block">
             {bookmark.description}
           </span>
         )}
@@ -77,6 +89,7 @@ export function BookmarkListItem({
               variant="ghost"
               size="icon-sm"
               className="shrink-0 md:opacity-0 md:transition-opacity md:group-hover:opacity-100"
+              onClick={(e) => e.stopPropagation()}
             />
           }
         >
@@ -91,6 +104,10 @@ export function BookmarkListItem({
             <HugeiconsIcon icon={Copy01Icon} className="mr-2 h-4 w-4" />
             Copy Link
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleOpen} className="md:hidden">
+            <HugeiconsIcon icon={ArrowUpRight01Icon} className="mr-2 h-4 w-4" />
+            Open
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => onDelete(bookmark.id)}
@@ -102,7 +119,7 @@ export function BookmarkListItem({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Category Badge */}
+      {/* Category Badge - hidden on mobile */}
       {bookmark.category && (
         <Badge
           variant="secondary"
@@ -115,14 +132,20 @@ export function BookmarkListItem({
                 }
               : undefined
           }
-          className={`shrink-0 ${bookmark.category.color ? "border" : ""}`}
+          className={`hidden shrink-0 md:inline-flex ${
+            bookmark.category.color ? "border" : ""
+          }`}
         >
           {bookmark.category.name}
         </Badge>
       )}
 
-      {/* Open Button */}
-      <Button onClick={handleOpen} size="sm" className="shrink-0 gap-1">
+      {/* Open Button - hidden on mobile */}
+      <Button
+        onClick={handleOpen}
+        size="sm"
+        className="hidden shrink-0 gap-1 md:inline-flex"
+      >
         Open
         <HugeiconsIcon icon={ArrowUpRight01Icon} className="h-3 w-3" />
       </Button>
