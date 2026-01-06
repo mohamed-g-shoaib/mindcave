@@ -8,27 +8,31 @@ import {
   ListViewIcon,
   YoutubeIcon,
   SpotifyIcon,
-  DribbbleIcon,
+  PaintBoardIcon,
 } from "@hugeicons/core-free-icons";
+import { OGPreview } from "../og-preview";
 
 const bookmarks = [
   {
+    id: "youtube",
     title: "YouTube",
     description: "Streaming",
     icon: YoutubeIcon,
     color: "#ff0000",
   },
   {
+    id: "spotify",
     title: "Spotify",
     description: "Music",
     icon: SpotifyIcon,
     color: "#1db954",
   },
   {
-    title: "Dribbble",
+    id: "figma",
+    title: "Design",
     description: "Inspire",
-    icon: DribbbleIcon,
-    color: "#ea4c89",
+    icon: PaintBoardIcon,
+    color: "#ec4899",
   },
 ];
 
@@ -136,59 +140,7 @@ export function ViewModesDemo() {
                 >
                   {/* OG Image placeholder */}
                   <div className="relative min-h-0 flex-1 w-full overflow-hidden border-b border-border/50">
-                    {bookmark.title === "YouTube" && (
-                      <div className="flex h-full w-full flex-col bg-gradient-to-b from-neutral-800 to-black p-2 relative">
-                        {/* Play button area */}
-                        <div className="flex-1 flex items-center justify-center">
-                          <div className="w-5 h-4 bg-[#f00]/90 flex items-center justify-center">
-                            <div className="w-0 h-0 border-t-2 border-t-transparent border-b-2 border-b-transparent border-l-4 border-l-white ml-0.5" />
-                          </div>
-                        </div>
-                        {/* Timestamp */}
-                        <div className="absolute bottom-3.5 right-1.5 bg-black/80 px-0.5 text-[5px] text-white font-medium">
-                          3:42
-                        </div>
-                        {/* Progress bar */}
-                        <div className="h-0.5 w-full bg-white/20 overflow-hidden mt-auto">
-                          <div className="h-full w-[45%] bg-[#f00]" />
-                        </div>
-                      </div>
-                    )}
-                    {bookmark.title === "Spotify" && (
-                      <div className="flex h-full w-full flex-col bg-gradient-to-br from-[#1db954] to-[#191414] p-1.5 relative overflow-hidden">
-                        {/* Equalizer bars */}
-                        <div className="flex-1 flex items-end justify-center gap-0.5 pb-1">
-                          <div className="w-1 h-[60%] bg-white/80" />
-                          <div className="w-1 h-[90%] bg-white/80" />
-                          <div className="w-1 h-[45%] bg-white/80" />
-                          <div className="w-1 h-[75%] bg-white/80" />
-                          <div className="w-1 h-[50%] bg-white/80" />
-                        </div>
-                        {/* Text like a song preview */}
-                        <div className="mt-auto">
-                          <div className="text-[5px] text-white/60 truncate">
-                            Now Playing
-                          </div>
-                          <div className="text-[6px] text-white font-bold truncate">
-                            Song Title
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {bookmark.title === "Dribbble" && (
-                      <div className="flex h-full w-full flex-col bg-white p-1.5 relative overflow-hidden">
-                        {/* Design portfolio card style */}
-                        <div className="flex-1 bg-gradient-to-br from-[#ea4c89] to-[#f082ac]" />
-                        {/* Bottom info bar */}
-                        <div className="flex items-center gap-1 mt-1">
-                          <div className="w-2 h-2 bg-[#ea4c89]" />
-                          <div className="flex-1">
-                            <div className="h-0.5 w-full bg-muted-foreground/20" />
-                            <div className="h-0.5 w-[60%] bg-muted-foreground/20 mt-0.5" />
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    <OGPreview id={bookmark.id} />
                   </div>
 
                   {/* Info area */}
