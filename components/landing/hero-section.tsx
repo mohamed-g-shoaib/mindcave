@@ -9,12 +9,93 @@ import {
   ListViewIcon,
   ArrowDown01Icon,
   Home01Icon,
-  BookOpen01Icon,
   Briefcase02Icon,
-  Folder01Icon,
   PlusSignIcon,
   SidebarLeftIcon,
+  Copy01Icon,
+  MoreVerticalIcon,
+  CodeIcon,
+  SpotifyIcon,
+  PlayIcon,
+  PaintBoardIcon,
+  FramerIcon,
+  ReactIcon,
+  GithubIcon,
+  FigmaIcon,
+  StripeIcon,
+  YoutubeIcon,
+  NewTwitterIcon,
 } from "@hugeicons/core-free-icons";
+
+const MOCK_CATEGORIES = {
+  development: { name: "Development", icon: CodeIcon, color: "#10b981" },
+  design: { name: "Design", icon: PaintBoardIcon, color: "#ec4899" },
+  entertainment: { name: "Entertainment", icon: PlayIcon, color: "#ef4444" },
+  productivity: {
+    name: "Productivity",
+    icon: Briefcase02Icon,
+    color: "#6366f1",
+  },
+};
+
+const MOCK_BOOKMARKS = [
+  {
+    title: "React.js Documentation",
+    desc: "The library for web user interfaces",
+    icon: ReactIcon,
+    category: MOCK_CATEGORIES.development,
+    bg: "from-[#000000] to-[#333333]",
+  },
+  {
+    title: "Framer Motion",
+    desc: "Production-ready animations",
+    icon: FramerIcon,
+    category: MOCK_CATEGORIES.design,
+    bg: "from-[#0055FF] to-[#000000]",
+  },
+  {
+    title: "GitHub Repository",
+    desc: "Collaborative software development",
+    icon: GithubIcon,
+    category: MOCK_CATEGORIES.development,
+    bg: "from-[#24292e] to-[#444444]",
+  },
+  {
+    title: "Design Inspirations",
+    desc: "Daily UI/UX inspirations & projects",
+    icon: FigmaIcon,
+    category: MOCK_CATEGORIES.design,
+    bg: "from-[#F24E1E] via-[#A259FF] to-[#1ABCFE]",
+  },
+  {
+    title: "Stripe Dashboard",
+    desc: "Financial infrastructure for the internet",
+    icon: StripeIcon,
+    category: MOCK_CATEGORIES.productivity,
+    bg: "from-[#635bff] to-[#42d392]",
+  },
+  {
+    title: "Programming Tutorials",
+    desc: "Learn modern web development",
+    icon: YoutubeIcon,
+    category: MOCK_CATEGORIES.entertainment,
+    bg: "from-[#FF0000] to-[#282828]",
+  },
+  {
+    title: "New Lo-Fi Beats",
+    desc: "Music for studying and focus",
+    icon: SpotifyIcon,
+    category: MOCK_CATEGORIES.entertainment,
+    bg: "from-[#1DB954] to-[#191414]",
+  },
+  {
+    title: "Tech News Daily",
+    desc: "Latest in software and hardware",
+    icon: NewTwitterIcon,
+    category: MOCK_CATEGORIES.entertainment,
+    bg: "from-[#1DA1F2] to-[#14171A]",
+  },
+];
 
 export function HeroSection() {
   return (
@@ -97,24 +178,35 @@ export function HeroSection() {
                     </div>
                     <div className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
                       <HugeiconsIcon
-                        icon={BookOpen01Icon}
-                        className="h-3.5 w-3.5 text-blue-500"
+                        icon={MOCK_CATEGORIES.development.icon}
+                        className="h-3.5 w-3.5"
+                        style={{ color: MOCK_CATEGORIES.development.color }}
                       />
-                      Learning
+                      {MOCK_CATEGORIES.development.name}
                     </div>
                     <div className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
                       <HugeiconsIcon
-                        icon={Briefcase02Icon}
-                        className="h-3.5 w-3.5 text-orange-500"
+                        icon={MOCK_CATEGORIES.design.icon}
+                        className="h-3.5 w-3.5"
+                        style={{ color: MOCK_CATEGORIES.design.color }}
                       />
-                      Work
+                      {MOCK_CATEGORIES.design.name}
                     </div>
                     <div className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
                       <HugeiconsIcon
-                        icon={Folder01Icon}
-                        className="h-3.5 w-3.5 text-purple-500"
+                        icon={MOCK_CATEGORIES.entertainment.icon}
+                        className="h-3.5 w-3.5"
+                        style={{ color: MOCK_CATEGORIES.entertainment.color }}
                       />
-                      Projects
+                      {MOCK_CATEGORIES.entertainment.name}
+                    </div>
+                    <div className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
+                      <HugeiconsIcon
+                        icon={MOCK_CATEGORIES.productivity.icon}
+                        className="h-3.5 w-3.5"
+                        style={{ color: MOCK_CATEGORIES.productivity.color }}
+                      />
+                      {MOCK_CATEGORIES.productivity.name}
                     </div>
                     <div className="mt-4 flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground/60">
                       <HugeiconsIcon
@@ -215,19 +307,52 @@ export function HeroSection() {
                   </div>
 
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i, index) => (
+                    {MOCK_BOOKMARKS.map((bookmark, index) => (
                       <div
-                        key={i}
+                        key={index}
                         className={cn(
-                          "group overflow-hidden border border-border bg-background transition-shadow hover:shadow-md",
+                          "group flex flex-col overflow-hidden border border-border bg-background transition-shadow hover:shadow-md",
                           index >= 4 && "hidden xl:block",
                           index >= 2 && index < 4 && "hidden md:block"
                         )}
                       >
-                        <div className="aspect-video bg-linear-to-br from-secondary/50 to-muted/50" />
+                        {/* OG Image Simulation */}
+                        <div
+                          className={cn(
+                            "aspect-video bg-linear-to-br p-2 flex items-center justify-center opacity-80",
+                            bookmark.bg
+                          )}
+                        >
+                          <HugeiconsIcon
+                            icon={bookmark.icon}
+                            className="h-8 w-8 text-white/40"
+                          />
+                        </div>
+                        {/* Card Info */}
                         <div className="p-3">
-                          <div className="h-3 w-3/4 bg-border/60" />
-                          <div className="mt-2 h-2 w-1/2 bg-border/30" />
+                          <div className="flex items-start justify-between gap-4">
+                            <h3 className="text-[10px] font-bold text-foreground line-clamp-2 flex-1 leading-tight">
+                              {bookmark.title}
+                            </h3>
+                            <div className="flex items-center gap-2 -mr-1 shrink-0 opacity-60">
+                              <HugeiconsIcon
+                                icon={bookmark.category.icon}
+                                className="h-3 w-3"
+                                style={{ color: bookmark.category.color }}
+                              />
+                              <HugeiconsIcon
+                                icon={Copy01Icon}
+                                className="h-3 w-3"
+                              />
+                              <HugeiconsIcon
+                                icon={MoreVerticalIcon}
+                                className="h-3 w-3"
+                              />
+                            </div>
+                          </div>
+                          <p className="mt-2 text-[8px] text-muted-foreground line-clamp-1 leading-tight">
+                            {bookmark.desc}
+                          </p>
                         </div>
                       </div>
                     ))}
