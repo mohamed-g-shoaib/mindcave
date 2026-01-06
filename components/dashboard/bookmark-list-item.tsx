@@ -76,7 +76,7 @@ export function BookmarkListItem({
             <Button
               variant="ghost"
               size="icon-sm"
-              className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+              className="shrink-0 md:opacity-0 md:transition-opacity md:group-hover:opacity-100"
             />
           }
         >
