@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { createClient } from "@/lib/supabase/server";
 import { Navbar } from "@/components/landing/navbar";
 import { HeroSection } from "@/components/landing/hero-section";
 import { AboutSection } from "@/components/landing/about-section";
@@ -8,13 +10,43 @@ import { FAQSection } from "@/components/landing/faq-section";
 import { CTASection } from "@/components/landing/cta-section";
 import { Footer } from "@/components/landing/footer";
 
+async function getUser() {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+
+    if (!data?.user) {
+      return null;
+    }
+
+    return {
+      id: data.user.id,
+      email: data.user.email || "",
+      name:
+        data.user.user_metadata?.full_name ||
+        data.user.email?.split("@")[0] ||
+        "User",
+      avatar_url: data.user.user_metadata?.avatar_url,
+    };
+  } catch {
+    return null;
+  }
+}
+
+async function NavbarWithUser() {
+  const user = await getUser();
+  return <Navbar user={user} />;
+}
+
 export default function LandingPage() {
   return (
     <div
       className="min-h-screen"
       style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
     >
-      <Navbar />
+      <Suspense fallback={<Navbar />}>
+        <NavbarWithUser />
+      </Suspense>
 
       <main className="pt-20">
         <HeroSection />

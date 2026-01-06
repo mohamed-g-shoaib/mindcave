@@ -6,11 +6,9 @@ import MindCaveLogo from "@/components/mind-cave-logo";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
@@ -20,7 +18,16 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 
-export function Navbar() {
+interface NavbarProps {
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    avatar_url?: string;
+  } | null;
+}
+
+export function Navbar({ user }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -179,11 +186,11 @@ export function Navbar() {
                   {/* Mobile Auth Button */}
                   <div className="border-t border-border pt-8">
                     <SheetClose
-                      render={<Link href="/login" />}
+                      render={<Link href={user ? "/dashboard" : "/login"} />}
                       nativeButton={false}
                       className="block bg-primary p-4 text-center text-base font-medium text-primary-foreground hover:bg-primary/90"
                     >
-                      Get Started
+                      {user ? "Dashboard" : "Get Started"}
                     </SheetClose>
                   </div>
                 </div>
@@ -194,10 +201,10 @@ export function Navbar() {
           {/* Desktop Auth */}
           <div className="hidden items-center lg:flex">
             <Link
-              href="/login"
+              href={user ? "/dashboard" : "/login"}
               className="bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
             >
-              Get Started
+              {user ? "Dashboard" : "Get Started"}
             </Link>
           </div>
         </div>

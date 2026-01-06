@@ -112,7 +112,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 size="lg"
-                onClick={() => router.push("/dashboard")}
+                onClick={() => router.push("/")}
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground [&_svg]:size-auto"
               >
                 <MindCaveLogo width={32} height={32} className="shrink-0" />
@@ -292,6 +292,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     </p>
                   </div>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => router.push("/")}>
+                    <HugeiconsIcon icon={Home01Icon} className="mr-2 h-4 w-4" />
+                    Go to Homepage
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() =>
                       setTheme(theme === "dark" ? "light" : "dark")
