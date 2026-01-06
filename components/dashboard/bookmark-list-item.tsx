@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Link01Icon,
@@ -7,11 +8,10 @@ import {
   Delete02Icon,
   Copy01Icon,
   MoreVerticalIcon,
-  ArrowUpRight01Icon,
+  Tick02Icon,
 } from "@hugeicons/core-free-icons";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getCategoryIcon } from "@/components/dashboard/icon-picker";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
 interface BookmarkListItemProps {
@@ -26,6 +27,8 @@ interface BookmarkListItemProps {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onCopy: (url: string) => void;
+  showCategory?: boolean;
+  columns?: number;
 }
 
 export function BookmarkListItem({
@@ -33,19 +36,35 @@ export function BookmarkListItem({
   onEdit,
   onDelete,
   onCopy,
+  showCategory = true,
+  columns = 1,
 }: BookmarkListItemProps) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => setCopied(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
+
   const handleOpen = () => {
     window.open(bookmark.url, "_blank", "noopener,noreferrer");
   };
 
+  const handleCopy = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    onCopy(bookmark.url);
+    setCopied(true);
+  };
+
   return (
     <div
-      className="group flex cursor-pointer items-center gap-3 border-b p-3 transition-colors hover:bg-muted/50 last:border-b-0 md:cursor-default md:gap-4"
+      className="group flex cursor-pointer items-center gap-2 border-b p-2 transition-colors hover:bg-muted/50 last:border-b-0 md:gap-3 md:p-3"
       onClick={(e) => {
-        // On mobile, clicking the row (not buttons) opens the bookmark
         const target = e.target as HTMLElement;
-        const isButton = target.closest("button");
-        if (window.innerWidth < 768 && !isButton) {
+        // Don't open if clicking a button or a menu item
+        if (!target.closest("button") && !target.closest('[role="menuitem"]')) {
           handleOpen();
         }
       }}
@@ -81,74 +100,96 @@ export function BookmarkListItem({
         )}
       </div>
 
-      {/* Actions Menu */}
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              className="shrink-0 md:opacity-0 md:transition-opacity md:group-hover:opacity-100"
-              onClick={(e) => e.stopPropagation()}
-            />
-          }
-        >
-          <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => onEdit(bookmark.id)}>
-            <HugeiconsIcon icon={Edit02Icon} className="mr-2 h-4 w-4" />
-            Edit
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onCopy(bookmark.url)}>
-            <HugeiconsIcon icon={Copy01Icon} className="mr-2 h-4 w-4" />
-            Copy Link
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleOpen} className="md:hidden">
-            <HugeiconsIcon icon={ArrowUpRight01Icon} className="mr-2 h-4 w-4" />
-            Open
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => onDelete(bookmark.id)}
-            className="text-destructive focus:text-destructive"
+      {/* Actions Container - unified spacing and hit areas */}
+      <div className="flex items-center -mr-1 gap-0.5 shrink-0">
+        {/* Category Icon - no background, fixed container size for consistent gap */}
+        {showCategory && bookmark.category && (
+          <div
+            className={`items-center justify-center w-8 h-8 shrink-0 ${
+              columns === 1 ? "flex" : "hidden md:flex"
+            }`}
+            style={{ color: bookmark.category.color || undefined }}
+            title={bookmark.category.name}
           >
-            <HugeiconsIcon icon={Delete02Icon} className="mr-2 h-4 w-4" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            <HugeiconsIcon
+              icon={getCategoryIcon(bookmark.category.icon)}
+              className="h-4 w-4"
+            />
+          </div>
+        )}
 
-      {/* Category Badge - hidden on mobile */}
-      {bookmark.category && (
-        <Badge
-          variant="secondary"
-          style={
-            bookmark.category.color
-              ? {
-                  backgroundColor: bookmark.category.color + "20",
-                  color: bookmark.category.color,
-                  borderColor: bookmark.category.color + "40",
-                }
-              : undefined
-          }
-          className={`hidden shrink-0 md:inline-flex ${
-            bookmark.category.color ? "border" : ""
+        {/* Copy Button - shown always, except for mobile 2 columns (moved to menu) */}
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={handleCopy}
+          className={`hover:text-primary transition-colors h-8 w-8 px-0 shrink-0 ${
+            columns === 2 ? "hidden md:flex" : "flex"
           }`}
+          aria-label="Copy link"
         >
-          {bookmark.category.name}
-        </Badge>
-      )}
+          <HugeiconsIcon
+            icon={copied ? Tick02Icon : Copy01Icon}
+            className={`h-4 w-4 transition-all duration-200 ${
+              copied ? "text-green-500 scale-110" : ""
+            }`}
+          />
+        </Button>
 
-      {/* Open Button - hidden on mobile */}
-      <Button
-        onClick={handleOpen}
-        size="sm"
-        className="hidden shrink-0 gap-1 md:inline-flex"
-      >
-        Open
-        <HugeiconsIcon icon={ArrowUpRight01Icon} className="h-3 w-3" />
-      </Button>
+        {/* Menu Button - always visible, consistent size */}
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="hover:text-primary transition-colors h-8 w-8 px-0 shrink-0"
+                onClick={(e) => e.stopPropagation()}
+              />
+            }
+          >
+            <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(bookmark.id);
+              }}
+            >
+              <HugeiconsIcon icon={Edit02Icon} className="mr-2 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
+
+            {/* Mobile 2 Columns: Move Copy Link to menu */}
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCopy();
+              }}
+              className={columns === 2 ? "flex md:hidden" : "hidden"}
+            >
+              <HugeiconsIcon
+                icon={copied ? Tick02Icon : Copy01Icon}
+                className={`mr-2 h-4 w-4 ${copied ? "text-green-500" : ""}`}
+              />
+              {copied ? "Copied!" : "Copy Link"}
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(bookmark.id);
+              }}
+              className="text-destructive focus:text-destructive"
+            >
+              <HugeiconsIcon icon={Delete02Icon} className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 }

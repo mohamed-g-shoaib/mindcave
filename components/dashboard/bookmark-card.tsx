@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Link01Icon,
@@ -7,16 +8,13 @@ import {
   Delete02Icon,
   Copy01Icon,
   MoreVerticalIcon,
-  ArrowUpRight01Icon,
+  Tick02Icon,
 } from "@hugeicons/core-free-icons";
 
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -27,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getCategoryIcon } from "@/components/dashboard/icon-picker";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
 interface BookmarkCardProps {
@@ -34,6 +33,8 @@ interface BookmarkCardProps {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onCopy: (url: string) => void;
+  showCategory?: boolean;
+  columns?: number;
 }
 
 export function BookmarkCard({
@@ -41,16 +42,31 @@ export function BookmarkCard({
   onEdit,
   onDelete,
   onCopy,
+  showCategory = true,
+  columns = 1,
 }: BookmarkCardProps) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (copied) {
+      const timer = setTimeout(() => setCopied(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copied]);
+
   const handleOpen = () => {
     window.open(bookmark.url, "_blank", "noopener,noreferrer");
   };
 
-  // Check if it's a YouTube video
+  const handleCopy = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onCopy(bookmark.url);
+    setCopied(true);
+  };
+
   const isYouTube =
     bookmark.media_type === "youtube" && bookmark.media_embed_id;
 
-  // Generate a color based on the URL for consistent backgrounds
   const getColorFromUrl = (url: string) => {
     let hash = 0;
     for (let i = 0; i < url.length; i++) {
@@ -62,125 +78,136 @@ export function BookmarkCard({
 
   return (
     <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md p-0">
-      {/* Media Section */}
-      {isYouTube ? (
-        <div className="aspect-video w-full overflow-hidden bg-muted">
-          <iframe
-            src={`https://www.youtube.com/embed/${bookmark.media_embed_id}`}
-            title={bookmark.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="h-full w-full"
-          />
-        </div>
-      ) : bookmark.og_image_url ? (
-        <div className="aspect-video w-full overflow-hidden bg-muted">
-          <img
-            src={bookmark.og_image_url}
-            alt={bookmark.title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-          />
-        </div>
-      ) : bookmark.favicon_url ? (
-        <div
-          className="flex aspect-video w-full items-center justify-center"
-          style={{ backgroundColor: getColorFromUrl(bookmark.url) }}
-        >
-          <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/80 shadow-sm backdrop-blur-sm">
-            <img
-              src={bookmark.favicon_url}
-              alt={`${bookmark.title} favicon`}
-              className="h-10 w-10 object-contain"
-              onError={(e) => {
-                // Fallback to link icon if favicon fails to load
-                e.currentTarget.style.display = "none";
-                const parent = e.currentTarget.parentElement;
-                if (parent) {
-                  parent.innerHTML = `<svg class="h-10 w-10 text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
-                }
-              }}
+      {/* Media Section - now the only clickable area to open bookmark */}
+      <div className="cursor-pointer overflow-hidden" onClick={handleOpen}>
+        {isYouTube ? (
+          <div className="aspect-video w-full bg-muted">
+            <iframe
+              src={`https://www.youtube.com/embed/${bookmark.media_embed_id}`}
+              title={bookmark.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="h-full w-full pointer-events-none"
             />
           </div>
-        </div>
-      ) : (
-        <div className="flex aspect-video w-full items-center justify-center bg-muted">
-          <HugeiconsIcon
-            icon={Link01Icon}
-            className="h-12 w-12 text-muted-foreground"
-          />
-        </div>
-      )}
+        ) : bookmark.og_image_url ? (
+          <div className="aspect-video w-full bg-muted">
+            <img
+              src={bookmark.og_image_url}
+              alt={bookmark.title}
+              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            />
+          </div>
+        ) : bookmark.favicon_url ? (
+          <div
+            className="flex aspect-video w-full items-center justify-center transition-opacity hover:opacity-90"
+            style={{ backgroundColor: getColorFromUrl(bookmark.url) }}
+          >
+            <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/80 shadow-sm backdrop-blur-sm">
+              <img
+                src={bookmark.favicon_url}
+                alt={`${bookmark.title} favicon`}
+                className="h-10 w-10 object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    parent.innerHTML = `<svg class="h-10 w-10 text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+                  }
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex aspect-video w-full items-center justify-center bg-muted transition-colors hover:bg-muted/80">
+            <HugeiconsIcon
+              icon={Link01Icon}
+              className="h-12 w-12 text-muted-foreground"
+            />
+          </div>
+        )}
+      </div>
 
       {/* Content */}
-      <CardHeader className="flex-1 pb-2 px-4">
-        <div className="flex items-start justify-between gap-2">
-          <CardTitle className="line-clamp-2 text-base">
+      <CardHeader className="flex-1 p-3 space-y-1">
+        <div className="flex items-start justify-between gap-1">
+          <CardTitle className="line-clamp-2 text-base flex-1 min-w-0">
             {bookmark.title}
           </CardTitle>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              render={
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="shrink-0 md:opacity-0 md:transition-opacity md:group-hover:opacity-100"
-                />
-              }
-            >
-              <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit(bookmark.id)}>
-                <HugeiconsIcon icon={Edit02Icon} className="mr-2 h-4 w-4" />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onCopy(bookmark.url)}>
-                <HugeiconsIcon icon={Copy01Icon} className="mr-2 h-4 w-4" />
-                Copy Link
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => onDelete(bookmark.id)}
-                className="text-destructive focus:text-destructive"
+
+          {/* Actions - consistent gap-0.5 and aligned to edge */}
+          <div className="flex items-center -mr-1 gap-0.5 shrink-0">
+            {/* Category Icon - show in 1-col card on mobile, or always on desktop */}
+            {showCategory && bookmark.category && (
+              <div
+                className={`items-center justify-center w-8 h-8 ${
+                  columns === 1 ? "flex" : "hidden md:flex"
+                }`}
+                style={{ color: bookmark.category.color || undefined }}
+                title={bookmark.category.name}
               >
-                <HugeiconsIcon icon={Delete02Icon} className="mr-2 h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <HugeiconsIcon
+                  icon={getCategoryIcon(bookmark.category.icon)}
+                  className="h-4 w-4"
+                />
+              </div>
+            )}
+
+            {/* Copy Button */}
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              onClick={handleCopy}
+              className="hover:text-primary transition-colors h-8 w-8 px-0 shrink-0"
+              aria-label="Copy link"
+            >
+              <HugeiconsIcon
+                icon={copied ? Tick02Icon : Copy01Icon}
+                className={`h-4 w-4 transition-all duration-200 ${
+                  copied ? "text-green-500 scale-110" : ""
+                }`}
+              />
+            </Button>
+
+            {/* Menu Button */}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    className="hover:text-primary transition-colors h-8 w-8 px-0 shrink-0"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                }
+              >
+                <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => onEdit(bookmark.id)}>
+                  <HugeiconsIcon icon={Edit02Icon} className="mr-2 h-4 w-4" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => onDelete(bookmark.id)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <HugeiconsIcon icon={Delete02Icon} className="mr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
+
+        {/* Description - takes full width below title and actions */}
         {bookmark.description && (
-          <CardDescription className="line-clamp-2">
+          <CardDescription className="line-clamp-2 w-full">
             {bookmark.description}
           </CardDescription>
         )}
       </CardHeader>
-
-      <CardFooter className="flex items-center justify-between gap-2 p-4">
-        {bookmark.category ? (
-          <Badge
-            variant="secondary"
-            style={
-              bookmark.category.color
-                ? {
-                    backgroundColor: bookmark.category.color + "20",
-                    color: bookmark.category.color,
-                    borderColor: bookmark.category.color + "40",
-                  }
-                : undefined
-            }
-            className={bookmark.category.color ? "border" : ""}
-          >
-            {bookmark.category.name}
-          </Badge>
-        ) : (
-          <span />
-        )}
-        <Button onClick={handleOpen} size="sm" className="gap-1">
-          Open
-          <HugeiconsIcon icon={ArrowUpRight01Icon} className="h-3 w-3" />
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

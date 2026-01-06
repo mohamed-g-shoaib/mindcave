@@ -275,6 +275,8 @@ function DashboardContent() {
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onCopy={handleCopy}
+                showCategory={!categoryId}
+                columns={currentColumns}
               />
             ))}
           </div>
@@ -287,6 +289,8 @@ function DashboardContent() {
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                   onCopy={handleCopy}
+                  showCategory={!categoryId}
+                  columns={currentColumns}
                 />
               </div>
             ))}
