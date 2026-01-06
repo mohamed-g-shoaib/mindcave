@@ -20,6 +20,16 @@ import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -96,6 +106,9 @@ function DashboardContent() {
   const [editingBookmark, setEditingBookmark] =
     useState<BookmarkWithCategory | null>(null);
   const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
+  const [deletingBookmarkId, setDeletingBookmarkId] = useState<string | null>(
+    null
+  );
 
   // Get current category name
   const currentCategory = categoryId
@@ -109,12 +122,20 @@ function DashboardContent() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
+    setDeletingBookmarkId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!deletingBookmarkId) return;
+
     try {
-      await deleteBookmark.mutateAsync(id);
+      await deleteBookmark.mutateAsync(deletingBookmarkId);
       toast.success("Bookmark deleted successfully");
     } catch {
       toast.error("Failed to delete bookmark");
+    } finally {
+      setDeletingBookmarkId(null);
     }
   };
 
@@ -302,6 +323,42 @@ function DashboardContent() {
         open={addBookmarkOpen}
         onOpenChange={setAddBookmarkOpen}
       />
+
+      <AlertDialog
+        open={!!deletingBookmarkId}
+        onOpenChange={(open) => !open && setDeletingBookmarkId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete{" "}
+              <span className="font-medium text-foreground">
+                &quot;
+                {bookmarks.find((b) => b.id === deletingBookmarkId)?.title ||
+                  "this bookmark"}
+                &quot;
+              </span>{" "}
+              from your cave.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteBookmark.isPending}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmDelete();
+              }}
+              variant="destructive"
+              disabled={deleteBookmark.isPending}
+            >
+              {deleteBookmark.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <EditBookmarkSheet
         open={!!editingBookmark}
         onOpenChange={(open) => !open && setEditingBookmark(null)}
