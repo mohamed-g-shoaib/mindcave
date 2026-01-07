@@ -131,12 +131,12 @@ export function Footer({ user }: FooterProps) {
             </h3>
             <ul className="space-y-4 text-base text-muted-foreground">
               <li>
-                <Link href="#" className="hover:text-foreground">
+                <Link href="/privacy" className="hover:text-foreground">
                   Privacy
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-foreground">
+                <Link href="/terms" className="hover:text-foreground">
                   Terms
                 </Link>
               </li>

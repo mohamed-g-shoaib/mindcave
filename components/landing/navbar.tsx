@@ -213,6 +213,27 @@ export function Navbar({ user }: NavbarProps) {
   );
 }
 
+export function NavbarSkeleton() {
+  return (
+    <nav className="fixed top-0 z-60 w-full border-b border-border bg-background/95 backdrop-blur-md">
+      <div className="mx-auto flex h-20 max-w-350 items-center justify-between px-4 sm:px-8">
+        <div className="flex items-center gap-3">
+          <MindCaveLogo className="h-10 w-10" />
+          <span className="text-xl font-bold text-foreground">Mind Cave</span>
+        </div>
+        <div className="hidden lg:flex items-center gap-8">
+          <div className="h-4 w-12 bg-muted/50" />
+          <div className="h-4 w-20 bg-muted/50" />
+          <div className="h-4 w-16 bg-muted/50" />
+          <div className="h-4 w-24 bg-muted/50" />
+          <div className="h-4 w-8 bg-muted/50" />
+        </div>
+        <div className="h-10 w-28 bg-primary/20" />
+      </div>
+    </nav>
+  );
+}
+
 function ListItem({
   title,
   children,
