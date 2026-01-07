@@ -93,7 +93,7 @@ const DRIVER_CONFIG: Config = {
   allowClose: true,
   overlayColor: "rgba(0, 0, 0, 0.75)",
   stagePadding: 8,
-  stageRadius: 8,
+  stageRadius: 0,
   popoverClass: "driver-popover-custom",
   progressText: "{{current}} of {{total}}",
   nextBtnText: "Next →",
