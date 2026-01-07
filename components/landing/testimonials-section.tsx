@@ -4,35 +4,41 @@ import { motion, useMotionValue, animate } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { QuoteUpIcon, QuoteDownIcon } from "@hugeicons/core-free-icons";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const testimonials = [
   {
     name: "Sarah Chen",
     role: "Software Engineer",
+    avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Sarah",
     content:
       "Mind Cave has completely transformed how I manage my research and development resources. The category system is brilliant!",
   },
   {
     name: "Marcus Rodriguez",
     role: "Product Designer",
+    avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Marcus",
     content:
-      "Finally, a bookmark manager that's both powerful and beautiful. The dark mode is chef's kiss 👨‍🍳",
+      "Finally, a bookmark manager that's both powerful and beautiful. The dark mode is chef's kiss",
   },
   {
     name: "Emily Watson",
     role: "Content Creator",
+    avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Emily",
     content:
       "I've tried so many bookmark tools, but Mind Cave is the only one that stuck. It's just that good.",
   },
   {
     name: "David Kim",
     role: "Entrepreneur",
+    avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=David",
     content:
       "The quick add feature saves me hours every week. I can't imagine going back to browser bookmarks.",
   },
   {
     name: "Lisa Anderson",
     role: "Student",
+    avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Lisa",
     content:
       "Perfect for organizing all my study materials and research papers. The search is lightning fast!",
   },
@@ -107,7 +113,15 @@ export function TestimonialsSection() {
 
                   {/* Avatar, name, role - always at bottom */}
                   <div className="mt-auto flex items-center gap-4">
-                    <div className="h-12 w-12 shrink-0 bg-primary/20" />
+                    <Avatar className="h-12 w-12 shrink-0">
+                      <AvatarImage
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                      />
+                      <AvatarFallback className="bg-primary/20 text-primary">
+                        {testimonial.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
                       <p className="font-medium text-foreground">
                         {testimonial.name}
