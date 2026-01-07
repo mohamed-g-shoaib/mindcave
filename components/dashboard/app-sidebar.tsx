@@ -7,8 +7,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   PlusSignIcon,
   Home01Icon,
+  DownloadIcon,
   LogoutIcon,
   Settings01Icon,
+  Cancel01Icon,
+  CursorAddSelection01Icon,
   Edit02Icon,
   Delete02Icon,
   MoreVerticalIcon,
@@ -21,6 +24,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -44,12 +48,24 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import MindCaveLogo from "@/components/mind-cave-logo";
 import { useCategories, useDeleteCategory } from "@/hooks/use-categories";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
 import { AddCategorySheet } from "@/components/dashboard/add-category-sheet";
 import { EditCategorySheet } from "@/components/dashboard/edit-category-sheet";
+import { ImportBookmarksSheet } from "@/components/dashboard/import-bookmarks-sheet";
 import type { Category } from "@/lib/supabase/types";
 
 interface AppSidebarProps {
@@ -72,28 +88,20 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const { data: categories = [], isLoading } = useCategories();
   const [addCategoryOpen, setAddCategoryOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [importBookmarksOpen, setImportBookmarksOpen] = useState(false);
+  const [isSelectingCategories, setIsSelectingCategories] = useState(false);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [deleteDialog, setDeleteDialog] = useState<
+    { type: "single"; id: string; name: string } | { type: "bulk" } | null
+  >(null);
   const deleteCategory = useDeleteCategory();
 
   const isCollapsed = state === "collapsed";
 
-  const handleDeleteCategory = async (id: string, name: string) => {
-    if (
-      !confirm(
-        `Are you sure you want to delete "${name}"? Bookmarks in this category will become uncategorized.`
-      )
-    ) {
-      return;
-    }
-
-    try {
-      await deleteCategory.mutateAsync(id);
-      toast.success("Category deleted successfully");
-      if (currentCategoryId === id) {
-        router.push("/dashboard");
-      }
-    } catch (error) {
-      toast.error("Failed to delete category");
-    }
+  const handleDeleteCategory = (id: string, name: string) => {
+    setDeleteDialog({ type: "single", id, name });
   };
 
   const handleSignOut = async () => {
@@ -102,6 +110,73 @@ export function AppSidebar({ user }: AppSidebarProps) {
       window.location.href = "/";
     }
   };
+
+  const toggleCategorySelection = (id: string) => {
+    setSelectedCategoryIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const clearSelectedCategories = () => {
+    setSelectedCategoryIds(new Set());
+  };
+
+  const confirmDeleteFromDialog = async () => {
+    if (!deleteDialog) return;
+
+    const ids =
+      deleteDialog.type === "single"
+        ? [deleteDialog.id]
+        : Array.from(selectedCategoryIds);
+
+    if (ids.length === 0) {
+      setDeleteDialog(null);
+      return;
+    }
+
+    try {
+      for (const id of ids) {
+        await deleteCategory.mutateAsync(id);
+      }
+
+      if (deleteDialog.type === "single") {
+        toast.success("Category deleted successfully");
+      } else {
+        toast.success(
+          `Deleted ${ids.length} categor${ids.length === 1 ? "y" : "ies"}`
+        );
+      }
+
+      if (currentCategoryId && ids.includes(currentCategoryId)) {
+        router.push("/dashboard");
+      }
+
+      setDeleteDialog(null);
+      clearSelectedCategories();
+
+      if (deleteDialog.type === "bulk") {
+        setIsSelectingCategories(false);
+      }
+    } catch {
+      toast.error(
+        deleteDialog.type === "single"
+          ? "Failed to delete category"
+          : "Failed to delete selected categories"
+      );
+    }
+  };
+
+  const selectedCategoryNames = categories
+    .filter((c) => selectedCategoryIds.has(c.id))
+    .map((c) => c.name);
+  const previewNames = selectedCategoryNames.slice(0, 5).join(", ");
+  const previewSuffix =
+    selectedCategoryNames.length > 5
+      ? ` (+${selectedCategoryNames.length - 5} more)`
+      : "";
 
   return (
     <>
@@ -127,6 +202,51 @@ export function AppSidebar({ user }: AppSidebarProps) {
         <SidebarContent>
           <SidebarGroup>
             <SidebarGroupLabel>Library</SidebarGroupLabel>
+            {!isSelectingCategories ? (
+              <SidebarGroupAction
+                type="button"
+                onClick={() => {
+                  setIsSelectingCategories(true);
+                  setSelectedCategoryIds(new Set());
+                }}
+                title="Select categories"
+              >
+                <HugeiconsIcon
+                  icon={CursorAddSelection01Icon}
+                  className="h-4 w-4"
+                />
+              </SidebarGroupAction>
+            ) : (
+              <>
+                <SidebarGroupAction
+                  type="button"
+                  className="right-9"
+                  disabled={
+                    selectedCategoryIds.size === 0 ||
+                    (deleteCategory as unknown as { isPending?: boolean })
+                      .isPending
+                  }
+                  onClick={() => setDeleteDialog({ type: "bulk" })}
+                  title={
+                    selectedCategoryIds.size === 0
+                      ? "Select categories to delete"
+                      : "Delete selected categories"
+                  }
+                >
+                  <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
+                </SidebarGroupAction>
+                <SidebarGroupAction
+                  type="button"
+                  onClick={() => {
+                    setIsSelectingCategories(false);
+                    clearSelectedCategories();
+                  }}
+                  title="Cancel selection"
+                >
+                  <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
+                </SidebarGroupAction>
+              </>
+            )}
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
@@ -154,85 +274,120 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 ) : (
                   categories.map((category) => (
                     <SidebarMenuItem key={category.id}>
-                      <ContextMenu>
-                        <ContextMenuTrigger className="flex flex-1 items-center overflow-hidden">
-                          <SidebarMenuButton
-                            onClick={() =>
-                              router.push(`/dashboard?category=${category.id}`)
-                            }
-                            isActive={currentCategoryId === category.id}
-                            tooltip={category.name}
-                          >
-                            <HugeiconsIcon
-                              icon={getCategoryIcon(category.icon)}
-                              className="h-4 w-4"
-                              style={
-                                category.color
-                                  ? { color: category.color }
-                                  : undefined
-                              }
-                            />
-                            <span>{category.name}</span>
-                          </SidebarMenuButton>
-                        </ContextMenuTrigger>
-                        <ContextMenuContent side="right" align="start">
-                          <ContextMenuItem
-                            onClick={() => setEditingCategory(category)}
-                          >
-                            <HugeiconsIcon
-                              icon={Edit02Icon}
-                              className="mr-2 h-4 w-4"
-                            />
-                            Edit
-                          </ContextMenuItem>
-                          <ContextMenuItem
-                            onClick={() =>
-                              handleDeleteCategory(category.id, category.name)
-                            }
-                            variant="destructive"
-                          >
-                            <HugeiconsIcon
-                              icon={Delete02Icon}
-                              className="mr-2 h-4 w-4"
-                            />
-                            Delete
-                          </ContextMenuItem>
-                        </ContextMenuContent>
-                      </ContextMenu>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger
-                          render={<SidebarMenuAction showOnHover />}
+                      {isSelectingCategories ? (
+                        <SidebarMenuButton
+                          onClick={() => toggleCategorySelection(category.id)}
+                          isActive={selectedCategoryIds.has(category.id)}
+                          tooltip={category.name}
+                          className="gap-2"
                         >
-                          <HugeiconsIcon
-                            icon={MoreVerticalIcon}
-                            className="h-4 w-4"
+                          <Checkbox
+                            checked={selectedCategoryIds.has(category.id)}
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`Select ${category.name}`}
                           />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="right" align="start">
-                          <DropdownMenuItem
-                            onClick={() => setEditingCategory(category)}
-                          >
-                            <HugeiconsIcon
-                              icon={Edit02Icon}
-                              className="mr-2 h-4 w-4"
-                            />
-                            Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleDeleteCategory(category.id, category.name)
+                          <HugeiconsIcon
+                            icon={getCategoryIcon(category.icon)}
+                            className="h-4 w-4"
+                            style={
+                              category.color
+                                ? { color: category.color }
+                                : undefined
                             }
-                            variant="destructive"
-                          >
-                            <HugeiconsIcon
-                              icon={Delete02Icon}
-                              className="mr-2 h-4 w-4"
-                            />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                          />
+                          <span>{category.name}</span>
+                        </SidebarMenuButton>
+                      ) : (
+                        <>
+                          <ContextMenu>
+                            <ContextMenuTrigger className="flex flex-1 items-center overflow-hidden">
+                              <SidebarMenuButton
+                                onClick={() =>
+                                  router.push(
+                                    `/dashboard?category=${category.id}`
+                                  )
+                                }
+                                isActive={currentCategoryId === category.id}
+                                tooltip={category.name}
+                              >
+                                <HugeiconsIcon
+                                  icon={getCategoryIcon(category.icon)}
+                                  className="h-4 w-4"
+                                  style={
+                                    category.color
+                                      ? { color: category.color }
+                                      : undefined
+                                  }
+                                />
+                                <span>{category.name}</span>
+                              </SidebarMenuButton>
+                            </ContextMenuTrigger>
+                            <ContextMenuContent side="right" align="start">
+                              <ContextMenuItem
+                                onClick={() => setEditingCategory(category)}
+                              >
+                                <HugeiconsIcon
+                                  icon={Edit02Icon}
+                                  className="mr-2 h-4 w-4"
+                                />
+                                Edit
+                              </ContextMenuItem>
+                              <ContextMenuItem
+                                onClick={() =>
+                                  handleDeleteCategory(
+                                    category.id,
+                                    category.name
+                                  )
+                                }
+                                variant="destructive"
+                              >
+                                <HugeiconsIcon
+                                  icon={Delete02Icon}
+                                  className="mr-2 h-4 w-4"
+                                />
+                                Delete
+                              </ContextMenuItem>
+                            </ContextMenuContent>
+                          </ContextMenu>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger
+                              render={<SidebarMenuAction showOnHover />}
+                            >
+                              <HugeiconsIcon
+                                icon={MoreVerticalIcon}
+                                className="h-4 w-4"
+                              />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="right" align="start">
+                              <DropdownMenuItem
+                                onClick={() => setEditingCategory(category)}
+                              >
+                                <HugeiconsIcon
+                                  icon={Edit02Icon}
+                                  className="mr-2 h-4 w-4"
+                                />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleDeleteCategory(
+                                    category.id,
+                                    category.name
+                                  )
+                                }
+                                variant="destructive"
+                              >
+                                <HugeiconsIcon
+                                  icon={Delete02Icon}
+                                  className="mr-2 h-4 w-4"
+                                />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </>
+                      )}
                     </SidebarMenuItem>
                   ))
                 )}
@@ -307,6 +462,15 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     />
                     Toggle Theme
                   </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setImportBookmarksOpen(true)}
+                  >
+                    <HugeiconsIcon
+                      icon={DownloadIcon}
+                      className="mr-2 h-4 w-4"
+                    />
+                    Import Bookmarks
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>
                     <HugeiconsIcon icon={LogoutIcon} className="mr-2 h-4 w-4" />
@@ -328,6 +492,73 @@ export function AppSidebar({ user }: AppSidebarProps) {
         onOpenChange={(open) => !open && setEditingCategory(null)}
         category={editingCategory}
       />
+      <ImportBookmarksSheet
+        open={importBookmarksOpen}
+        onOpenChange={setImportBookmarksOpen}
+      />
+
+      <AlertDialog
+        open={deleteDialog !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteDialog(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {deleteDialog?.type === "bulk"
+                ? `Delete ${selectedCategoryIds.size} categories?`
+                : deleteDialog?.type === "single"
+                ? `Delete \"${deleteDialog.name}\"?`
+                : "Delete category?"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteDialog?.type === "bulk" ? (
+                selectedCategoryIds.size === 0 ? (
+                  "Select at least one category to delete."
+                ) : (
+                  <>
+                    Bookmarks in these categories will become uncategorized.
+                    {previewNames ? (
+                      <>
+                        <br />
+                        <br />
+                        {previewNames}
+                        {previewSuffix}
+                      </>
+                    ) : null}
+                  </>
+                )
+              ) : (
+                "Bookmarks in this category will become uncategorized."
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              disabled={
+                (deleteCategory as unknown as { isPending?: boolean }).isPending
+              }
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              disabled={
+                (deleteCategory as unknown as { isPending?: boolean })
+                  .isPending ||
+                (deleteDialog?.type === "bulk" &&
+                  selectedCategoryIds.size === 0)
+              }
+              onClick={() => {
+                void confirmDeleteFromDialog();
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
