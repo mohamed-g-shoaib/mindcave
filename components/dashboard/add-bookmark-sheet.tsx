@@ -45,9 +45,108 @@ export function AddBookmarkSheet({
     media_embed_id: "",
   });
   const [isFetchingMetadata, setIsFetchingMetadata] = useState(false);
+  const [isUploadingOg, setIsUploadingOg] = useState(false);
+  const [isUploadingFavicon, setIsUploadingFavicon] = useState(false);
+  const [hasCustomOg, setHasCustomOg] = useState(false);
+  const [hasCustomFavicon, setHasCustomFavicon] = useState(false);
 
   const createBookmark = useCreateBookmark();
   const { data: categories = [] } = useCategories();
+
+  const fetchMetadataForUrl = async (rawUrl: string) => {
+    try {
+      const response = await fetch("/api/fetch-metadata", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: rawUrl }),
+      });
+
+      if (!response.ok) return;
+      const data = await response.json();
+
+      setFormData((prev) => ({
+        ...prev,
+        // Only auto-fill title if it's empty
+        title: prev.title.trim() ? prev.title : data.title || "",
+        // Only auto-fill description if it's empty
+        description: prev.description.trim()
+          ? prev.description
+          : data.description || "",
+        og_image_url: hasCustomOg ? prev.og_image_url : data.og_image_url || "",
+        favicon_url: hasCustomFavicon
+          ? prev.favicon_url
+          : data.favicon_url || "",
+        media_type: data.media_type || "default",
+        media_embed_id: data.media_embed_id || "",
+      }));
+    } catch (error) {
+      console.error("Failed to fetch metadata:", error);
+    }
+  };
+
+  const uploadCustom = async (kind: "ogimage" | "favicon", file: File) => {
+    if (!formData.url) {
+      toast.error("Set the URL first");
+      return;
+    }
+
+    try {
+      new URL(formData.url);
+    } catch {
+      toast.error("Enter a valid URL first");
+      return;
+    }
+
+    const form = new FormData();
+    form.set("kind", kind);
+    form.set("url", formData.url);
+    form.set("file", file);
+
+    if (kind === "ogimage") setIsUploadingOg(true);
+    else setIsUploadingFavicon(true);
+
+    try {
+      const res = await fetch("/api/storage/upload", {
+        method: "POST",
+        body: form,
+      });
+
+      const payload = await res.json();
+
+      console.log("Upload response:", {
+        ok: res.ok,
+        status: res.status,
+        payload,
+      });
+
+      if (!res.ok) {
+        throw new Error(payload?.error || "Upload failed");
+      }
+
+      if (!payload.publicUrl) {
+        throw new Error("No public URL in response");
+      }
+
+      if (kind === "ogimage") {
+        setFormData((prev) => ({ ...prev, og_image_url: payload.publicUrl }));
+        setHasCustomOg(true);
+      } else {
+        setFormData((prev) => ({ ...prev, favicon_url: payload.publicUrl }));
+        setHasCustomFavicon(true);
+      }
+
+      toast.success(
+        kind === "ogimage"
+          ? "Custom OG image uploaded"
+          : "Custom favicon uploaded"
+      );
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      if (kind === "ogimage") setIsUploadingOg(false);
+      else setIsUploadingFavicon(false);
+    }
+  };
 
   // Fetch metadata when URL changes
   useEffect(() => {
@@ -64,22 +163,7 @@ export function AddBookmarkSheet({
       setIsFetchingMetadata(true);
 
       try {
-        const response = await fetch("/api/fetch-metadata", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: formData.url }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setFormData((prev) => ({
-            ...prev,
-            og_image_url: data.og_image_url || "",
-            favicon_url: data.favicon_url || "",
-            media_type: data.media_type || "default",
-            media_embed_id: data.media_embed_id || "",
-          }));
-        }
+        await fetchMetadataForUrl(formData.url);
       } catch (error) {
         console.error("Failed to fetch metadata:", error);
       } finally {
@@ -123,6 +207,8 @@ export function AddBookmarkSheet({
         media_type: "default",
         media_embed_id: "",
       });
+      setHasCustomOg(false);
+      setHasCustomFavicon(false);
       onOpenChange(false);
     } catch (error) {
       toast.error("Failed to add bookmark");
@@ -148,20 +234,6 @@ export function AddBookmarkSheet({
             onSubmit={handleSubmit}
             className="space-y-6"
           >
-            {/* Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Title *</Label>
-              <Input
-                id="title"
-                required
-                value={formData.title}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                placeholder="Enter bookmark title"
-              />
-            </div>
-
             {/* URL */}
             <div className="space-y-2">
               <Label htmlFor="url">URL *</Label>
@@ -174,6 +246,25 @@ export function AddBookmarkSheet({
                   setFormData({ ...formData, url: e.target.value })
                 }
                 placeholder="https://example.com"
+              />
+              {isFetchingMetadata && (
+                <p className="text-xs text-muted-foreground">
+                  Fetching metadata...
+                </p>
+              )}
+            </div>
+
+            {/* Title */}
+            <div className="space-y-2">
+              <Label htmlFor="title">Title *</Label>
+              <Input
+                id="title"
+                required
+                value={formData.title}
+                onChange={(e) =>
+                  setFormData({ ...formData, title: e.target.value })
+                }
+                placeholder="Enter bookmark title"
               />
             </div>
 
@@ -189,6 +280,99 @@ export function AddBookmarkSheet({
                 }
                 placeholder="Optional description"
               />
+            </div>
+
+            {/* Custom media */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="custom-og">Custom OG image (optional)</Label>
+                <Input
+                  id="custom-og"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  disabled={isUploadingOg || createBookmark.isPending}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) uploadCustom("ogimage", f);
+                  }}
+                />
+                <div className="flex items-center justify-between">
+                  {hasCustomOg ? (
+                    <p className="text-xs text-muted-foreground">
+                      Using your uploaded OG image.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      If empty, we’ll fetch it automatically.
+                    </p>
+                  )}
+                  {hasCustomOg && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isFetchingMetadata}
+                      onClick={async () => {
+                        setHasCustomOg(false);
+                        setFormData((prev) => ({ ...prev, og_image_url: "" }));
+                        if (formData.url) {
+                          setIsFetchingMetadata(true);
+                          await fetchMetadataForUrl(formData.url);
+                          setIsFetchingMetadata(false);
+                        }
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="custom-favicon">
+                  Custom favicon (optional)
+                </Label>
+                <Input
+                  id="custom-favicon"
+                  type="file"
+                  accept="image/png,image/x-icon,image/vnd.microsoft.icon,image/svg+xml"
+                  disabled={isUploadingFavicon || createBookmark.isPending}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) uploadCustom("favicon", f);
+                  }}
+                />
+                <div className="flex items-center justify-between">
+                  {hasCustomFavicon ? (
+                    <p className="text-xs text-muted-foreground">
+                      Using your uploaded favicon.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      If empty, we’ll fetch it automatically.
+                    </p>
+                  )}
+                  {hasCustomFavicon && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isFetchingMetadata}
+                      onClick={async () => {
+                        setHasCustomFavicon(false);
+                        setFormData((prev) => ({ ...prev, favicon_url: "" }));
+                        if (formData.url) {
+                          setIsFetchingMetadata(true);
+                          await fetchMetadataForUrl(formData.url);
+                          setIsFetchingMetadata(false);
+                        }
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Category */}
