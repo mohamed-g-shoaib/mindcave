@@ -4,13 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import MindCaveLogo from "@/components/mind-cave-logo";
 import { cn } from "@/lib/utils";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { NavigationMenuLink } from "@/components/ui/navigation-menu";
 import {
   Sheet,
   SheetContent,
@@ -39,71 +33,38 @@ export function Navbar({ user }: NavbarProps) {
           <span className="text-xl font-bold text-foreground">Mind Cave</span>
         </Link>
 
-        {/* Desktop Navigation Menu */}
-        <div className="hidden lg:block">
-          <NavigationMenu>
-            <NavigationMenuList className="gap-1">
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  render={<Link href="#about" />}
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
-                  )}
-                >
-                  About
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  render={<Link href="#how-it-works" />}
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
-                  )}
-                >
-                  How It Works
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  render={<Link href="#features" />}
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
-                  )}
-                >
-                  Features
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  render={<Link href="#testimonials" />}
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
-                  )}
-                >
-                  Testimonials
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  render={<Link href="#faq" />}
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    "bg-transparent text-base text-foreground/80 hover:bg-secondary hover:text-foreground"
-                  )}
-                >
-                  FAQ
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center gap-1">
+          <Link
+            href="#about"
+            className="px-2.5 py-1.5 text-base font-medium text-foreground/80 hover:bg-secondary hover:text-foreground transition-colors"
+          >
+            About
+          </Link>
+          <Link
+            href="#how-it-works"
+            className="px-2.5 py-1.5 text-base font-medium text-foreground/80 hover:bg-secondary hover:text-foreground transition-colors"
+          >
+            How It Works
+          </Link>
+          <Link
+            href="#features"
+            className="px-2.5 py-1.5 text-base font-medium text-foreground/80 hover:bg-secondary hover:text-foreground transition-colors"
+          >
+            Features
+          </Link>
+          <Link
+            href="#testimonials"
+            className="px-2.5 py-1.5 text-base font-medium text-foreground/80 hover:bg-secondary hover:text-foreground transition-colors"
+          >
+            Testimonials
+          </Link>
+          <Link
+            href="#faq"
+            className="px-2.5 py-1.5 text-base font-medium text-foreground/80 hover:bg-secondary hover:text-foreground transition-colors"
+          >
+            FAQ
+          </Link>
         </div>
 
         {/* Mobile Menu Toggle */}
