@@ -82,7 +82,7 @@ export function OrganizeDemo() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               style={{ willChange: "opacity, transform" }}
-              className="flex items-center gap-1.5 bg-green-500/10 px-2.5 py-1 text-[10px] font-medium text-green-500 border border-green-500/20 shadow-sm"
+              className="flex items-center gap-1.5 text-[10px] font-medium text-green-500"
             >
               <HugeiconsIcon icon={Tick02Icon} className="h-3 w-3" />
               <span>Saved</span>
