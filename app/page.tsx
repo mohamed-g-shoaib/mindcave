@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
-import { Navbar } from "@/components/landing/navbar";
+import { Navbar, NavbarSkeleton } from "@/components/landing/navbar";
 import { HeroSection } from "@/components/landing/hero-section";
 import { AboutSection } from "@/components/landing/about-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
@@ -59,12 +59,12 @@ export default function LandingPage() {
       className="min-h-screen"
       style={{ backgroundColor: "oklch(0.216 0.006 56.043)" }}
     >
-      <Suspense fallback={<Navbar />}>
+      <Suspense fallback={<NavbarSkeleton />}>
         <NavbarWithUser />
       </Suspense>
 
       <main className="pt-20">
-        <Suspense fallback={<HeroSection />}>
+        <Suspense fallback={<div className="min-h-[80vh] bg-background" />}>
           <HeroWithUser />
         </Suspense>
         <AboutSection />
@@ -72,12 +72,14 @@ export default function LandingPage() {
         <FeaturesSection />
         <TestimonialsSection />
         <FAQSection />
-        <Suspense fallback={<CTASection />}>
+        <Suspense fallback={<div className="h-96 bg-background" />}>
           <CTAWithUser />
         </Suspense>
       </main>
 
-      <Suspense fallback={<Footer />}>
+      <Suspense
+        fallback={<div className="h-64 bg-background border-t border-border" />}
+      >
         <FooterWithUser />
       </Suspense>
     </div>
