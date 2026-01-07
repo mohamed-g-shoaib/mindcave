@@ -55,14 +55,45 @@ export async function DELETE(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { error } = await supabase
+  const { data: category, error: categoryError } = await supabase
+    .from("categories")
+    .select("id")
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (categoryError) {
+    return NextResponse.json({ error: categoryError.message }, { status: 500 });
+  }
+
+  if (!category) {
+    return NextResponse.json({ error: "Category not found" }, { status: 404 });
+  }
+
+  const { error: bookmarksError } = await supabase
+    .from("bookmarks")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("category_id", id);
+
+  if (bookmarksError) {
+    return NextResponse.json(
+      { error: bookmarksError.message },
+      { status: 500 }
+    );
+  }
+
+  const { error: deleteCategoryError } = await supabase
     .from("categories")
     .delete()
     .eq("id", id)
     .eq("user_id", user.id);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (deleteCategoryError) {
+    return NextResponse.json(
+      { error: deleteCategoryError.message },
+      { status: 500 }
+    );
   }
 
   return NextResponse.json({ success: true });
