@@ -187,7 +187,7 @@ export function SearchDemo() {
                         <div className="truncate text-sm text-muted-foreground">
                           Messenger
                         </div>
-                        <div className="truncate text-xs text-muted-foreground/60">
+                        <div className="truncate text-xs text-muted-foreground">
                           messenger.com
                         </div>
                       </div>
@@ -196,7 +196,7 @@ export function SearchDemo() {
                 )}
                 {(phase === "opening" || phase === "typing") &&
                   query === "" && (
-                    <div className="flex h-full items-center justify-center py-8 text-xs text-muted-foreground/60">
+                    <div className="flex h-full items-center justify-center py-8 text-xs text-muted-foreground">
                       Type to search...
                     </div>
                   )}

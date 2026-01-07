@@ -20,7 +20,7 @@ export function CTASection({ user }: CTASectionProps) {
             <h2 className="text-4xl font-bold text-background md:text-5xl lg:text-6xl">
               Start Organizing Today
             </h2>
-            <p className="mt-6 text-xl text-background/80">
+            <p className="mt-6 text-xl text-background">
               Join thousands of users who have already organized their digital
               lives with Mind Cave
             </p>
@@ -35,7 +35,7 @@ export function CTASection({ user }: CTASectionProps) {
               </Link>
             </div>
 
-            <div className="mt-8 flex flex-col items-center justify-center gap-2 text-base text-background/70 sm:flex-row sm:gap-4">
+            <div className="mt-8 flex flex-col items-center justify-center gap-2 text-base text-background/90 sm:flex-row sm:gap-4">
               <span>No subscription</span>
               <span className="hidden sm:inline opacity-50">•</span>
               <span>Free forever</span>

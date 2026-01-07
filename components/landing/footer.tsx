@@ -35,9 +35,9 @@ function ThemeToggle() {
   if (!mounted) return null;
 
   const options = [
-    { value: "light", icon: Sun01Icon },
-    { value: "dark", icon: Moon02Icon },
-    { value: "system", icon: ComputerIcon },
+    { value: "light", icon: Sun01Icon, label: "Light theme" },
+    { value: "dark", icon: Moon02Icon, label: "Dark theme" },
+    { value: "system", icon: ComputerIcon, label: "System theme" },
   ];
 
   return (
@@ -46,6 +46,7 @@ function ThemeToggle() {
         <button
           key={option.value}
           onClick={() => setTheme(option.value)}
+          aria-label={option.label}
           className={`px-2 py-1 transition-colors ${
             theme === option.value
               ? "bg-primary text-primary-foreground"
@@ -75,7 +76,7 @@ export function Footer({ user }: FooterProps) {
             <p className="mt-4 text-base text-muted-foreground">
               Organize your digital life with ease
             </p>
-            <p className="mt-4 text-base text-muted-foreground/60">
+            <p className="mt-4 text-sm text-muted-foreground">
               © 2026 Mind Cave. All rights reserved.
             </p>
             <div className="mt-4">

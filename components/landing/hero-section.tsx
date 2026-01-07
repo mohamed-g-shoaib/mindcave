@@ -138,7 +138,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                       />
                       {MOCK_CATEGORIES.productivity.name}
                     </div>
-                    <div className="mt-4 flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground/60">
+                    <div className="mt-4 flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground">
                       <HugeiconsIcon
                         icon={PlusSignIcon}
                         className="h-3.5 w-3.5"
