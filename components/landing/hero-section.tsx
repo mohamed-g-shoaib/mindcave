@@ -16,6 +16,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { MOCK_CATEGORIES, MOCK_BOOKMARKS } from "./hero-mock-data";
 import { OGPreview } from "./og-preview";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface HeroSectionProps {
   user?: {
@@ -150,15 +151,18 @@ export function HeroSection({ user }: HeroSectionProps) {
                 {/* Sidebar Footer (Avatar Area) */}
                 <div className="mt-auto border-t border-border -mx-4 px-4 pt-4">
                   <div className="flex items-center gap-2 px-2">
-                    <div className="flex h-7 w-7 shrink-0 items-center justify-center bg-secondary text-[10px] font-bold text-secondary-foreground">
-                      JD
-                    </div>
+                    <Avatar className="h-7 w-7 shrink-0">
+                      <AvatarImage src="https://api.dicebear.com/9.x/thumbs/svg?seed=David" />
+                      <AvatarFallback className="bg-secondary text-[8px] text-secondary-foreground">
+                        SG
+                      </AvatarFallback>
+                    </Avatar>
                     <div className="flex flex-1 flex-col overflow-hidden leading-tight">
-                      <span className="truncate text-[10px] font-semibold text-foreground">
-                        John Doe
+                      <span className="truncate text-[11px] font-semibold text-foreground">
+                        Saul Goodman
                       </span>
-                      <span className="truncate text-[8px] text-muted-foreground">
-                        john@mindcave.app
+                      <span className="truncate text-[10px] text-muted-foreground ">
+                        saul@mindcave.app
                       </span>
                     </div>
                   </div>
