@@ -25,10 +25,11 @@ export function Providers({ children }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       {children}
       <Toaster
-        position="bottom-right"
+        position="top-center"
         theme="system"
         richColors
         closeButton
+        offset="16px"
         toastOptions={{
           className: "group",
           style: {
