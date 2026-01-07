@@ -213,3 +213,118 @@
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
 }
+
+/* Driver.js Onboarding Styles */
+.driver-popover {
+  background: var(--color-popover) !important;
+  color: var(--color-popover-foreground) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+  font-family: var(--font-space-mono), ui-monospace, monospace !important;
+  max-width: min(400px, calc(100vw - 2rem)) !important;
+  padding: 1rem !important;
+}
+
+.driver-popover .driver-popover-title {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: var(--color-foreground) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.driver-popover .driver-popover-description {
+  font-size: 0.875rem !important;
+  color: var(--color-muted-foreground) !important;
+  line-height: 1.5 !important;
+}
+
+.driver-popover .driver-popover-progress-text {
+  font-size: 0.75rem !important;
+  color: var(--color-muted-foreground) !important;
+}
+
+.driver-popover .driver-popover-footer {
+  margin-top: 1rem !important;
+}
+
+.driver-popover .driver-popover-navigation-btns {
+  gap: 0.5rem !important;
+  justify-content: flex-end !important;
+}
+
+.driver-popover .driver-popover-prev-btn,
+.driver-popover .driver-popover-next-btn {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-secondary-foreground) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: opacity 0.15s ease !important;
+  text-shadow: none !important;
+}
+
+.driver-popover .driver-popover-prev-btn:hover,
+.driver-popover .driver-popover-next-btn:hover {
+  opacity: 0.8 !important;
+}
+
+.driver-popover .driver-popover-next-btn,
+.driver-popover .driver-popover-done-btn {
+  background-color: var(--color-primary) !important;
+  color: var(--color-primary-foreground) !important;
+}
+
+.driver-popover .driver-popover-close-btn {
+  color: var(--color-muted-foreground) !important;
+}
+
+.driver-popover .driver-popover-close-btn:hover {
+  color: var(--color-foreground) !important;
+}
+
+.driver-popover-arrow-side-left.driver-popover-arrow {
+  border-left-color: var(--color-popover) !important;
+}
+
+.driver-popover-arrow-side-right.driver-popover-arrow {
+  border-right-color: var(--color-popover) !important;
+}
+
+.driver-popover-arrow-side-top.driver-popover-arrow {
+  border-top-color: var(--color-popover) !important;
+}
+
+.driver-popover-arrow-side-bottom.driver-popover-arrow {
+  border-bottom-color: var(--color-popover) !important;
+}
+
+.driver-active-element {
+  outline: 2px solid var(--color-primary) !important;
+  outline-offset: 2px !important;
+}
+
+@media (max-width: 640px) {
+  .driver-popover {
+    max-width: calc(100vw - 1rem) !important;
+    margin: 0.5rem !important;
+  }
+
+  .driver-popover .driver-popover-title {
+    font-size: 0.9375rem !important;
+  }
+
+  .driver-popover .driver-popover-description {
+    font-size: 0.8125rem !important;
+  }
+
+  .driver-popover .driver-popover-prev-btn,
+  .driver-popover .driver-popover-next-btn,
+  .driver-popover .driver-popover-done-btn {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8125rem !important;
+  }
+}
