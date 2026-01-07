@@ -75,15 +75,6 @@ export function BookmarkCard({
   const isYouTube =
     bookmark.media_type === "youtube" && bookmark.media_embed_id;
 
-  const getColorFromUrl = (url: string) => {
-    let hash = 0;
-    for (let i = 0; i < url.length; i++) {
-      hash = url.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const hue = hash % 360;
-    return `hsl(${hue}, 70%, 85%)`;
-  };
-
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -109,20 +100,17 @@ export function BookmarkCard({
                 />
               </div>
             ) : bookmark.favicon_url ? (
-              <div
-                className="flex aspect-video w-full items-center justify-center transition-opacity hover:opacity-90"
-                style={{ backgroundColor: getColorFromUrl(bookmark.url) }}
-              >
-                <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/80 shadow-sm backdrop-blur-sm">
+              <div className="flex aspect-video w-full items-center justify-center bg-muted transition-colors hover:bg-muted/80">
+                <div className="flex h-14 w-14 items-center justify-center rounded-none bg-background/70 ring-1 ring-foreground/10">
                   <img
                     src={bookmark.favicon_url}
-                    alt={`${bookmark.title} favicon`}
-                    className="h-10 w-10 object-contain"
+                    alt=""
+                    className="h-8 w-8 object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
                       const parent = e.currentTarget.parentElement;
                       if (parent) {
-                        parent.innerHTML = `<svg class="h-10 w-10 text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
+                        parent.innerHTML = `<svg class="h-8 w-8 text-foreground/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
                       }
                     }}
                   />
