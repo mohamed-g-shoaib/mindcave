@@ -1,0 +1,29 @@
+# Mind Cave
+
+> Your Digital Library, Perfectly Organized
+
+Mind Cave is a bookmark manager built for people who save a lot of links and need them to be findable. It replaces browser bookmark folders with a dedicated interface that fetches metadata automatically, organizes resources by category, and works across devices.
+
+## What It Does
+
+- Saves bookmarks with automatic metadata extraction (title, description, favicon, OpenGraph image)
+- Organizes links into custom categories with icons and colors
+- Imports existing bookmarks from browser exports
+- Provides card and list view modes with adjustable density
+- Supports dark and light themes
+- Syncs across devices with secure authentication
+
+## Who It's For
+
+People who regularly save articles, documentation, tools, and resources for later reference. Developers, researchers, designers, students, and anyone who collects links.
+
+## Links
+
+- Homepage: https://mindcave.vercel.app
+- Documentation: https://mindcave.vercel.app/llms-full.txt
+- Privacy: https://mindcave.vercel.app/privacy
+- Terms: https://mindcave.vercel.app/terms
+
+## Built By
+
+Devloop (https://www.devloop.software)

@@ -1,0 +1,230 @@
+# Mind Cave
+
+> Your Digital Library, Perfectly Organized
+
+Mind Cave is a production-ready bookmark manager and digital resource organizer built with Next.js and Supabase. It solves the problem of disorganized browser bookmarks by providing a dedicated, high-performance interface for resource management.
+
+---
+
+## Core Features
+
+### Intelligent Resource Management
+
+**Automated Metadata Extraction**
+When you save a URL, Mind Cave fetches the page title, description, favicon, and OpenGraph image automatically. No manual data entry required.
+
+**Browser Bookmarks Import**
+Drag and drop your browser's exported bookmarks file. Mind Cave parses the HTML, lets you select which folders to import, and handles deduplication so you don't get duplicate entries.
+
+**Custom Media Override**
+If the auto-fetched favicon or preview image doesn't look right, you can upload your own.
+
+**Category Organization**
+Group bookmarks into categories. Each category has a name, color, and icon. There are 80+ icons to choose from, organized by type (development, media, education, finance, etc.).
+
+### Dashboard Interface
+
+**View Modes**
+Switch between card view (visual grid with preview images) and list view (compact rows).
+
+**Grid Density**
+Adjust how many cards appear per row. Useful for different screen sizes and personal preference.
+
+**Context Menus**
+Right-click any bookmark or category for quick actions: edit, delete, copy URL, move to category.
+
+**Bulk Operations**
+Select multiple bookmarks and perform actions on all of them at once.
+
+**Real-time Search**
+Filter bookmarks instantly by typing. Search matches titles, descriptions, and URLs.
+
+### Quality and Performance
+
+**Lazy Loading**
+Components render when they enter the viewport, reducing initial page load time.
+
+**Responsive Design**
+Works on desktop, tablet, and mobile. The layout adapts to screen size.
+
+**Dark and Light Themes**
+Follows your system preference with manual override available.
+
+**Animations**
+Smooth, subtle animations for interactions. Built with Framer Motion.
+
+**Row Level Security**
+Each user's data is isolated at the database level using Supabase RLS policies. Users can only access their own bookmarks.
+
+---
+
+## Technical Stack
+
+| Component | Technology |
+|-----------|------------|
+| Framework | Next.js 14 (App Router) |
+| Language | TypeScript |
+| UI | React 19 |
+| Styling | Tailwind CSS v4 |
+| Components | Shadcn/ui, Base UI |
+| Animations | Framer Motion |
+| State | TanStack React Query |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth (Google OAuth) |
+| Storage | Supabase Storage |
+| Icons | Hugeicons |
+
+---
+
+## Project Structure
+
+```
+app/
+├── api/              API routes for bookmarks, categories, metadata fetching
+├── dashboard/        Main application interface (protected)
+├── login/            Authentication page
+├── privacy/          Privacy policy
+├── story/            About page
+├── terms/            Terms of service
+├── layout.tsx        Root layout with metadata
+├── page.tsx          Landing page
+
+components/
+├── dashboard/        Bookmark cards, category sidebar, sheets
+├── landing/          Hero, features, testimonials, FAQ
+├── ui/               Buttons, inputs, dialogs, sheets
+
+hooks/
+├── use-bookmarks.ts  React Query hooks for bookmark CRUD
+├── use-categories.ts React Query hooks for category CRUD
+├── use-preferences.ts User preference management
+
+lib/
+├── supabase/         Client and server Supabase utilities
+├── utils.ts          Helper functions
+```
+
+---
+
+## Pages
+
+### Landing Page (/)
+Public marketing page with feature demos, testimonials, and call-to-action.
+
+### Dashboard (/dashboard)
+Protected. The main interface where users manage bookmarks and categories.
+
+### Login (/login)
+Google OAuth authentication flow.
+
+### Our Story (/story)
+Background on why Mind Cave exists and the problem it solves.
+
+### Privacy Policy (/privacy)
+Data handling, what we collect, how we use it.
+
+### Terms of Service (/terms)
+Usage terms and conditions.
+
+---
+
+## API Endpoints
+
+All API routes are under `/api/`.
+
+**/api/bookmarks**
+GET, POST, PUT, DELETE operations for bookmarks.
+
+**/api/categories**
+GET, POST, PUT, DELETE operations for categories.
+
+**/api/fetch-metadata**
+POST. Accepts a URL, fetches its metadata (title, description, favicon, OG image).
+
+**/api/preferences**
+GET, PUT. User preferences for view mode and grid density.
+
+**/api/upload-og** and **/api/upload-favicon**
+POST. Upload custom images for bookmarks.
+
+---
+
+## Authentication
+
+Mind Cave uses Supabase Auth with Google OAuth provider. When a user signs in:
+
+1. Supabase handles the OAuth flow
+2. A user record is created or retrieved
+3. The session is stored and sent to the client
+4. All subsequent API calls include the session for authorization
+5. RLS policies ensure users only see their own data
+
+---
+
+## Data Model
+
+**bookmarks**
+- id (uuid)
+- user_id (uuid, foreign key to auth.users)
+- url (text)
+- title (text)
+- description (text)
+- favicon_url (text)
+- og_image_url (text)
+- category_id (uuid, foreign key to categories)
+- created_at (timestamp)
+- updated_at (timestamp)
+
+**categories**
+- id (uuid)
+- user_id (uuid)
+- name (text)
+- icon (text)
+- color (text)
+- order (integer)
+- created_at (timestamp)
+
+**user_preferences**
+- user_id (uuid, primary key)
+- view_mode (text: 'card' or 'list')
+- grid_density (text: 'compact', 'normal', 'spacious')
+
+---
+
+## Local Development
+
+Prerequisites: Node.js 18+, pnpm
+
+1. Clone the repository
+2. Run `pnpm install`
+3. Create `.env.local` with:
+   - NEXT_PUBLIC_SUPABASE_URL
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY
+   - NEXT_PUBLIC_SITE_URL (optional, defaults to localhost:3000)
+4. Run `pnpm dev`
+5. Open http://localhost:3000
+
+---
+
+## Deployment
+
+Mind Cave is deployed on Vercel. The production URL is https://mindcave.vercel.app.
+
+Environment variables for production:
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- NEXT_PUBLIC_SITE_URL=https://mindcave.vercel.app
+
+---
+
+## License
+
+Open sourced under Devloop (https://www.devloop.software).
+
+---
+
+## Contact
+
+For questions or issues, contact Devloop:
+- Website: https://www.devloop.software
+- Email: contact@devloop.software
