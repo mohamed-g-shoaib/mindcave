@@ -12,7 +12,7 @@ export function LoginForm() {
         type="submit"
         className="relative w-full h-14 text-lg font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-3 rounded-none"
       >
-        <HugeiconsIcon icon={GoogleIcon} className="h-6 w-6" />
+        <HugeiconsIcon icon={GoogleIcon} className="size-7" />
         Continue with Google
       </Button>
     </form>
