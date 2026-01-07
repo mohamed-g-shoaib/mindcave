@@ -100,7 +100,7 @@ export function AddCategorySheet({
             <div className="space-y-2">
               <Label>Icon</Label>
               <div className="flex items-center gap-4 mb-3">
-                <div className="flex h-12 w-12 items-center justify-center border bg-muted">
+                <div className="flex h-12 w-12 items-center justify-center">
                   <HugeiconsIcon
                     icon={getCategoryIcon(formData.icon)}
                     className="h-6 w-6"
