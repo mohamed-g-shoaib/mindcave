@@ -219,7 +219,10 @@ function DashboardContent() {
           </div>
           <div className="flex items-center gap-2">
             {/* View Mode Toggle */}
-            <div className="flex items-center gap-1">
+            <div
+              className="flex items-center gap-1"
+              data-onboarding="view-toggle"
+            >
               <Button
                 variant={viewMode === "card" ? "secondary" : "ghost"}
                 size="icon-sm"
@@ -242,7 +245,12 @@ function DashboardContent() {
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={
-                  <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="gap-1 text-xs"
+                    data-onboarding="column-selector"
+                  >
                     {columnOptions.find((o) => o.value === currentColumns)
                       ?.label || `${currentColumns} col`}
                     <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />

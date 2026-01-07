@@ -15,6 +15,7 @@ import {
   Edit02Icon,
   Delete02Icon,
   MoreVerticalIcon,
+  HelpCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
@@ -66,6 +67,7 @@ import { getCategoryIcon } from "@/components/dashboard/icon-picker";
 import { AddCategorySheet } from "@/components/dashboard/add-category-sheet";
 import { EditCategorySheet } from "@/components/dashboard/edit-category-sheet";
 import { ImportBookmarksSheet } from "@/components/dashboard/import-bookmarks-sheet";
+import { useDashboardTour } from "@/components/dashboard/onboarding";
 import type { Category } from "@/lib/supabase/types";
 
 interface AppSidebarProps {
@@ -84,6 +86,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const currentCategoryId = searchParams.get("category");
   const { state } = useSidebar();
   const { setTheme, theme } = useTheme();
+  const { startTour } = useDashboardTour();
 
   const { data: categories = [], isLoading } = useCategories();
   const [addCategoryOpen, setAddCategoryOpen] = useState(false);
@@ -189,6 +192,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 size="lg"
                 onClick={() => router.push("/")}
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground [&_svg]:size-auto"
+                data-onboarding="sidebar-logo"
               >
                 <MindCaveLogo width={32} height={32} className="shrink-0" />
                 <span className="truncate font-bold text-lg group-data-[collapsible=icon]:hidden">
@@ -249,7 +253,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
             )}
             <SidebarGroupContent>
               <SidebarMenu>
-                <SidebarMenuItem>
+                <SidebarMenuItem data-onboarding="all-bookmarks">
                   <SidebarMenuButton
                     onClick={() => router.push("/dashboard")}
                     isActive={pathname === "/dashboard" && !currentCategoryId}
@@ -393,7 +397,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                 )}
 
                 {/* Add Category Button */}
-                <SidebarMenuItem>
+                <SidebarMenuItem data-onboarding="add-category">
                   <SidebarMenuButton
                     onClick={() => setAddCategoryOpen(true)}
                     tooltip="Add Category"
@@ -410,7 +414,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
         {/* Footer with User Menu */}
         <SidebarFooter className="border-t">
           <SidebarMenu>
-            <SidebarMenuItem>
+            <SidebarMenuItem data-onboarding="user-menu">
               <DropdownMenu>
                 <DropdownMenuTrigger
                   render={
@@ -470,6 +474,13 @@ export function AppSidebar({ user }: AppSidebarProps) {
                       className="mr-2 h-4 w-4"
                     />
                     Import Bookmarks
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={startTour}>
+                    <HugeiconsIcon
+                      icon={HelpCircleIcon}
+                      className="mr-2 h-4 w-4"
+                    />
+                    Start Tour
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>

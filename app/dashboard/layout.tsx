@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { DashboardOnboarding } from "@/components/dashboard/onboarding";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface User {
@@ -52,6 +53,7 @@ async function DashboardContent({ children }: { children: React.ReactNode }) {
         </Suspense>
         <main className="flex-1 p-4 md:p-6">{children}</main>
       </SidebarInset>
+      <DashboardOnboarding />
     </SidebarProvider>
   );
 }

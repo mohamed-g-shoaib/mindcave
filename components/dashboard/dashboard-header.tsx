@@ -102,7 +102,11 @@ export function DashboardHeader() {
           </Button>
 
           {/* Add Bookmark */}
-          <Button size="sm" onClick={() => setAddBookmarkOpen(true)}>
+          <Button
+            size="sm"
+            onClick={() => setAddBookmarkOpen(true)}
+            data-onboarding="add-bookmark"
+          >
             <HugeiconsIcon icon={PlusSignIcon} className="h-4 w-4 md:mr-2" />
             <span className="hidden md:inline">Add Bookmark</span>
           </Button>
