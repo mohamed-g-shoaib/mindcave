@@ -2,47 +2,49 @@
 
 # Mind Cave
 
-Mind Cave is a production-ready bookmark manager and digital resource organizer built with Next.js and Supabase. It solves the problem of disorganized browser bookmarks by providing a dedicated, high-performance interface for resource management, designed for scale, maintainability, and real-world use.
+**Your Digital Library, Perfectly Organized**
 
-## Core Functionality
+Mind Cave is a production-ready bookmark manager built with Next.js and Supabase. It replaces scattered browser bookmarks with a dedicated interface that fetches metadata automatically, organizes resources by category, and works across devices.
 
-### Intelligent Resource Management
+## The Problem
 
-- **Automated Metadata Extraction**: Fetches title, description, and OpenGraph images from saved URLs without manual input
-- **Browser Bookmarks Import**: Drag-and-drop import from browser exports with folder selection and automatic deduplication
-- **Custom Media Override**: Replace auto-fetched favicons and OG images with custom uploads when needed
-- **Category Organization**: Group resources into color-coded categories with 80+ icon options
+Browser bookmarks are broken. Folders get nested too deep. Names are cryptic. There's no preview, no search worth using, and no sync that actually works. You save links to read later but never find them again.
 
-### Dashboard Experience
+## The Solution
 
-- **View Modes**: Switch between card and list layouts based on workflow preference
-- **Grid Density Controls**: Adjust card density for compact or spacious layouts
-- **Context Menus**: Right-click actions for quick bookmark and category management
-- **Bulk Operations**: Select and manage multiple bookmarks simultaneously
-- **Real-time Filtering**: Instant search by category, tag, or content
+Mind Cave gives you a single place to save, organize, and retrieve web resources.
 
-### Performance and Quality
+### Core Features
 
-- **Viewport-based Lazy Loading**: Components render only when visible, reducing initial load
-- **Responsive Design**: Tested across desktop, tablets, and mobile devices
-- **Dark/Light Themes**: System-aware with manual override
-- **Smooth Animations**: Micro-interactions that enhance usability without sacrificing performance
-- **Row Level Security**: Supabase RLS ensures data isolation per user
+- **Automatic Metadata**: Save a URL and get the title, description, favicon, and preview image without typing anything
+- **Category Organization**: Group bookmarks with custom icons and colors (80+ icons available)
+- **Browser Import**: Drag your exported bookmarks file and import with folder selection and deduplication
+- **Custom Media**: Override auto-fetched images when needed
+- **View Modes**: Switch between card grid and compact list
+- **Grid Density**: Adjust layout density for your screen size
+- **Context Menus**: Right-click for quick actions
+- **Bulk Operations**: Select and manage multiple bookmarks at once
+- **Real-time Search**: Filter instantly by title, description, or URL
+
+### Quality
+
+- **Performance**: Lazy loading, optimized rendering, minimal bundle size
+- **Responsive**: Works on desktop, tablet, and mobile
+- **Themes**: Dark and light modes with system detection
+- **Security**: Row Level Security ensures data isolation per user
 
 ---
 
-## Technical Architecture
+## Technical Stack
 
-Mind Cave is architected as a modern Single Page Application within the Next.js App Router, prioritizing maintainability and scalability.
-
-| Layer            | Technology                                 |
-| ---------------- | ------------------------------------------ |
-| Framework        | Next.js (App Router), React 19, TypeScript |
-| Styling          | Tailwind CSS v4, Base UI, Shadcn/ui        |
-| Animations       | Framer Motion                              |
-| State Management | TanStack React Query (Server State)        |
-| Backend          | Supabase (PostgreSQL, Auth, Storage, RLS)  |
-| Icons            | Hugeicons                                  |
+| Layer      | Technology                                 |
+| ---------- | ------------------------------------------ |
+| Framework  | Next.js (App Router), React 19, TypeScript |
+| Styling    | Tailwind CSS v4, Shadcn/ui, Base UI        |
+| Animations | Framer Motion                              |
+| State      | TanStack React Query                       |
+| Backend    | Supabase (PostgreSQL, Auth, Storage, RLS)  |
+| Icons      | Hugeicons                                  |
 
 ---
 
@@ -50,72 +52,56 @@ Mind Cave is architected as a modern Single Page Application within the Next.js 
 
 ```
 mind-cave/
-├── app/                  # Next.js App Router pages
-│   ├── api/              # API routes (bookmarks, categories, metadata)
-│   ├── dashboard/        # Main dashboard interface
+├── app/
+│   ├── api/              # Bookmarks, categories, metadata endpoints
+│   ├── dashboard/        # Main interface (protected)
 │   ├── login/            # Authentication
 │   ├── privacy/          # Privacy policy
 │   ├── story/            # About page
 │   └── terms/            # Terms of service
 ├── components/
-│   ├── dashboard/        # Dashboard-specific components
-│   ├── landing/          # Landing page sections and demos
-│   └── ui/               # Reusable UI primitives
-├── hooks/                # Custom React hooks
-├── lib/                  # Utilities and Supabase client
-├── docs/                 # Documentation
-└── supabase/             # Database migrations
+│   ├── dashboard/        # Bookmark cards, sidebar, sheets
+│   ├── landing/          # Hero, features, testimonials
+│   └── ui/               # Primitives
+├── hooks/                # React Query hooks
+├── lib/                  # Supabase client, utilities
+└── public/               # Static assets, llms.txt
 ```
 
 ---
 
 ## Local Development
 
-### Prerequisites
+Prerequisites: Node.js 18+, pnpm
 
-- Node.js 18 or later
-- pnpm package manager
+```bash
+git clone https://github.com/mohamed-g-shoaib/mind-cave.git
+cd mind-cave
+pnpm install
+```
 
-### Setup
+Create `.env.local`:
 
-1. **Clone the repository**
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
 
-   ```bash
-   git clone https://github.com/mohamed-g-shoaib/mind-cave.git
-   cd mind-cave
-   ```
+```bash
+pnpm dev
+```
 
-2. **Install dependencies**
-
-   ```bash
-   pnpm install
-   ```
-
-3. **Configure environment variables**
-
-   Create `.env.local` with your Supabase credentials:
-
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-   ```
-
-4. **Start the development server**
-
-   ```bash
-   pnpm dev
-   ```
-
-   The application runs at `http://localhost:3000`.
+Open http://localhost:3000
 
 ---
 
-## Design Principles
+## AI Discovery
 
-- **Production-ready**: Not a proof of concept. Built for real users and real load.
-- **Maintainable**: Code is structured for future engineers to understand and extend.
-- **Scalable**: Architecture handles growth without rewrites.
-- **Performant**: Lazy loading, optimized rendering, minimal bundle size.
+For LLM agents and AI-driven crawlers:
+
+- `/llms.txt` - Summary for quick parsing
+- `/llms-full.txt` - Full technical documentation
 
 ---
 
