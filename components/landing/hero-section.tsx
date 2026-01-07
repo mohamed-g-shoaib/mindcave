@@ -51,7 +51,7 @@ export function HeroSection({ user }: HeroSectionProps) {
             </Link>
             <Link
               href="#features"
-              className="inline-flex items-center justify-center gap-2 border border-border px-10 py-5 text-lg font-medium text-foreground/80 hover:border-foreground/50 hover:bg-secondary"
+              className="inline-flex items-center justify-center gap-2 border border-border px-10 py-5 text-lg font-medium text-foreground/80 transition-all duration-300 hover:border-primary/50 hover:bg-muted/80"
             >
               See Features
             </Link>
@@ -244,7 +244,7 @@ export function HeroSection({ user }: HeroSectionProps) {
                       <div
                         key={index}
                         className={cn(
-                          "group flex flex-col overflow-hidden border border-border bg-background transition-shadow hover:shadow-md",
+                          "group flex flex-col overflow-hidden border border-border bg-background transition-all duration-300 hover:border-primary/40 hover:bg-muted/50 hover:shadow-md",
                           index >= 4 && "hidden xl:block",
                           index >= 2 && index < 4 && "hidden md:block"
                         )}

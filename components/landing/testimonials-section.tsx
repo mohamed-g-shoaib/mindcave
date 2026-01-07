@@ -92,7 +92,7 @@ export function TestimonialsSection() {
               {[...testimonials, ...testimonials].map((testimonial, index) => (
                 <div
                   key={index}
-                  className="flex h-64 w-96 shrink-0 flex-col border border-border bg-card p-8 transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:shadow-sm dark:hover:bg-primary/2"
+                  className="flex h-64 w-96 shrink-0 flex-col border border-border bg-card p-8 transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:shadow-sm dark:hover:bg-primary/10"
                 >
                   {/* Quote content - takes available space */}
                   <div className="flex-1">

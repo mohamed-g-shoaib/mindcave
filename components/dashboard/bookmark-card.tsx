@@ -87,7 +87,7 @@ export function BookmarkCard({
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md p-0">
+        <Card className="group flex flex-col overflow-hidden transition-all duration-300 hover:ring-1 hover:ring-primary/50 hover:bg-muted/80 hover:shadow-md p-0">
           {/* Media Section - now the only clickable area to open bookmark */}
           <div className="cursor-pointer overflow-hidden" onClick={handleOpen}>
             {isYouTube ? (

@@ -81,7 +81,7 @@ export function FAQSection() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="overflow-hidden border border-border bg-card"
+              className="overflow-hidden border border-border bg-card transition-all duration-300 hover:ring-1 hover:ring-primary/40 hover:bg-muted/30"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}

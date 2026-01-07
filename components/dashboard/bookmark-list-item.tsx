@@ -70,7 +70,7 @@ export function BookmarkListItem({
     <ContextMenu>
       <ContextMenuTrigger>
         <div
-          className="group flex cursor-pointer items-center gap-2 border-b p-2 transition-colors hover:bg-muted/50 last:border-b-0 md:gap-3 md:p-3"
+          className="group flex cursor-pointer items-center gap-2 border-b p-2 transition-all duration-300 hover:bg-muted/90 hover:border-primary/40 last:border-b-0 md:gap-3 md:p-3"
           onClick={(e) => {
             const target = e.target as HTMLElement;
             // Don't open if clicking a button or a menu item
