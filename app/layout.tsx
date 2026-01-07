@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { ThemeProvider } from "next-themes";
 import { Providers } from "@/components/providers";
 import "./globals.css";
@@ -108,6 +109,12 @@ export default function RootLayout({
         >
           <Providers>{children}</Providers>
         </ThemeProvider>
+        <Script
+          src="/metrics/lib.js"
+          data-website-id="ad6711d2-6b18-43d7-ac62-37945bb36c6c"
+          data-host-url="/metrics"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );
