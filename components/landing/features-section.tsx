@@ -49,7 +49,7 @@ export function FeaturesSection() {
             Powerful Features
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-xl text-muted-foreground">
-            Everything you need to organize your digital life, built with care
+            Features that actually matter. No bloat, just what you need.
           </p>
         </motion.div>
 
