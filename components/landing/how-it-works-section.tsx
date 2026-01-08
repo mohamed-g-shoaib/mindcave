@@ -69,7 +69,7 @@ export function HowItWorksSection() {
             How It Works
           </h2>
           <p className="mx-auto mt-6 max-w-2xl text-xl text-muted-foreground">
-            Four simple steps to organize your digital life.
+            Four steps. That's all it takes to stay organized.
           </p>
         </motion.div>
 
