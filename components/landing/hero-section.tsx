@@ -37,8 +37,8 @@ export function HeroSection({ user }: HeroSectionProps) {
             <span className="text-primary">Perfectly Organized</span>
           </h1>
           <p className="mx-auto mt-8 max-w-3xl text-xl text-muted-foreground md:text-2xl">
-            Mind Cave helps you centralize and organize all your important
-            links, bookmarks, and resources in one beautiful place.
+            One place for every link, doc, and resource you need to keep. No
+            browser clutter. Just organized bookmarks.
           </p>
 
           <div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row">
@@ -245,8 +245,13 @@ export function HeroSection({ user }: HeroSectionProps) {
                         key={index}
                         className={cn(
                           "group flex flex-col overflow-hidden border border-border bg-background transition-all duration-300 hover:border-primary/40 hover:bg-muted/50 hover:shadow-md",
-                          index >= 4 && "hidden xl:block",
-                          index >= 2 && index < 4 && "hidden md:block"
+                          index >= 6
+                            ? "hidden xl:block"
+                            : index >= 4
+                            ? "hidden lg:block"
+                            : index >= 2
+                            ? "hidden sm:block"
+                            : null
                         )}
                       >
                         {/* OG Image Simulation */}
