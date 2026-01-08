@@ -5,39 +5,38 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
   {
-    question: "Is Mind Cave really free?",
+    question: "Is Mind Cave free?",
     answer:
-      "Yes! Mind Cave is completely free to use. No credit card required, no hidden fees. We believe in making powerful bookmark management accessible to everyone.",
+      "Yes. No credit card. No upsells. I want a tool that stays simple and usable.",
   },
   {
     question: "How does Mind Cave differ from browser bookmarks?",
     answer:
-      "Mind Cave offers a centralized, organized approach with custom categories, instant search, rich previews with auto-fetched metadata, and a beautiful interface. Your bookmarks are stored securely and accessible from any browser.",
+      "It is built for retrieval, not storage. Categories, fast search, and metadata that makes links scannable.",
   },
   {
-    question: "What is auto metadata?",
+    question: "What happens when I save a link?",
     answer:
-      "When you add a bookmark, Mind Cave automatically fetches the page's title, description, and favicon. No manual entry needed — just paste a URL and we handle the rest.",
+      "You paste a URL. Mind Cave fetches the title, description, and favicon so the bookmark has context.",
   },
   {
     question: "Can I customize categories?",
     answer:
-      "Absolutely! You can create categories with custom names, icons, and colors. This makes organizing and finding your bookmarks intuitive and personalized to your workflow.",
+      "Yes. Create categories with names and icons. Keep it close to how you think, not how a browser thinks.",
   },
   {
     question: "Is my data secure?",
     answer:
-      "Yes. We use Supabase with row-level security, ensuring your bookmarks are private and secure. Only you can access your data.",
+      "Mind Cave uses Supabase with row level security. Your bookmarks are private to your account.",
   },
   {
     question: "Do I need to install anything?",
-    answer:
-      "No installation needed! Mind Cave is a web application that works in any modern browser. Just sign in with Google and start organizing.",
+    answer: "No. It runs in the browser. Sign in and start saving.",
   },
   {
     question: "Can I import my existing bookmarks?",
     answer:
-      "Bookmark import functionality is coming soon! You'll be able to import from Chrome, Firefox, Safari, and other popular browsers.",
+      "Yes. Upload your browser bookmarks HTML export, pick the folders you want, and Mind Cave creates missing categories. You can also skip duplicate URLs.",
   },
 ];
 
@@ -73,7 +72,7 @@ export function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className="mt-6 text-xl text-muted-foreground">
-            Everything you need to know about Mind Cave
+            Straight answers, no fluff
           </p>
         </div>
 
