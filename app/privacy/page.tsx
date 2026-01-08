@@ -4,7 +4,7 @@ export default function PrivacyPage() {
   return (
     <StaticPageLayout
       title="Privacy Policy"
-      subtitle="We value your privacy as much as you do. Here is how we protect your data."
+      subtitle="Clear, practical privacy. No marketing games."
     >
       <div className="space-y-12 text-lg leading-relaxed text-muted-foreground">
         <section className="space-y-4">
@@ -12,10 +12,8 @@ export default function PrivacyPage() {
             Overview
           </h2>
           <p>
-            At Mind Cave, we believe privacy is a fundamental human right. Our
-            business model is not based on selling your data. We built Mind Cave
-            because we wanted a secure place for our own bookmarks, and we
-            provide that same security to you.
+            Mind Cave is built to store your links, not to monetize you. We do
+            not sell your personal data.
           </p>
         </section>
 
@@ -23,10 +21,7 @@ export default function PrivacyPage() {
           <h2 className="text-3xl font-bold text-foreground tracking-tight">
             Data Collection
           </h2>
-          <p>
-            We collect only the most essential information needed to provide our
-            service:
-          </p>
+          <p>We collect the minimum needed to run the service:</p>
           <ul className="list-disc pl-6 space-y-2 marker:text-primary">
             <li>
               <strong className="text-foreground">Authentication:</strong> Your
@@ -38,11 +33,6 @@ export default function PrivacyPage() {
               URLs, titles, descriptions, and categories of the bookmarks you
               save.
             </li>
-            <li>
-              <strong className="text-foreground">Analytics:</strong> We use
-              privacy-friendly, cookieless analytics to understand how our app
-              is used without tracking individual users.
-            </li>
           </ul>
         </section>
 
@@ -50,10 +40,7 @@ export default function PrivacyPage() {
           <h2 className="text-3xl font-bold text-foreground tracking-tight">
             How We Use Data
           </h2>
-          <p>
-            Your data is used solely to provide and improve the Mind Cave
-            experience. We use it to:
-          </p>
+          <p>We use your data to provide the product:</p>
           <ul className="list-disc pl-6 space-y-2 marker:text-primary">
             <li>
               Maintain and synchronize your bookmark collection across devices.
@@ -71,10 +58,8 @@ export default function PrivacyPage() {
             Data Security
           </h2>
           <p>
-            Your bookmarks are stored securely using industry-standard
-            encryption. We use Supabase with Row-Level Security (RLS), which
-            means your data is isolated at the database level — only you can
-            access your saved links.
+            Mind Cave uses Supabase with row level security, so data is isolated
+            at the database level. Your saved links are private to your account.
           </p>
         </section>
 
@@ -83,9 +68,9 @@ export default function PrivacyPage() {
             Third-Party Services
           </h2>
           <p>
-            We do not share your personal data with third parties for marketing
-            purposes. We use reputable service providers (like Google for Auth
-            and Supabase for storage) who adhere to strict privacy standards.
+            Mind Cave relies on third party providers to function, like Google
+            for authentication and Supabase for storage. We do not share your
+            personal data with third parties for marketing.
           </p>
         </section>
 
@@ -93,10 +78,7 @@ export default function PrivacyPage() {
           <h2 className="text-3xl font-bold text-foreground tracking-tight">
             Contact Us
           </h2>
-          <p>
-            If you have any questions about our privacy practices, please
-            contact us at privacy@mindcave.app.
-          </p>
+          <p>Questions about privacy: privacy@mindcave.app</p>
         </section>
       </div>
     </StaticPageLayout>

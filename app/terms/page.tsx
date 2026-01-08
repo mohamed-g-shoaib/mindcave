@@ -4,7 +4,7 @@ export default function TermsPage() {
   return (
     <StaticPageLayout
       title="Terms of Service"
-      subtitle="Standard terms for using our platform. Simple, clear, and fair."
+      subtitle="Simple terms for using Mind Cave."
     >
       <div className="space-y-12 text-lg leading-relaxed text-muted-foreground">
         <section className="space-y-4">
@@ -12,9 +12,8 @@ export default function TermsPage() {
             Acceptance of Terms
           </h2>
           <p>
-            By accessing or using Mind Cave, you agree to be bound by these
-            Terms of Service. If you do not agree to these terms, please do not
-            use our service.
+            By accessing or using Mind Cave, you agree to these Terms of
+            Service. If you do not agree, please do not use the service.
           </p>
         </section>
 
@@ -23,10 +22,8 @@ export default function TermsPage() {
             User Conduct
           </h2>
           <p>
-            Mind Cave is designed for personal organization and productivity.
-            You agree to use the service only for lawful purposes. You are
-            responsible for all content saved to your account and must ensure
-            you have the right to store and access that content.
+            Use Mind Cave for lawful purposes. You are responsible for the links
+            and content you save, and you must have the right to store it.
           </p>
         </section>
 
@@ -35,9 +32,8 @@ export default function TermsPage() {
             Account Security
           </h2>
           <p>
-            Mind Cave uses Google Authentication. You are responsible for
-            maintaining the security of your Google account and any actions
-            taken through your Mind Cave account.
+            Mind Cave uses Google authentication. Keep your Google account
+            secure. Activity through your account is treated as your activity.
           </p>
         </section>
 
@@ -46,10 +42,9 @@ export default function TermsPage() {
             Intellectual Property
           </h2>
           <p>
-            All software, design, and original content on Mind Cave (excluding
-            your saved links and their associated metadata) are the intellectual
-            property of Mind Cave. You may not reproduce or distribute any part
-            of our service without permission.
+            The Mind Cave software and design are owned by Mind Cave. Your saved
+            links remain yours. Do not copy, resell, or reverse engineer the
+            service without permission.
           </p>
         </section>
 
@@ -58,10 +53,8 @@ export default function TermsPage() {
             Termination
           </h2>
           <p>
-            We reserve the right to suspend or terminate your access to Mind
-            Cave at our discretion, without notice, for conduct that we believe
-            violates these Terms or is harmful to other users or the service
-            itself.
+            Access may be suspended or terminated if usage violates these terms
+            or harms the service or other users.
           </p>
         </section>
 
@@ -70,10 +63,8 @@ export default function TermsPage() {
             Changes to Terms
           </h2>
           <p>
-            We may update these terms from time to time. We will notify users of
-            any significant changes by posting the new terms on this page. Your
-            continued use of the service after such changes constitutes your
-            acceptance of the new terms.
+            These terms may change over time. Updates will be posted on this
+            page. Continued use means you accept the updated terms.
           </p>
         </section>
 
@@ -82,10 +73,9 @@ export default function TermsPage() {
             Disclaimers
           </h2>
           <p>
-            Mind Cave is provided "as is" without warranties of any kind. While
-            we strive 100% reliability, we are not liable for any data loss,
-            service interruptions, or other issues arising from the use of the
-            platform.
+            Mind Cave is provided "as is" without warranties. We work to keep it
+            reliable, but we cannot guarantee uninterrupted service and we are
+            not liable for losses caused by outages or disruptions.
           </p>
         </section>
       </div>
