@@ -74,7 +74,7 @@ export function Footer({ user }: FooterProps) {
               </span>
             </Link>
             <p className="mt-4 text-base text-muted-foreground">
-              Organize your digital life with ease
+              Your Digital Library, Perfectly Organized
             </p>
             <p className="mt-4 text-sm text-muted-foreground">
               © 2026 Mind Cave. All rights reserved.
