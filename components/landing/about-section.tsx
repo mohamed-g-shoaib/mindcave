@@ -57,8 +57,7 @@ export function AboutSection() {
             Your Digital Vault
           </h2>
           <p className="mx-auto mt-6 max-w-3xl text-xl text-muted-foreground">
-            More than bookmarks. A complete system to capture and organize the
-            web.
+            Stop losing links. Start finding them instantly.
           </p>
         </motion.div>
 
