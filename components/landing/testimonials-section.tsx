@@ -8,39 +8,44 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const testimonials = [
   {
-    name: "Sarah Chen",
-    role: "Software Engineer",
+    name: "Husseini Sobhy",
+    role: "AI Engineer",
     avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Sarah",
     content:
-      "Mind Cave has completely transformed how I manage my research and development resources. The category system is brilliant!",
+      "I keep every API doc, paper, and GitHub repo here. The category system actually makes sense for how I work.",
+    rating: 5,
   },
   {
-    name: "Marcus Rodriguez",
-    role: "Product Designer",
+    name: "Ahmed Saad",
+    role: "Video Editor",
     avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Marcus",
     content:
-      "Finally, a bookmark manager that's both powerful and beautiful. The dark mode is chef's kiss",
+      "All my stock sites, tutorials, and client refs in one place. Clean interface, works fast. Dark mode is perfect for late nights.",
+    rating: 5,
   },
   {
-    name: "Emily Watson",
-    role: "Content Creator",
+    name: "Mohamed Hassan",
+    role: "Cross-platform Developer",
     avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Emily",
     content:
-      "I've tried so many bookmark tools, but Mind Cave is the only one that stuck. It's just that good.",
+      "Switching between Flutter docs, React Native guides, and platform-specific resources used to be chaos. Not anymore.",
+    rating: 5,
   },
   {
-    name: "David Kim",
-    role: "Entrepreneur",
+    name: "Salah Khattab",
+    role: "AI Engineer",
     avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=David",
     content:
-      "The quick add feature saves me hours every week. I can't imagine going back to browser bookmarks.",
+      "Quick add saves me when I'm deep in research mode. Just bookmark and keep working. I organize later.",
+    rating: 5,
   },
   {
-    name: "Lisa Anderson",
-    role: "Student",
+    name: "Yahya Hassan",
+    role: "Backend Developer",
     avatar: "https://api.dicebear.com/9.x/thumbs/svg?seed=Lisa",
     content:
-      "Perfect for organizing all my study materials and research papers. The search is lightning fast!",
+      "Database docs, API references, stack overflow threads. Everything I need, searchable in milliseconds. Exactly what I wanted.",
+    rating: 5,
   },
 ];
 
