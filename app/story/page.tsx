@@ -4,54 +4,85 @@ export default function StoryPage() {
   return (
     <StaticPageLayout
       title="Our Story"
-      subtitle="The journey of creating a peaceful home for your digital life."
+      subtitle="Why we built Mind Cave, and why it stays simple."
     >
       <div className="space-y-12 text-lg leading-relaxed text-muted-foreground">
         <section className="space-y-4">
           <h2 className="text-3xl font-bold text-foreground tracking-tight">
-            The Digital Chaos
+            The Problem
           </h2>
           <p>
-            In today&apos;s digital world, we are constantly bombarded with
-            information. Links from social media, research papers, inspiration
-            for our next projects, and tools for our daily work are scattered
-            across hundreds of tabs, forgotten in messaging apps, or lost in the
-            abyss of browser bookmarks that we never open again.
+            Links are everywhere. Tabs, chats, notes, and a bookmarks bar that
+            turns into a graveyard.
           </p>
           <p>
-            We realized that the problem wasn&apos;t a lack of information, but
-            a lack of a peaceful place to store and organize it. Browser
-            bookmarks felt like a dusty filing cabinet, and modern
-            "read-it-later" apps often felt like yet another inbox to clear.
+            The issue is not saving links. The issue is finding them again with
+            enough context to trust what you are clicking.
+          </p>
+          <p>
+            Browser bookmarks optimize for storage. Real work needs retrieval.
+            When you come back weeks later, you need the title, the source, and
+            a quick way to search and group what matters.
           </p>
         </section>
 
         <section className="space-y-4">
           <h2 className="text-3xl font-bold text-foreground tracking-tight">
-            Modern Simplicity
+            The Approach
           </h2>
           <p>
-            Mind Cave was born from a simple desire: to create a space that
-            feels like a sanctuary for your digital resources. A place where you
-            can quickly drop a link, trust that it will be beautifully stored
-            with all its context, and find it again exactly when you need it.
+            We built Mind Cave like we build production systems: start with the
+            real workflow, cut the noise, and make the core path fast.
           </p>
           <p>We focused on three core pillars:</p>
           <ul className="list-disc pl-6 space-y-2 marker:text-primary">
             <li>
               <strong className="text-foreground">Instant Organization:</strong>{" "}
-              Automatically fetching metadata so you don&apos;t have to.
+              Fetch metadata automatically so you do not have to.
             </li>
             <li>
-              <strong className="text-foreground">Visual Clarity:</strong> A
-              design that prioritizes aesthetics and ease of use.
+              <strong className="text-foreground">Visual Clarity:</strong> Keep
+              the UI clean so scanning is effortless.
             </li>
             <li>
               <strong className="text-foreground">Fastest Access:</strong>{" "}
-              Powerful search and intuitive categorization that stays out of
-              your way.
+              Search and categories that stay out of your way.
             </li>
           </ul>
+          <p>
+            We care about the hard parts too: predictable behavior, safe
+            defaults, and features that do not create maintenance debt.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-3xl font-bold text-foreground tracking-tight">
+            What It Does
+          </h2>
+          <p>
+            The core loop is intentionally boring. Save a link. Mind Cave pulls
+            the title, description, and favicon. You get a clean card you can
+            scan later.
+          </p>
+          <p>
+            If you are migrating from a browser, you can import your bookmarks
+            HTML export, choose which folders to bring in, and skip duplicate
+            URLs.
+          </p>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-3xl font-bold text-foreground tracking-tight">
+            What We Won’t Do
+          </h2>
+          <p>
+            We do not ship features that look impressive but make retrieval
+            worse. No clutter. No dark patterns. No surprise paywalls.
+          </p>
+          <p>
+            If a feature cannot stay reliable under real usage, it does not
+            belong here.
+          </p>
         </section>
 
         <section className="space-y-4">
@@ -59,16 +90,12 @@ export default function StoryPage() {
             The Vision
           </h2>
           <p>
-            Our vision is to help millions of people reclaim their digital
-            peace. Mind Cave isn&apos;t just a bookmark manager; it&apos;s a
-            second brain that grows with you. Whether you&apos;re a researcher,
-            a creative, a developer, or someone who just wants to keep their
-            favorite recipes in one place, we built this for you.
+            Mind Cave is a bookmark manager that behaves like a second brain.
+            Save a link, keep the context, and get it back when you need it.
           </p>
           <p>
-            We are committed to keeping Mind Cave accessible, fast, and
-            beautiful. This is just the beginning of the journey, and we&apos;re
-            excited to have you with us.
+            We will keep it fast, stable, and boring in the best way. If a
+            feature does not help retrieval, it does not ship.
           </p>
         </section>
       </div>
