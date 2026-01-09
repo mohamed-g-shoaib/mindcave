@@ -32,7 +32,7 @@ export function CTASection({ user }: CTASectionProps) {
                 href={user ? "/dashboard" : "/login"}
                 className="inline-flex items-center justify-center gap-2 bg-background px-10 py-5 text-lg font-medium text-foreground hover:bg-background/90"
               >
-                {user ? "Open Dashboard" : "Get Started"}
+                {user ? "Dashboard" : "Get Started"}
                 <HugeiconsIcon icon={ArrowRight01Icon} className="h-5 w-5" />
               </Link>
             </div>
