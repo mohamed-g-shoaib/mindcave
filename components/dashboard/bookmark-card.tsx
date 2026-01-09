@@ -130,7 +130,7 @@ export function BookmarkCard({
           {/* Content - fixed height with description area always present */}
           <CardHeader className="p-3 space-y-1">
             <div className="flex items-start justify-between gap-1">
-              <CardTitle className="line-clamp-2 text-base flex-1 min-w-0">
+              <CardTitle className="line-clamp-2 text-base flex-1 min-w-0 min-h-12">
                 {bookmark.title}
               </CardTitle>
 
