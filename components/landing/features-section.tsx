@@ -62,7 +62,7 @@ export function FeaturesSection() {
             viewport={{ once: true }}
             className="flex flex-col border border-border bg-card p-4 sm:p-8 lg:col-span-2"
           >
-            <div className="mb-6">
+            <div className="mb-6 md:min-h-28">
               <h3 className="text-2xl font-semibold text-foreground">
                 Quick Add
               </h3>
@@ -89,7 +89,7 @@ export function FeaturesSection() {
             transition={{ delay: 0.1 }}
             className="flex flex-col border border-border bg-card p-4 sm:p-8"
           >
-            <div className="mb-6">
+            <div className="mb-6 md:min-h-28">
               <h3 className="text-2xl font-semibold text-foreground">
                 Add Categories
               </h3>
@@ -116,7 +116,7 @@ export function FeaturesSection() {
             transition={{ delay: 0.2 }}
             className="flex flex-col border border-border bg-card p-4 sm:p-8"
           >
-            <div className="mb-6">
+            <div className="mb-6 md:min-h-28">
               <h3 className="text-2xl font-semibold text-foreground">
                 Instant Search
               </h3>
@@ -143,7 +143,7 @@ export function FeaturesSection() {
             transition={{ delay: 0.3 }}
             className="flex flex-col border border-border bg-card p-4 sm:p-8 lg:col-span-2"
           >
-            <div className="mb-6">
+            <div className="mb-6 md:min-h-28">
               <h3 className="text-2xl font-semibold text-foreground">
                 Auto Metadata
               </h3>
@@ -170,7 +170,7 @@ export function FeaturesSection() {
             transition={{ delay: 0.4 }}
             className="flex flex-col border border-border bg-card p-4 sm:p-8 lg:col-span-2"
           >
-            <div className="mb-6">
+            <div className="mb-6 md:min-h-28">
               <h3 className="text-2xl font-semibold text-foreground">
                 Flexible Views
               </h3>
