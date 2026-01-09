@@ -71,7 +71,7 @@ export function BookmarkListItem({
     <ContextMenu>
       <ContextMenuTrigger>
         <div
-          className="group flex cursor-pointer items-center gap-2 border-b p-2 transition-all duration-300 hover:bg-muted/90 hover:border-primary/40 last:border-b-0 md:gap-3 md:p-3"
+          className="group flex cursor-pointer items-center gap-2 border-b p-2 transition-all duration-300 hover:bg-muted/50 hover:border-primary/50 hover:shadow-md last:border-b-0 md:gap-3 md:p-3"
           onClick={(e) => {
             const target = e.target as HTMLElement;
             // Don't open if clicking a button or a menu item
@@ -84,12 +84,12 @@ export function BookmarkListItem({
           }}
         >
           {/* Favicon */}
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10">
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10 transition-transform group-hover:scale-110">
             {bookmark.favicon_url ? (
               <img
                 src={getProxiedImageUrl(bookmark.favicon_url) || undefined}
                 alt=""
-                className="h-5 w-5 object-contain md:h-6 md:w-6"
+                className="h-5 w-5 object-contain md:h-6 md:w-6 transition-transform"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                 }}
@@ -97,7 +97,7 @@ export function BookmarkListItem({
             ) : (
               <HugeiconsIcon
                 icon={Link01Icon}
-                className="h-4 w-4 text-muted-foreground md:h-5 md:w-5"
+                className="h-4 w-4 text-muted-foreground md:h-5 md:w-5 transition-transform"
               />
             )}
           </div>
