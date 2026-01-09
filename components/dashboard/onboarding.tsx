@@ -4,11 +4,23 @@ import { useEffect, useCallback, useRef } from "react";
 import { driver, type DriveStep, type Config } from "driver.js";
 import "driver.js/dist/driver.css";
 import { useOnboarding } from "@/hooks/use-onboarding";
+import { useSidebar } from "@/components/ui/sidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-// Define onboarding steps
-const ONBOARDING_STEPS: DriveStep[] = [
+// Step locations: sidebar = in sheet, dashboard = outside sheet
+type StepLocation = "sidebar" | "dashboard";
+
+interface OnboardingStep extends DriveStep {
+  location?: StepLocation;
+}
+
+// Define onboarding steps with location metadata
+// Sidebar steps come first, then dashboard steps - no back and forth on mobile
+const ONBOARDING_STEPS: OnboardingStep[] = [
+  // === SIDEBAR STEPS (0-3) ===
   {
     element: "[data-onboarding='sidebar-logo']",
+    location: "sidebar",
     popover: {
       title: "Welcome to Mind Cave!",
       description:
@@ -19,6 +31,7 @@ const ONBOARDING_STEPS: DriveStep[] = [
   },
   {
     element: "[data-onboarding='all-bookmarks']",
+    location: "sidebar",
     popover: {
       title: "All Bookmarks",
       description:
@@ -29,6 +42,7 @@ const ONBOARDING_STEPS: DriveStep[] = [
   },
   {
     element: "[data-onboarding='add-category']",
+    location: "sidebar",
     popover: {
       title: "Create Categories",
       description:
@@ -38,7 +52,20 @@ const ONBOARDING_STEPS: DriveStep[] = [
     },
   },
   {
+    element: "[data-onboarding='user-menu']",
+    location: "sidebar",
+    popover: {
+      title: "User Menu",
+      description:
+        "Access your profile, import bookmarks from your browser, toggle theme, or sign out.",
+      side: "right",
+      align: "end",
+    },
+  },
+  // === DASHBOARD STEPS (4-6) ===
+  {
     element: "[data-onboarding='add-bookmark']",
+    location: "dashboard",
     popover: {
       title: "Add Bookmarks",
       description:
@@ -49,6 +76,7 @@ const ONBOARDING_STEPS: DriveStep[] = [
   },
   {
     element: "[data-onboarding='view-toggle']",
+    location: "dashboard",
     popover: {
       title: "Switch Views",
       description:
@@ -59,6 +87,7 @@ const ONBOARDING_STEPS: DriveStep[] = [
   },
   {
     element: "[data-onboarding='column-selector']",
+    location: "dashboard",
     popover: {
       title: "Adjust Layout",
       description:
@@ -67,17 +96,9 @@ const ONBOARDING_STEPS: DriveStep[] = [
       align: "end",
     },
   },
+  // === FINAL STEP ===
   {
-    element: "[data-onboarding='user-menu']",
-    popover: {
-      title: "User Menu",
-      description:
-        "Access your profile, import bookmarks from your browser, toggle theme, or sign out.",
-      side: "right",
-      align: "end",
-    },
-  },
-  {
+    location: "dashboard",
     popover: {
       title: "You're All Set!",
       description:
@@ -110,6 +131,7 @@ export function DashboardOnboarding({
 }: DashboardOnboardingProps) {
   const { hasCompletedOnboarding, isReady, completeOnboarding } =
     useOnboarding();
+  const { setOpenMobile, isMobile } = useSidebar();
   const driverRef = useRef<ReturnType<typeof driver> | null>(null);
   const hasStartedRef = useRef(false);
 
@@ -118,17 +140,38 @@ export function DashboardOnboarding({
       driverRef.current.destroy();
     }
 
+    // Create steps with mobile sidebar handling
+    const stepsWithMobileHandling = ONBOARDING_STEPS.map((step, index) => ({
+      ...step,
+      onHighlightStarted: () => {
+        if (isMobile) {
+          const currentStep = ONBOARDING_STEPS[index];
+          // Open sidebar for sidebar steps, close for dashboard steps
+          setOpenMobile(currentStep.location === "sidebar");
+        }
+      },
+    }));
+
     driverRef.current = driver({
       ...DRIVER_CONFIG,
-      steps: ONBOARDING_STEPS,
+      steps: stepsWithMobileHandling,
       onDestroyStarted: () => {
+        // Close sidebar when tour ends on mobile
+        if (isMobile) {
+          setOpenMobile(false);
+        }
         completeOnboarding();
         driverRef.current?.destroy();
       },
     });
 
+    // Open sidebar before starting tour on mobile
+    if (isMobile) {
+      setOpenMobile(true);
+    }
+
     driverRef.current.drive();
-  }, [completeOnboarding]);
+  }, [completeOnboarding, isMobile, setOpenMobile]);
 
   useEffect(() => {
     // Only auto-start once when ready and not completed
@@ -162,6 +205,7 @@ export function DashboardOnboarding({
 // Export a function to manually trigger the tour
 export function useDashboardTour() {
   const { completeOnboarding, resetOnboarding } = useOnboarding();
+  const { setOpenMobile, isMobile } = useSidebar();
   const driverRef = useRef<ReturnType<typeof driver> | null>(null);
 
   const startTour = useCallback(() => {
@@ -169,17 +213,36 @@ export function useDashboardTour() {
       driverRef.current.destroy();
     }
 
+    // Create steps with mobile sidebar handling
+    const stepsWithMobileHandling = ONBOARDING_STEPS.map((step, index) => ({
+      ...step,
+      onHighlightStarted: () => {
+        if (isMobile) {
+          const currentStep = ONBOARDING_STEPS[index];
+          setOpenMobile(currentStep.location === "sidebar");
+        }
+      },
+    }));
+
     driverRef.current = driver({
       ...DRIVER_CONFIG,
-      steps: ONBOARDING_STEPS,
+      steps: stepsWithMobileHandling,
       onDestroyStarted: () => {
+        if (isMobile) {
+          setOpenMobile(false);
+        }
         completeOnboarding();
         driverRef.current?.destroy();
       },
     });
 
+    // Open sidebar before starting tour on mobile
+    if (isMobile) {
+      setOpenMobile(true);
+    }
+
     driverRef.current.drive();
-  }, [completeOnboarding]);
+  }, [completeOnboarding, isMobile, setOpenMobile]);
 
   return { startTour, resetOnboarding };
 }
