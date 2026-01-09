@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { useCreateBookmark } from "@/hooks/use-bookmarks";
 import { useCategories } from "@/hooks/use-categories";
+import { getCategoryIcon } from "@/components/dashboard/icon-picker";
 
 interface AddBookmarkSheetProps {
   open: boolean;
@@ -389,17 +391,47 @@ export function AddBookmarkSheet({
               >
                 <SelectTrigger className="w-full">
                   <SelectValue>
-                    {formData.category_id
-                      ? categories.find((c) => c.id === formData.category_id)
-                          ?.name
-                      : "Uncategorized"}
+                    {formData.category_id ? (
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon
+                          icon={getCategoryIcon(
+                            categories.find(
+                              (c) => c.id === formData.category_id
+                            )?.icon || "folder-01"
+                          )}
+                          className="h-4 w-4"
+                          style={{
+                            color:
+                              categories.find(
+                                (c) => c.id === formData.category_id
+                              )?.color || undefined,
+                          }}
+                        />
+                        <span>
+                          {
+                            categories.find(
+                              (c) => c.id === formData.category_id
+                            )?.name
+                          }
+                        </span>
+                      </div>
+                    ) : (
+                      "Uncategorized"
+                    )}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="uncategorized">Uncategorized</SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
-                      {category.name}
+                      <div className="flex items-center gap-2">
+                        <HugeiconsIcon
+                          icon={getCategoryIcon(category.icon)}
+                          className="h-4 w-4"
+                          style={{ color: category.color || undefined }}
+                        />
+                        <span>{category.name}</span>
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
