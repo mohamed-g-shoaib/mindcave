@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { toast } from "sonner";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -24,6 +25,7 @@ import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -426,79 +428,102 @@ function DashboardContent() {
               Add Bookmark
             </Button>
           </div>
-        ) : viewMode === "card" ? (
-          <div className={`grid auto-rows-fr gap-4 ${getGridClasses()}`}>
-            {bookmarks.map((bookmark) => (
-              <div key={bookmark.id} className="relative">
-                {isSelectingBookmarks && (
-                  <div
-                    className="absolute inset-0 z-10 cursor-pointer"
-                    onClick={() => toggleBookmarkSelection(bookmark.id)}
-                  >
-                    <div className="absolute top-2 left-2 z-20">
-                      <Checkbox
-                        checked={selectedBookmarkIds.has(bookmark.id)}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </div>
-                    <div
-                      className={`absolute inset-0 transition-colors ${
-                        selectedBookmarkIds.has(bookmark.id)
-                          ? "bg-primary/10 ring-2 ring-primary"
-                          : "hover:bg-muted/50"
-                      }`}
-                    />
-                  </div>
-                )}
-                <BookmarkCard
-                  bookmark={bookmark}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onCopy={handleCopy}
-                  showCategory={!categoryId}
-                  columns={currentColumns}
-                />
-              </div>
-            ))}
-          </div>
         ) : (
-          <div className={`grid gap-4 ${getGridClasses()}`}>
-            {bookmarks.map((bookmark) => (
-              <div
-                key={bookmark.id}
-                className="relative overflow-hidden border"
-              >
-                {isSelectingBookmarks && (
-                  <div
-                    className="absolute inset-0 z-10 cursor-pointer flex items-center"
-                    onClick={() => toggleBookmarkSelection(bookmark.id)}
+          <LayoutGroup>
+            <motion.div
+              layout
+              className={cn(
+                "grid gap-4",
+                getGridClasses(),
+                viewMode === "card" && "auto-rows-fr"
+              )}
+            >
+              <AnimatePresence mode="popLayout">
+                {bookmarks.map((bookmark) => (
+                  <motion.div
+                    layout
+                    key={bookmark.id}
+                    initial={{ opacity: 0, scale: 0.96, y: 8 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.96, y: -8 }}
+                    transition={{
+                      layout: {
+                        type: "spring",
+                        stiffness: 200,
+                        damping: 25,
+                        mass: 0.6,
+                      },
+                      opacity: {
+                        duration: 0.35,
+                        ease: [0.25, 0.1, 0.25, 1.0], // Custom cubic-bezier for smooth fade
+                      },
+                      scale: {
+                        duration: 0.4,
+                        ease: [0.34, 1.56, 0.64, 1], // Subtle elastic out
+                      },
+                      y: {
+                        duration: 0.4,
+                        ease: [0.16, 1, 0.3, 1], // Smooth vertical movement
+                      },
+                    }}
+                    className={cn(
+                      "relative",
+                      viewMode === "list" && "overflow-hidden border"
+                    )}
                   >
-                    <div className="absolute left-3 z-20">
-                      <Checkbox
-                        checked={selectedBookmarkIds.has(bookmark.id)}
-                        onClick={(e) => e.stopPropagation()}
+                    {isSelectingBookmarks && (
+                      <div
+                        className="absolute inset-0 z-10 cursor-pointer"
+                        onClick={() => toggleBookmarkSelection(bookmark.id)}
+                      >
+                        <div
+                          className={cn(
+                            "absolute z-20",
+                            viewMode === "card"
+                              ? "top-2 left-2"
+                              : "left-3 top-1/2 -translate-y-1/2"
+                          )}
+                        >
+                          <Checkbox
+                            checked={selectedBookmarkIds.has(bookmark.id)}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                        <div
+                          className={cn(
+                            "absolute inset-0 transition-colors",
+                            selectedBookmarkIds.has(bookmark.id)
+                              ? "bg-primary/10 ring-2 ring-primary"
+                              : "hover:bg-muted/50"
+                          )}
+                        />
+                      </div>
+                    )}
+
+                    {viewMode === "card" ? (
+                      <BookmarkCard
+                        bookmark={bookmark}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onCopy={handleCopy}
+                        showCategory={!categoryId}
+                        columns={currentColumns}
                       />
-                    </div>
-                    <div
-                      className={`absolute inset-0 transition-colors ${
-                        selectedBookmarkIds.has(bookmark.id)
-                          ? "bg-primary/10 ring-2 ring-primary ring-inset"
-                          : "hover:bg-muted/50"
-                      }`}
-                    />
-                  </div>
-                )}
-                <BookmarkListItem
-                  bookmark={bookmark}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onCopy={handleCopy}
-                  showCategory={!categoryId}
-                  columns={currentColumns}
-                />
-              </div>
-            ))}
-          </div>
+                    ) : (
+                      <BookmarkListItem
+                        bookmark={bookmark}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onCopy={handleCopy}
+                        showCategory={!categoryId}
+                        columns={currentColumns}
+                      />
+                    )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          </LayoutGroup>
         )}
       </div>
 
