@@ -41,7 +41,7 @@ export function HeroSection({ user }: HeroSectionProps) {
             browser clutter. Just organized bookmarks.
           </p>
 
-          <div className="mt-12 flex flex-col justify-center gap-4 sm:flex-row">
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               href={user ? "/dashboard" : "/login"}
               className="inline-flex items-center justify-center gap-2 bg-primary px-10 py-5 text-lg font-medium text-primary-foreground hover:bg-primary/90"
@@ -57,7 +57,18 @@ export function HeroSection({ user }: HeroSectionProps) {
             </Link>
           </div>
 
-          <div className="mt-10 flex items-center justify-center gap-10 text-base text-muted-foreground">
+          <div className="mt-6 flex items-center justify-center">
+            <Link
+              href="https://www.devloop.software/"
+              target="_blank"
+              className="group flex items-center gap-2 border border-border bg-muted/30 px-3 py-1 text-[10px] font-medium tracking-widest uppercase text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+            >
+              <span>A Devloop Project</span>
+              <div className="h-1 w-1 rounded-full bg-primary/40 group-hover:bg-primary" />
+            </Link>
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-10 text-base text-muted-foreground">
             <div className="flex items-center gap-2">
               <div className="h-2 w-2 bg-primary" />
               <span>Free forever</span>
@@ -70,7 +81,7 @@ export function HeroSection({ user }: HeroSectionProps) {
         </div>
 
         {/* Dashboard Preview */}
-        <div className="relative mx-auto mt-20">
+        <div className="relative mx-auto mt-6">
           <div className="overflow-hidden border border-border bg-card">
             {/* Mock Browser Chrome */}
             <div className="flex items-center gap-4 border-b border-border bg-muted/50 px-4 py-3 sm:gap-2">
