@@ -60,6 +60,8 @@ const CARD_COLUMN_OPTIONS = [
   { value: 4, label: "4 columns" },
   { value: 5, label: "5 columns" },
   { value: 6, label: "6 columns" },
+  { value: 7, label: "7 columns" },
+  { value: 8, label: "8 columns" },
 ];
 
 // Desktop column options for lists
@@ -67,6 +69,8 @@ const LIST_COLUMN_OPTIONS = [
   { value: 1, label: "1 column" },
   { value: 2, label: "2 columns" },
   { value: 3, label: "3 columns" },
+  { value: 4, label: "4 columns" },
+  { value: 5, label: "5 columns" },
 ];
 
 // Grid class mapping for cards (desktop)
@@ -76,6 +80,8 @@ const CARD_GRID_CLASSES: Record<number, string> = {
   4: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
   5: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5",
   6: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6",
+  7: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7",
+  8: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-8",
 };
 
 // Grid class mapping for lists (desktop)
@@ -83,6 +89,8 @@ const LIST_GRID_CLASSES: Record<number, string> = {
   1: "",
   2: "lg:grid-cols-2",
   3: "lg:grid-cols-2 xl:grid-cols-3",
+  4: "lg:grid-cols-2 xl:grid-cols-4",
+  5: "lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5",
 };
 
 // Mobile grid classes
