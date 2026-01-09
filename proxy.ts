@@ -3,6 +3,30 @@ import { NextResponse, type NextRequest } from "next/server";
 import { hasEnvVars } from "./lib/utils";
 
 export async function proxy(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  const isAllowedOrigin =
+    origin &&
+    (origin.startsWith("chrome-extension://") ||
+      origin === "https://mindcave.vercel.app" ||
+      origin === "http://localhost:3000");
+
+  if (request.method === "OPTIONS") {
+    const response = new NextResponse(null, { status: 204 });
+    if (isAllowedOrigin) {
+      response.headers.set("Access-Control-Allow-Origin", origin!);
+      response.headers.set(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS"
+      );
+      response.headers.set(
+        "Access-Control-Allow-Headers",
+        "Content-Type, Authorization"
+      );
+      response.headers.set("Access-Control-Allow-Credentials", "true");
+    }
+    return response;
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -50,6 +74,11 @@ export async function proxy(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
+  }
+
+  if (isAllowedOrigin) {
+    supabaseResponse.headers.set("Access-Control-Allow-Origin", origin!);
+    supabaseResponse.headers.set("Access-Control-Allow-Credentials", "true");
   }
 
   return supabaseResponse;

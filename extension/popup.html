@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mind Cave</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body class="dark">
+    <div id="app" class="popup-container">
+      <header class="header">
+        <h1 class="logo">Mind Cave</h1>
+        <div id="user-info" class="user-info"></div>
+      </header>
+
+      <main class="content">
+        <div id="loading" class="loading-state">
+          <div class="spinner"></div>
+          <p>Fetching page metadata...</p>
+        </div>
+
+        <div id="login-required" class="error-state hidden">
+          <p>Please log in to Mind Cave to save bookmarks.</p>
+          <a
+            href="https://mindcave.vercel.app/login"
+            target="_blank"
+            class="button primary"
+            >Login</a
+          >
+        </div>
+
+        <div id="metadata-form" class="metadata-form hidden">
+          <div class="field">
+            <label for="url">URL</label>
+            <input type="text" id="url" readonly />
+          </div>
+
+          <div class="preview-card">
+            <img id="og-image" src="" alt="" class="og-image hidden" />
+            <div class="preview-details">
+              <div class="title-row">
+                <img id="favicon" src="" alt="" class="favicon hidden" />
+                <h2 id="title" class="title"></h2>
+              </div>
+              <p id="description" class="description"></p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category">
+              <option value="">Select a category...</option>
+            </select>
+          </div>
+
+          <button id="save-btn" class="button primary full-width">
+            Save Bookmark
+          </button>
+        </div>
+
+        <div id="success" class="success-state hidden">
+          <div class="success-icon">✓</div>
+          <p>Saved successfully!</p>
+          <button id="close-btn" class="button secondary full-width">
+            Close
+          </button>
+        </div>
+      </main>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

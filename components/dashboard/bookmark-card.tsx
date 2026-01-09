@@ -34,6 +34,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
+import { getProxiedImageUrl } from "@/lib/image-proxy";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
 interface BookmarkCardProps {
@@ -78,7 +79,7 @@ export function BookmarkCard({
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Card className="group flex flex-col overflow-hidden transition-all duration-300 hover:ring-1 hover:ring-primary/50 hover:bg-muted/80 hover:shadow-md p-0">
+        <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:ring-1 hover:ring-primary/50 hover:bg-muted/80 hover:shadow-md p-0">
           {/* Media Section - now the only clickable area to open bookmark */}
           <div className="cursor-pointer overflow-hidden" onClick={handleOpen}>
             {isYouTube ? (
@@ -94,7 +95,7 @@ export function BookmarkCard({
             ) : bookmark.og_image_url ? (
               <div className="aspect-video w-full bg-muted">
                 <img
-                  src={bookmark.og_image_url}
+                  src={getProxiedImageUrl(bookmark.og_image_url) || undefined}
                   alt={bookmark.title}
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
                 />
@@ -103,7 +104,7 @@ export function BookmarkCard({
               <div className="flex aspect-video w-full items-center justify-center bg-muted transition-colors hover:bg-muted/80">
                 <div className="flex h-14 w-14 items-center justify-center rounded-none bg-background/70 ring-1 ring-foreground/10">
                   <img
-                    src={bookmark.favicon_url}
+                    src={getProxiedImageUrl(bookmark.favicon_url) || undefined}
                     alt=""
                     className="h-8 w-8 object-contain"
                     onError={(e) => {
@@ -126,8 +127,8 @@ export function BookmarkCard({
             )}
           </div>
 
-          {/* Content */}
-          <CardHeader className="flex-1 p-3 space-y-1">
+          {/* Content - fixed height with description area always present */}
+          <CardHeader className="p-3 space-y-1">
             <div className="flex items-start justify-between gap-1">
               <CardTitle className="line-clamp-2 text-base flex-1 min-w-0">
                 {bookmark.title}
@@ -208,12 +209,10 @@ export function BookmarkCard({
               </div>
             </div>
 
-            {/* Description - takes full width below title and actions */}
-            {bookmark.description && (
-              <CardDescription className="line-clamp-2 w-full">
-                {bookmark.description}
-              </CardDescription>
-            )}
+            {/* Description - always present for consistent height, line-clamp-2 for truncation */}
+            <CardDescription className="line-clamp-2 w-full min-h-10">
+              {bookmark.description || "\u00A0"}
+            </CardDescription>
           </CardHeader>
         </Card>
       </ContextMenuTrigger>

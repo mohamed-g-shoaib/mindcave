@@ -36,6 +36,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useBookmarks, useDeleteBookmark } from "@/hooks/use-bookmarks";
+import { useBookmarksRealtime } from "@/hooks/use-bookmarks-realtime";
 import { useCategories } from "@/hooks/use-categories";
 import { useViewMode } from "@/hooks/use-preferences";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -94,6 +95,10 @@ function DashboardContent() {
     useBookmarks(categoryId);
   const { data: categories = [] as Category[] } = useCategories();
   const deleteBookmark = useDeleteBookmark();
+
+  // Subscribe to real-time bookmark changes (e.g., from Chrome extension)
+  useBookmarksRealtime();
+
   const {
     viewMode,
     cardColumns,
@@ -296,7 +301,7 @@ function DashboardContent() {
             </Button>
           </div>
         ) : viewMode === "card" ? (
-          <div className={`grid gap-4 ${getGridClasses()}`}>
+          <div className={`grid auto-rows-fr gap-4 ${getGridClasses()}`}>
             {bookmarks.map((bookmark) => (
               <BookmarkCard
                 key={bookmark.id}
