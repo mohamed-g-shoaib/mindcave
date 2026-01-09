@@ -27,6 +27,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
+import { getProxiedImageUrl } from "@/lib/image-proxy";
 import { cn } from "@/lib/utils";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
@@ -86,7 +87,7 @@ export function BookmarkListItem({
           <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10">
             {bookmark.favicon_url ? (
               <img
-                src={bookmark.favicon_url}
+                src={getProxiedImageUrl(bookmark.favicon_url) || undefined}
                 alt=""
                 className="h-5 w-5 object-contain md:h-6 md:w-6"
                 onError={(e) => {
