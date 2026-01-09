@@ -11,6 +11,10 @@ import {
   ListViewIcon,
   ArrowDown01Icon,
   Tick02Icon,
+  CursorAddSelection01Icon,
+  CheckListIcon,
+  Cancel01Icon,
+  Delete02Icon,
 } from "@hugeicons/core-free-icons";
 
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
@@ -18,6 +22,7 @@ import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
 import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
 import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -115,6 +120,13 @@ function DashboardContent() {
     null
   );
 
+  // Bookmark multi-select state
+  const [isSelectingBookmarks, setIsSelectingBookmarks] = useState(false);
+  const [selectedBookmarkIds, setSelectedBookmarkIds] = useState<Set<string>>(
+    () => new Set()
+  );
+  const [deletingBulk, setDeletingBulk] = useState(false);
+
   // Get current category name
   const currentCategory = categoryId
     ? categories.find((c) => c.id === categoryId)?.name
@@ -147,6 +159,47 @@ function DashboardContent() {
   const handleCopy = (url: string) => {
     navigator.clipboard.writeText(url);
     toast.success("Link copied to clipboard");
+  };
+
+  // Bookmark multi-select helpers
+  const toggleBookmarkSelection = (id: string) => {
+    setSelectedBookmarkIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAllBookmarks = () => {
+    setSelectedBookmarkIds(new Set(bookmarks.map((b) => b.id)));
+  };
+
+  const clearSelectedBookmarks = () => {
+    setSelectedBookmarkIds(new Set());
+  };
+
+  const confirmBulkDelete = async () => {
+    const ids = Array.from(selectedBookmarkIds);
+    if (ids.length === 0) {
+      setDeletingBulk(false);
+      return;
+    }
+
+    try {
+      for (const id of ids) {
+        await deleteBookmark.mutateAsync(id);
+      }
+      toast.success(
+        `Deleted ${ids.length} bookmark${ids.length === 1 ? "" : "s"}`
+      );
+      clearSelectedBookmarks();
+      setIsSelectingBookmarks(false);
+    } catch {
+      toast.error("Failed to delete selected bookmarks");
+    } finally {
+      setDeletingBulk(false);
+    }
   };
 
   // Column options based on screen size and view mode
@@ -277,6 +330,71 @@ function DashboardContent() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Bookmark Multi-Select Controls */}
+            {bookmarks.length > 0 && (
+              <>
+                {!isSelectingBookmarks ? (
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => {
+                      setIsSelectingBookmarks(true);
+                      clearSelectedBookmarks();
+                    }}
+                    title="Select bookmarks"
+                  >
+                    <HugeiconsIcon
+                      icon={CursorAddSelection01Icon}
+                      className="h-4 w-4"
+                    />
+                  </Button>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    {selectedBookmarkIds.size > 0 && (
+                      <span className="text-xs text-muted-foreground mr-1">
+                        {selectedBookmarkIds.size} selected
+                      </span>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      disabled={
+                        selectedBookmarkIds.size === 0 ||
+                        deleteBookmark.isPending
+                      }
+                      onClick={() => setDeletingBulk(true)}
+                      title={
+                        selectedBookmarkIds.size === 0
+                          ? "Select bookmarks to delete"
+                          : "Delete selected bookmarks"
+                      }
+                    >
+                      <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={selectAllBookmarks}
+                      title="Select all bookmarks"
+                    >
+                      <HugeiconsIcon icon={CheckListIcon} className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => {
+                        setIsSelectingBookmarks(false);
+                        clearSelectedBookmarks();
+                      }}
+                      title="Cancel selection"
+                    >
+                      <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
 
@@ -303,21 +421,65 @@ function DashboardContent() {
         ) : viewMode === "card" ? (
           <div className={`grid auto-rows-fr gap-4 ${getGridClasses()}`}>
             {bookmarks.map((bookmark) => (
-              <BookmarkCard
-                key={bookmark.id}
-                bookmark={bookmark}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onCopy={handleCopy}
-                showCategory={!categoryId}
-                columns={currentColumns}
-              />
+              <div key={bookmark.id} className="relative">
+                {isSelectingBookmarks && (
+                  <div
+                    className="absolute inset-0 z-10 cursor-pointer"
+                    onClick={() => toggleBookmarkSelection(bookmark.id)}
+                  >
+                    <div className="absolute top-2 left-2 z-20">
+                      <Checkbox
+                        checked={selectedBookmarkIds.has(bookmark.id)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                    <div
+                      className={`absolute inset-0 transition-colors ${
+                        selectedBookmarkIds.has(bookmark.id)
+                          ? "bg-primary/10 ring-2 ring-primary"
+                          : "hover:bg-muted/50"
+                      }`}
+                    />
+                  </div>
+                )}
+                <BookmarkCard
+                  bookmark={bookmark}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onCopy={handleCopy}
+                  showCategory={!categoryId}
+                  columns={currentColumns}
+                />
+              </div>
             ))}
           </div>
         ) : (
           <div className={`grid gap-4 ${getGridClasses()}`}>
             {bookmarks.map((bookmark) => (
-              <div key={bookmark.id} className="overflow-hidden border">
+              <div
+                key={bookmark.id}
+                className="relative overflow-hidden border"
+              >
+                {isSelectingBookmarks && (
+                  <div
+                    className="absolute inset-0 z-10 cursor-pointer flex items-center"
+                    onClick={() => toggleBookmarkSelection(bookmark.id)}
+                  >
+                    <div className="absolute left-3 z-20">
+                      <Checkbox
+                        checked={selectedBookmarkIds.has(bookmark.id)}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                    <div
+                      className={`absolute inset-0 transition-colors ${
+                        selectedBookmarkIds.has(bookmark.id)
+                          ? "bg-primary/10 ring-2 ring-primary ring-inset"
+                          : "hover:bg-muted/50"
+                      }`}
+                    />
+                  </div>
+                )}
                 <BookmarkListItem
                   bookmark={bookmark}
                   onEdit={handleEdit}
@@ -372,6 +534,41 @@ function DashboardContent() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <AlertDialog
+        open={deletingBulk}
+        onOpenChange={(open) => !open && setDeletingBulk(false)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Delete {selectedBookmarkIds.size} bookmark
+              {selectedBookmarkIds.size === 1 ? "" : "s"}?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              selected bookmarks from your cave.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteBookmark.isPending}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                confirmBulkDelete();
+              }}
+              variant="destructive"
+              disabled={deleteBookmark.isPending}
+            >
+              {deleteBookmark.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <EditBookmarkSheet
         open={!!editingBookmark}
         onOpenChange={(open) => !open && setEditingBookmark(null)}

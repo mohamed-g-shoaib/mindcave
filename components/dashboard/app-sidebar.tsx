@@ -16,6 +16,7 @@ import {
   Delete02Icon,
   MoreVerticalIcon,
   HelpCircleIcon,
+  CheckListIcon,
 } from "@hugeicons/core-free-icons";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
@@ -224,7 +225,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
               <>
                 <SidebarGroupAction
                   type="button"
-                  className="right-9"
+                  className="right-15"
                   disabled={
                     selectedCategoryIds.size === 0 ||
                     (deleteCategory as unknown as { isPending?: boolean })
@@ -238,6 +239,19 @@ export function AppSidebar({ user }: AppSidebarProps) {
                   }
                 >
                   <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
+                </SidebarGroupAction>
+                <SidebarGroupAction
+                  type="button"
+                  className="right-9"
+                  onClick={() => {
+                    // Select all categories
+                    setSelectedCategoryIds(
+                      new Set(categories.map((c) => c.id))
+                    );
+                  }}
+                  title="Select all categories"
+                >
+                  <HugeiconsIcon icon={CheckListIcon} className="h-4 w-4" />
                 </SidebarGroupAction>
                 <SidebarGroupAction
                   type="button"
