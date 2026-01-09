@@ -284,99 +284,6 @@ export function AddBookmarkSheet({
               />
             </div>
 
-            {/* Custom media */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="custom-og">Custom OG image (optional)</Label>
-                <Input
-                  id="custom-og"
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  disabled={isUploadingOg || createBookmark.isPending}
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) uploadCustom("ogimage", f);
-                  }}
-                />
-                <div className="flex items-center justify-between">
-                  {hasCustomOg ? (
-                    <p className="text-xs text-muted-foreground">
-                      Using your uploaded OG image.
-                    </p>
-                  ) : (
-                    <p className="text-xs text-muted-foreground">
-                      If empty, we’ll fetch it automatically.
-                    </p>
-                  )}
-                  {hasCustomOg && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      disabled={isFetchingMetadata}
-                      onClick={async () => {
-                        setHasCustomOg(false);
-                        setFormData((prev) => ({ ...prev, og_image_url: "" }));
-                        if (formData.url) {
-                          setIsFetchingMetadata(true);
-                          await fetchMetadataForUrl(formData.url);
-                          setIsFetchingMetadata(false);
-                        }
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="custom-favicon">
-                  Custom favicon (optional)
-                </Label>
-                <Input
-                  id="custom-favicon"
-                  type="file"
-                  accept="image/png,image/x-icon,image/vnd.microsoft.icon,image/svg+xml"
-                  disabled={isUploadingFavicon || createBookmark.isPending}
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) uploadCustom("favicon", f);
-                  }}
-                />
-                <div className="flex items-center justify-between">
-                  {hasCustomFavicon ? (
-                    <p className="text-xs text-muted-foreground">
-                      Using your uploaded favicon.
-                    </p>
-                  ) : (
-                    <p className="text-xs text-muted-foreground">
-                      If empty, we’ll fetch it automatically.
-                    </p>
-                  )}
-                  {hasCustomFavicon && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      disabled={isFetchingMetadata}
-                      onClick={async () => {
-                        setHasCustomFavicon(false);
-                        setFormData((prev) => ({ ...prev, favicon_url: "" }));
-                        if (formData.url) {
-                          setIsFetchingMetadata(true);
-                          await fetchMetadataForUrl(formData.url);
-                          setIsFetchingMetadata(false);
-                        }
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-
             {/* Category */}
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
@@ -436,6 +343,99 @@ export function AddBookmarkSheet({
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Custom media */}
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="custom-og">Custom OG image (optional)</Label>
+                <Input
+                  id="custom-og"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  disabled={isUploadingOg || createBookmark.isPending}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) uploadCustom("ogimage", f);
+                  }}
+                />
+                <div className="flex items-center justify-between">
+                  {hasCustomOg ? (
+                    <p className="text-xs text-muted-foreground">
+                      Using your uploaded OG image.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      If empty, we'll fetch it automatically.
+                    </p>
+                  )}
+                  {hasCustomOg && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isFetchingMetadata}
+                      onClick={async () => {
+                        setHasCustomOg(false);
+                        setFormData((prev) => ({ ...prev, og_image_url: "" }));
+                        if (formData.url) {
+                          setIsFetchingMetadata(true);
+                          await fetchMetadataForUrl(formData.url);
+                          setIsFetchingMetadata(false);
+                        }
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="custom-favicon">
+                  Custom favicon (optional)
+                </Label>
+                <Input
+                  id="custom-favicon"
+                  type="file"
+                  accept="image/png,image/x-icon,image/vnd.microsoft.icon,image/svg+xml"
+                  disabled={isUploadingFavicon || createBookmark.isPending}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) uploadCustom("favicon", f);
+                  }}
+                />
+                <div className="flex items-center justify-between">
+                  {hasCustomFavicon ? (
+                    <p className="text-xs text-muted-foreground">
+                      Using your uploaded favicon.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      If empty, we'll fetch it automatically.
+                    </p>
+                  )}
+                  {hasCustomFavicon && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isFetchingMetadata}
+                      onClick={async () => {
+                        setHasCustomFavicon(false);
+                        setFormData((prev) => ({ ...prev, favicon_url: "" }));
+                        if (formData.url) {
+                          setIsFetchingMetadata(true);
+                          await fetchMetadataForUrl(formData.url);
+                          setIsFetchingMetadata(false);
+                        }
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
             </div>
           </form>
         </div>
