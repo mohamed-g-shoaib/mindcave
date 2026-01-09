@@ -37,7 +37,10 @@ const ViewModesDemo = dynamic(
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="bg-background py-28 md:py-40">
+    <section id="features" className="relative bg-muted py-28 md:py-40">
+      {/* Bottom Bleed - smoother transition */}
+      <div className="absolute inset-x-0 bottom-0 h-64 bg-linear-to-t from-background via-background/50 to-transparent pointer-events-none" />
+
       <div className="mx-auto max-w-350 px-4 sm:px-8">
         <motion.div
           initial={{ opacity: 0, transform: "translateY(20px)" }}
