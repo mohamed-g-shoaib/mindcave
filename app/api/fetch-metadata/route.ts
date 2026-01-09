@@ -135,14 +135,40 @@ function pickBestIconUrl(baseUrl: string, html: string) {
   return best.absoluteHref;
 }
 
+function decodeHtmlEntities(str: string): string {
+  // Decode numeric HTML entities (&#123; or &#x7B;)
+  return str
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) =>
+      String.fromCodePoint(parseInt(hex, 16))
+    );
+}
+
 function trimTitle(raw: string) {
   if (!raw) return "";
-  const separators = [" | ", " - ", " — ", "|", "-", "—", ", ", ",", "."];
+  // Decode HTML entities first (e.g., &#128525; → 😍)
+  const decoded = decodeHtmlEntities(raw);
+  const separators = [
+    " | ",
+    " - ",
+    " — ",
+    " ! ",
+    "!",
+    "|",
+    "-",
+    "—",
+    ", ",
+    ",",
+    ".",
+    "·",
+  ];
   const firstIdx = separators
-    .map((sep) => raw.indexOf(sep))
+    .map((sep) => decoded.indexOf(sep))
     .filter((idx) => idx >= 0)
     .sort((a, b) => a - b)[0];
-  const clipped = Number.isFinite(firstIdx) ? raw.slice(0, firstIdx) : raw;
+  const clipped = Number.isFinite(firstIdx)
+    ? decoded.slice(0, firstIdx)
+    : decoded;
   return clipped.trim();
 }
 
