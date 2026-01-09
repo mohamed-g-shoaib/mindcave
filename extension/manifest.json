@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Mind Cave",
+  "version": "1.0",
+  "description": "Capture and organize web bookmarks in Mind Cave.",
+  "permissions": ["tabs", "activeTab", "storage"],
+  "host_permissions": [
+    "https://mindcave.vercel.app/api/*",
+    "http://localhost:3000/api/*"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
