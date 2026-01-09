@@ -3,12 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  Link01Icon,
-  Folder01Icon,
-  PlusSignIcon,
-  Search01Icon,
-} from "@hugeicons/core-free-icons";
+import { Link01Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 
 import {
   CommandDialog as CommandDialogPrimitive,
@@ -22,6 +17,8 @@ import {
 } from "@/components/ui/command";
 import { useCategories } from "@/hooks/use-categories";
 import { useBookmarks } from "@/hooks/use-bookmarks";
+import { getCategoryIcon } from "@/components/dashboard/icon-picker";
+import { getProxiedImageUrl } from "@/lib/image-proxy";
 import type { BookmarkWithCategory, Category } from "@/lib/supabase/types";
 
 interface CommandDialogProps {
@@ -86,6 +83,7 @@ export function CommandDialog({ open, onOpenChange }: CommandDialogProps) {
                 {categories.map((category) => (
                   <CommandItem
                     key={category.id}
+                    value={category.name}
                     onSelect={() =>
                       runCommand(() =>
                         router.push(`/dashboard?category=${category.id}`)
@@ -93,8 +91,9 @@ export function CommandDialog({ open, onOpenChange }: CommandDialogProps) {
                     }
                   >
                     <HugeiconsIcon
-                      icon={Folder01Icon}
+                      icon={getCategoryIcon(category.icon)}
                       className="mr-2 h-4 w-4"
+                      style={{ color: category.color || undefined }}
                     />
                     <span>{category.name}</span>
                   </CommandItem>
@@ -107,14 +106,31 @@ export function CommandDialog({ open, onOpenChange }: CommandDialogProps) {
             <>
               <CommandSeparator />
               <CommandGroup heading="Bookmarks">
-                {bookmarks.slice(0, 5).map((bookmark) => (
+                {bookmarks.map((bookmark) => (
                   <CommandItem
                     key={bookmark.id}
+                    value={`${bookmark.title} ${bookmark.url}`}
                     onSelect={() =>
                       runCommand(() => window.open(bookmark.url, "_blank"))
                     }
                   >
-                    <HugeiconsIcon icon={Link01Icon} className="mr-2 h-4 w-4" />
+                    {bookmark.favicon_url ? (
+                      <img
+                        src={
+                          getProxiedImageUrl(bookmark.favicon_url) || undefined
+                        }
+                        alt=""
+                        className="mr-2 h-4 w-4 object-contain"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <HugeiconsIcon
+                        icon={Link01Icon}
+                        className="mr-2 h-4 w-4"
+                      />
+                    )}
                     <span>{bookmark.title}</span>
                   </CommandItem>
                 ))}
