@@ -122,6 +122,15 @@ export function Footer({ user }: FooterProps) {
                   Our Story
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="https://www.devloop.software/"
+                  className="hover:text-foreground"
+                  target="_blank"
+                >
+                  Devloop
+                </Link>
+              </li>
             </ul>
           </div>
 
