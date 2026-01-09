@@ -32,7 +32,7 @@ export function HeroSection({ user }: HeroSectionProps) {
     <section className="bg-background py-28 md:py-40">
       <div className="mx-auto max-w-350 px-4 sm:px-8">
         <div className="mx-auto max-w-6xl text-center">
-          <h1 className="text-5xl font-bold leading-tight text-foreground md:text-6xl lg:text-7xl xl:text-8xl">
+          <h1 className="text-5xl font-bold leading-tight text-foreground md:text-6xl lg:text-7xl xl:text-8xl [word-spacing:-0.3em]">
             Your Digital Library,{" "}
             <span className="text-primary">Perfectly Organized</span>
           </h1>

@@ -70,6 +70,7 @@
   }
   body {
     @apply bg-background text-foreground;
+    word-spacing: -0.2em;
   }
   ::selection {
     @apply bg-primary/30 text-foreground;
