@@ -67,7 +67,7 @@ export function FeaturesSection() {
                 Quick Add
               </h3>
               <p className="mt-2 text-muted-foreground">
-                Add bookmarks instantly from anywhere with browser extension
+                Add bookmarks instantly from anywhere with our browser extension
               </p>
             </div>
             <div className="flex-1">
