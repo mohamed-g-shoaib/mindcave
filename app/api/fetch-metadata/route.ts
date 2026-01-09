@@ -141,7 +141,13 @@ function decodeHtmlEntities(str: string): string {
     .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
     .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) =>
       String.fromCodePoint(parseInt(hex, 16))
-    );
+    )
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, " ");
 }
 
 function trimTitle(raw: string) {
@@ -157,6 +163,7 @@ function trimTitle(raw: string) {
     "|",
     "-",
     "—",
+    "–",
     ", ",
     ",",
     ".",
@@ -174,11 +181,12 @@ function trimTitle(raw: string) {
 
 function trimDescription(raw: string) {
   if (!raw) return "";
-  const dotIdx = raw.indexOf(".");
+  const decoded = decodeHtmlEntities(raw);
+  const dotIdx = decoded.indexOf(".");
   if (dotIdx >= 0) {
-    return raw.slice(0, dotIdx + 1).trim();
+    return decoded.slice(0, dotIdx + 1).trim();
   }
-  return raw.trim();
+  return decoded.trim();
 }
 
 export async function POST(request: Request) {
