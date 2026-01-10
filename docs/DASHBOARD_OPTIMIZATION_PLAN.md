@@ -790,13 +790,14 @@ const { data, error } = await supabase
 
 ### Metrics to Track
 
-| Metric              | Current | Phase 1 | Phase 2 | Phase 3 | Phase 4 |
-| ------------------- | ------- | ------- | ------- | ------- | ------- |
-| Page Load           | 5.49s   | 3.5s    | 2.0s    | 1.3s    | 1.2s    |
-| Image Total         | 2.0MB   | 2.0MB   | 0.8MB   | 0.5MB   | 0.5MB   |
-| Requests            | 18      | 12      | 12      | 8       | 8       |
-| Time to Interactive | 3.5s    | 2.5s    | 1.5s    | 1.0s    | 0.9s    |
-| CLS                 | TBD     | ↓       | ↓       | ↓       | ↓       |
+| Metric              | Current | Phase 1 | Phase 2 | Phase 3 (Actual) | Phase 4 |
+| ------------------- | ------- | ------- | ------- | --------------- | ------- |
+| Page Load           | 5.49s   | 3.5s    | 2.0s    | 1.4s (27% ↓)    | 1.2s    |
+| Image Load (Initial)| 476KB   | 476KB   | 90KB    | 43KB (54% ↓)    | 43KB    |
+| Total Images Initial| 20      | 20      | 20      | 9 (55% ↓)       | 9       |
+| Requests on Scroll  | N/A     | N/A     | N/A     | On-demand load  | N/A     |
+| Time to Interactive | 3.5s    | 2.5s    | 1.5s    | 1.0s            | 0.9s    |
+| CLS                 | TBD     | ↓       | ↓       | ↓               | ↓       |
 
 ### User Testing
 
