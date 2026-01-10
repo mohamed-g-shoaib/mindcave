@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useLazyImage } from "@/hooks/use-lazy-image";
 import {
   Link01Icon,
   Edit02Icon,
@@ -77,6 +78,17 @@ export function BookmarkCard({
   const isYouTube =
     bookmark.media_type === "youtube" && bookmark.media_embed_id;
 
+  const ogImageUrl = getOptimizedImageUrl(
+    bookmark.og_image_url,
+    300,
+    "webp",
+    75
+  );
+  const { ref: ogImageRef, imageSrc: ogImageSrc } = useLazyImage(ogImageUrl);
+
+  const faviconUrl = getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
+  const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -87,21 +99,13 @@ export function BookmarkCard({
               <YouTubePreview
                 embedId={bookmark.media_embed_id}
                 title={bookmark.title}
-                onClick={handleOpen}
               />
             ) : bookmark.og_image_url ? (
               <div className="aspect-video w-full bg-muted">
                 <img
-                  src={
-                    getOptimizedImageUrl(
-                      bookmark.og_image_url,
-                      300,
-                      "webp",
-                      75
-                    ) || undefined
-                  }
+                  ref={ogImageRef}
+                  src={ogImageSrc || undefined}
                   alt={bookmark.title}
-                  loading="lazy"
                   width={300}
                   height={169}
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
@@ -111,12 +115,9 @@ export function BookmarkCard({
               <div className="flex aspect-video w-full items-center justify-center bg-muted transition-colors hover:bg-muted/80">
                 <div className="flex h-14 w-14 items-center justify-center rounded-none bg-background/70 ring-1 ring-foreground/10">
                   <img
-                    src={
-                      getOptimizedImageUrl(bookmark.favicon_url, 32, "webp") ||
-                      undefined
-                    }
+                    ref={faviconRef}
+                    src={faviconSrc || undefined}
                     alt=""
-                    loading="lazy"
                     width={32}
                     height={32}
                     className="h-8 w-8 object-contain"

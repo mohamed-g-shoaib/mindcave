@@ -7,7 +7,6 @@ import { PlayIcon } from "@hugeicons/core-free-icons";
 interface YouTubePreviewProps {
   embedId: string;
   title: string;
-  onClick?: (e: React.MouseEvent) => void;
 }
 
 /**
@@ -16,11 +15,7 @@ interface YouTubePreviewProps {
  * Displays a clickable YouTube thumbnail with play button overlay.
  * Only renders the actual iframe after user clicks, reducing initial page load.
  */
-export function YouTubePreview({
-  embedId,
-  title,
-  onClick,
-}: YouTubePreviewProps) {
+export function YouTubePreview({ embedId, title }: YouTubePreviewProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   if (isLoaded) {
@@ -41,8 +36,8 @@ export function YouTubePreview({
     <div
       className="aspect-video w-full bg-black relative group cursor-pointer overflow-hidden"
       onClick={(e) => {
+        e.stopPropagation();
         setIsLoaded(true);
-        onClick?.(e);
       }}
       role="button"
       tabIndex={0}
@@ -50,7 +45,6 @@ export function YouTubePreview({
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           setIsLoaded(true);
-          onClick?.(e as any);
         }
       }}
       aria-label={`Play ${title}`}

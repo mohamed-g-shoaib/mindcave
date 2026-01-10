@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useLazyImage } from "@/hooks/use-lazy-image";
 import {
   Link01Icon,
   Edit02Icon,
@@ -67,6 +68,9 @@ export function BookmarkListItem({
     setCopied(true);
   };
 
+  const faviconUrl = getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
+  const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -87,12 +91,9 @@ export function BookmarkListItem({
           <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10 transition-transform group-hover:scale-110">
             {bookmark.favicon_url ? (
               <img
-                src={
-                  getOptimizedImageUrl(bookmark.favicon_url, 32, "webp") ||
-                  undefined
-                }
+                ref={faviconRef}
+                src={faviconSrc || undefined}
                 alt=""
-                loading="lazy"
                 width={24}
                 height={24}
                 className="h-5 w-5 object-contain md:h-6 md:w-6 transition-transform"
