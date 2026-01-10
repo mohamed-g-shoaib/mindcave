@@ -53,7 +53,6 @@ create table if not exists public.user_preferences (
 );
 
 -- Create indexes for better query performance
-create index if not exists categories_user_id_idx on public.categories(user_id);
 create index if not exists categories_user_id_order_idx on public.categories(user_id, "order");
 create index if not exists bookmarks_user_id_idx on public.bookmarks(user_id);
 create index if not exists bookmarks_category_id_idx on public.bookmarks(category_id);
@@ -65,55 +64,67 @@ alter table public.bookmarks enable row level security;
 alter table public.user_preferences enable row level security;
 
 -- RLS Policies for categories
+drop policy if exists "Users can view their own categories" on public.categories;
 create policy "Users can view their own categories"
   on public.categories for select
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can insert their own categories" on public.categories;
 create policy "Users can insert their own categories"
   on public.categories for insert
-  with check (auth.uid() = user_id);
+  with check ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can update their own categories" on public.categories;
 create policy "Users can update their own categories"
   on public.categories for update
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can delete their own categories" on public.categories;
 create policy "Users can delete their own categories"
   on public.categories for delete
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
 -- RLS Policies for bookmarks
+drop policy if exists "Users can view their own bookmarks" on public.bookmarks;
 create policy "Users can view their own bookmarks"
   on public.bookmarks for select
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can insert their own bookmarks" on public.bookmarks;
 create policy "Users can insert their own bookmarks"
   on public.bookmarks for insert
-  with check (auth.uid() = user_id);
+  with check ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can update their own bookmarks" on public.bookmarks;
 create policy "Users can update their own bookmarks"
   on public.bookmarks for update
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can delete their own bookmarks" on public.bookmarks;
 create policy "Users can delete their own bookmarks"
   on public.bookmarks for delete
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
 -- RLS Policies for user_preferences
+drop policy if exists "Users can view their own preferences" on public.user_preferences;
 create policy "Users can view their own preferences"
   on public.user_preferences for select
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can insert their own preferences" on public.user_preferences;
 create policy "Users can insert their own preferences"
   on public.user_preferences for insert
-  with check (auth.uid() = user_id);
+  with check ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can update their own preferences" on public.user_preferences;
 create policy "Users can update their own preferences"
   on public.user_preferences for update
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can delete their own preferences" on public.user_preferences;
 create policy "Users can delete their own preferences"
   on public.user_preferences for delete
-  using (auth.uid() = user_id);
+  using ((select auth.uid()) = user_id);
 
 -- Function to update updated_at timestamp
 create or replace function public.handle_updated_at()
@@ -122,7 +133,7 @@ begin
   new.updated_at = timezone('utc'::text, now());
   return new;
 end;
-$$ language plpgsql;
+$$ language plpgsql set search_path = public;
 
 -- Triggers for updated_at
 create trigger categories_updated_at
