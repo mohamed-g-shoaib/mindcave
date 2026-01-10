@@ -13,7 +13,9 @@ function generateThumbnailUrl(
   if (!imageUrl) return null;
 
   // Build the thumbnail URL using our image proxy
-  return `/api/image-proxy?url=${encodeURIComponent(imageUrl)}&w=${width}&fmt=webp&q=${quality}`;
+  return `/api/image-proxy?url=${encodeURIComponent(
+    imageUrl
+  )}&w=${width}&fmt=webp&q=${quality}`;
 }
 
 export async function GET(request: Request) {
