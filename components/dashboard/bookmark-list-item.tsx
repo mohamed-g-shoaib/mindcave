@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useLazyImage } from "@/hooks/use-lazy-image";
 import {
   Link01Icon,
   Edit02Icon,
@@ -27,7 +28,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
-import { getProxiedImageUrl } from "@/lib/image-proxy";
+import { getProxiedImageUrl, getOptimizedImageUrl } from "@/lib/image-proxy";
 import { cn } from "@/lib/utils";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
@@ -67,6 +68,12 @@ export function BookmarkListItem({
     setCopied(true);
   };
 
+  // Use pre-generated thumbnails from database if available, fallback to computing
+  const faviconUrl =
+    (bookmark as any).favicon_url_thumb ||
+    getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
+  const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -87,8 +94,11 @@ export function BookmarkListItem({
           <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10 transition-transform group-hover:scale-110">
             {bookmark.favicon_url ? (
               <img
-                src={getProxiedImageUrl(bookmark.favicon_url) || undefined}
+                ref={faviconRef}
+                src={faviconSrc || undefined}
                 alt=""
+                width={24}
+                height={24}
                 className="h-5 w-5 object-contain md:h-6 md:w-6 transition-transform"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";

@@ -1,6 +1,23 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
+/**
+ * Generate optimized thumbnail URLs for faster loading
+ * Thumbnails are pre-generated and stored in DB to avoid runtime computation
+ */
+function generateThumbnailUrl(
+  imageUrl: string | null | undefined,
+  width: number,
+  quality: number
+): string | null {
+  if (!imageUrl) return null;
+
+  // Build the thumbnail URL using our image proxy
+  return `/api/image-proxy?url=${encodeURIComponent(
+    imageUrl
+  )}&w=${width}&fmt=webp&q=${quality}`;
+}
+
 export async function GET(request: Request) {
   const supabase = await createClient();
 
@@ -64,6 +81,10 @@ export async function POST(request: Request) {
     media_embed_id,
   } = body;
 
+  // Pre-generate thumbnail URLs to avoid runtime computation
+  const og_image_url_thumb = generateThumbnailUrl(og_image_url, 300, 75);
+  const favicon_url_thumb = generateThumbnailUrl(favicon_url, 32, 75);
+
   const { data, error } = await supabase
     .from("bookmarks")
     .insert({
@@ -73,7 +94,9 @@ export async function POST(request: Request) {
       description,
       category_id,
       og_image_url,
+      og_image_url_thumb,
       favicon_url,
+      favicon_url_thumb,
       media_type,
       media_embed_id,
     })

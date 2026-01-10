@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useLazyImage } from "@/hooks/use-lazy-image";
 import {
   Link01Icon,
   Edit02Icon,
@@ -34,7 +35,8 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
-import { getProxiedImageUrl } from "@/lib/image-proxy";
+import { YouTubePreview } from "@/components/dashboard/youtube-preview";
+import { getProxiedImageUrl, getOptimizedImageUrl } from "@/lib/image-proxy";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
 interface BookmarkCardProps {
@@ -76,6 +78,17 @@ export function BookmarkCard({
   const isYouTube =
     bookmark.media_type === "youtube" && bookmark.media_embed_id;
 
+  // Use pre-generated thumbnails from database if available, fallback to computing
+  const ogImageUrl =
+    (bookmark as any).og_image_url_thumb ||
+    getOptimizedImageUrl(bookmark.og_image_url, 300, "webp", 75);
+  const { ref: ogImageRef, imageSrc: ogImageSrc } = useLazyImage(ogImageUrl);
+
+  const faviconUrl =
+    (bookmark as any).favicon_url_thumb ||
+    getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
+  const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
+
   return (
     <ContextMenu>
       <ContextMenuTrigger>
@@ -83,20 +96,18 @@ export function BookmarkCard({
           {/* Media Section - now the only clickable area to open bookmark */}
           <div className="cursor-pointer overflow-hidden" onClick={handleOpen}>
             {isYouTube ? (
-              <div className="aspect-video w-full bg-muted">
-                <iframe
-                  src={`https://www.youtube.com/embed/${bookmark.media_embed_id}`}
-                  title={bookmark.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="h-full w-full pointer-events-none"
-                />
-              </div>
+              <YouTubePreview
+                embedId={bookmark.media_embed_id}
+                title={bookmark.title}
+              />
             ) : bookmark.og_image_url ? (
               <div className="aspect-video w-full bg-muted">
                 <img
-                  src={getProxiedImageUrl(bookmark.og_image_url) || undefined}
+                  ref={ogImageRef}
+                  src={ogImageSrc || undefined}
                   alt={bookmark.title}
+                  width={300}
+                  height={169}
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
                 />
               </div>
@@ -104,8 +115,11 @@ export function BookmarkCard({
               <div className="flex aspect-video w-full items-center justify-center bg-muted transition-colors hover:bg-muted/80">
                 <div className="flex h-14 w-14 items-center justify-center rounded-none bg-background/70 ring-1 ring-foreground/10">
                   <img
-                    src={getProxiedImageUrl(bookmark.favicon_url) || undefined}
+                    ref={faviconRef}
+                    src={faviconSrc || undefined}
                     alt=""
+                    width={32}
+                    height={32}
                     className="h-8 w-8 object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
