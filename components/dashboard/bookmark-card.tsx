@@ -34,6 +34,7 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
+import { YouTubePreview } from "@/components/dashboard/youtube-preview";
 import { getProxiedImageUrl, getOptimizedImageUrl } from "@/lib/image-proxy";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
@@ -83,15 +84,11 @@ export function BookmarkCard({
           {/* Media Section - now the only clickable area to open bookmark */}
           <div className="cursor-pointer overflow-hidden" onClick={handleOpen}>
             {isYouTube ? (
-              <div className="aspect-video w-full bg-muted">
-                <iframe
-                  src={`https://www.youtube.com/embed/${bookmark.media_embed_id}`}
-                  title={bookmark.title}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  className="h-full w-full pointer-events-none"
-                />
-              </div>
+              <YouTubePreview
+                embedId={bookmark.media_embed_id}
+                title={bookmark.title}
+                onClick={handleOpen}
+              />
             ) : bookmark.og_image_url ? (
               <div className="aspect-video w-full bg-muted">
                 <img

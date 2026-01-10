@@ -439,7 +439,7 @@ function DashboardContent() {
               )}
             >
               <AnimatePresence mode="popLayout">
-                {bookmarks.map((bookmark) => (
+                {bookmarks.map((bookmark, index) => (
                   <motion.div
                     layout
                     key={bookmark.id}
@@ -470,6 +470,11 @@ function DashboardContent() {
                       "relative",
                       viewMode === "list" && "overflow-hidden border"
                     )}
+                    style={{
+                      // Browser optimization: defer rendering of off-screen items
+                      // Only applies to items after the first 10
+                      ...(index > 10 && { contentVisibility: "auto" as any }),
+                    }}
                   >
                     {isSelectingBookmarks && (
                       <div
