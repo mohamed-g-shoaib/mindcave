@@ -68,7 +68,10 @@ export function BookmarkListItem({
     setCopied(true);
   };
 
-  const faviconUrl = getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
+  // Use pre-generated thumbnails from database if available, fallback to computing
+  const faviconUrl =
+    (bookmark as any).favicon_url_thumb ||
+    getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
   const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
 
   return (

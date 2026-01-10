@@ -78,15 +78,15 @@ export function BookmarkCard({
   const isYouTube =
     bookmark.media_type === "youtube" && bookmark.media_embed_id;
 
-  const ogImageUrl = getOptimizedImageUrl(
-    bookmark.og_image_url,
-    300,
-    "webp",
-    75
-  );
+  // Use pre-generated thumbnails from database if available, fallback to computing
+  const ogImageUrl =
+    (bookmark as any).og_image_url_thumb ||
+    getOptimizedImageUrl(bookmark.og_image_url, 300, "webp", 75);
   const { ref: ogImageRef, imageSrc: ogImageSrc } = useLazyImage(ogImageUrl);
 
-  const faviconUrl = getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
+  const faviconUrl =
+    (bookmark as any).favicon_url_thumb ||
+    getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
   const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
 
   return (
