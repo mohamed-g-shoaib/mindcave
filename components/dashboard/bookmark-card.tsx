@@ -95,7 +95,7 @@ export function BookmarkCard({
         <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:ring-1 hover:ring-primary/50 hover:bg-muted/80 hover:shadow-md p-0">
           {/* Media Section - now the only clickable area to open bookmark */}
           <div className="cursor-pointer overflow-hidden" onClick={handleOpen}>
-            {isYouTube ? (
+            {isYouTube && bookmark.media_embed_id ? (
               <YouTubePreview
                 embedId={bookmark.media_embed_id}
                 title={bookmark.title}
