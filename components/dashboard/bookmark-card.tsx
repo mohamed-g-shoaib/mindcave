@@ -97,6 +97,9 @@ export function BookmarkCard({
                 <img
                   src={getProxiedImageUrl(bookmark.og_image_url) || undefined}
                   alt={bookmark.title}
+                  loading="lazy"
+                  width={300}
+                  height={169}
                   className="h-full w-full object-cover transition-transform group-hover:scale-105"
                 />
               </div>
@@ -106,6 +109,9 @@ export function BookmarkCard({
                   <img
                     src={getProxiedImageUrl(bookmark.favicon_url) || undefined}
                     alt=""
+                    loading="lazy"
+                    width={32}
+                    height={32}
                     className="h-8 w-8 object-contain"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";

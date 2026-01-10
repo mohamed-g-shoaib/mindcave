@@ -52,7 +52,7 @@ export async function GET(request: Request) {
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": contentType,
-        "Cache-Control": "public, max-age=86400", // Cache for 24 hours
+        "Cache-Control": "public, max-age=31536000", // Cache for 365 days
         "Access-Control-Allow-Origin": "*",
       },
     });
