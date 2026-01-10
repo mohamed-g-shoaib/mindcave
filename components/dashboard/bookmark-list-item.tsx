@@ -87,7 +87,10 @@ export function BookmarkListItem({
           <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10 transition-transform group-hover:scale-110">
             {bookmark.favicon_url ? (
               <img
-                src={getOptimizedImageUrl(bookmark.favicon_url, 32, "webp") || undefined}
+                src={
+                  getOptimizedImageUrl(bookmark.favicon_url, 32, "webp") ||
+                  undefined
+                }
                 alt=""
                 loading="lazy"
                 width={24}

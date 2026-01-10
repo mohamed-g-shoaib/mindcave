@@ -66,7 +66,8 @@ export async function GET(request: Request) {
         }
 
         // Convert format if specified, otherwise use original
-        const targetFormat = format || (contentType.includes("webp") ? "webp" : "jpeg");
+        const targetFormat =
+          format || (contentType.includes("webp") ? "webp" : "jpeg");
         const qualityNum = Math.min(Math.max(parseInt(quality), 50), 95);
 
         if (targetFormat === "webp") {
@@ -76,11 +77,12 @@ export async function GET(request: Request) {
           pipeline = pipeline.jpeg({ quality: qualityNum, progressive: true });
           contentType = "image/jpeg";
         } else if (targetFormat === "png") {
-          pipeline = pipeline.png({ compression: 9 });
+          pipeline = pipeline.png({ compressionLevel: 9 });
           contentType = "image/png";
         }
 
-        buffer = await pipeline.toBuffer();
+        const processedBuffer = await pipeline.toBuffer();
+        buffer = processedBuffer.buffer as ArrayBuffer;
       } catch (sharpError) {
         console.error("Sharp processing error:", sharpError);
         // Fall back to original buffer if processing fails

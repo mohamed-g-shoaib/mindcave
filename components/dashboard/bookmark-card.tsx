@@ -95,7 +95,14 @@ export function BookmarkCard({
             ) : bookmark.og_image_url ? (
               <div className="aspect-video w-full bg-muted">
                 <img
-                  src={getOptimizedImageUrl(bookmark.og_image_url, 300, "webp", 75) || undefined}
+                  src={
+                    getOptimizedImageUrl(
+                      bookmark.og_image_url,
+                      300,
+                      "webp",
+                      75
+                    ) || undefined
+                  }
                   alt={bookmark.title}
                   loading="lazy"
                   width={300}
@@ -107,7 +114,10 @@ export function BookmarkCard({
               <div className="flex aspect-video w-full items-center justify-center bg-muted transition-colors hover:bg-muted/80">
                 <div className="flex h-14 w-14 items-center justify-center rounded-none bg-background/70 ring-1 ring-foreground/10">
                   <img
-                    src={getOptimizedImageUrl(bookmark.favicon_url, 32, "webp") || undefined}
+                    src={
+                      getOptimizedImageUrl(bookmark.favicon_url, 32, "webp") ||
+                      undefined
+                    }
                     alt=""
                     loading="lazy"
                     width={32}
