@@ -248,11 +248,12 @@ export function ImportBookmarksSheet({
       const skipped =
         "skippedExisting" in payload ? payload.skippedExisting ?? 0 : 0;
 
-      toast.success(
+      const successMessage =
         skipped > 0
           ? `Imported ${imported} bookmarks (skipped ${skipped} duplicates)`
-          : `Imported ${imported} bookmarks`
-      );
+          : `Imported ${imported} bookmark${imported === 1 ? "" : "s"}`;
+
+      toast.success(successMessage);
 
       await queryClient.invalidateQueries({ queryKey: ["categories"] });
       await queryClient.invalidateQueries({ queryKey: ["bookmarks"] });

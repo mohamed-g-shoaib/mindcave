@@ -149,9 +149,10 @@ export function AppSidebar({ user }: AppSidebarProps) {
       if (deleteDialog.type === "single") {
         toast.success("Category deleted successfully");
       } else {
-        toast.success(
-          `Deleted ${ids.length} categor${ids.length === 1 ? "y" : "ies"}`
-        );
+        const successMessage = `Deleted ${ids.length} categor${
+          ids.length === 1 ? "y" : "ies"
+        }`;
+        toast.success(successMessage);
       }
 
       if (currentCategoryId && ids.includes(currentCategoryId)) {

@@ -200,9 +200,10 @@ function DashboardContent() {
       for (const id of ids) {
         await deleteBookmark.mutateAsync(id);
       }
-      toast.success(
-        `Deleted ${ids.length} bookmark${ids.length === 1 ? "" : "s"}`
-      );
+      const successMessage = `Deleted ${ids.length} bookmark${
+        ids.length === 1 ? "" : "s"
+      }`;
+      toast.success(successMessage);
       clearSelectedBookmarks();
       setIsSelectingBookmarks(false);
     } catch {

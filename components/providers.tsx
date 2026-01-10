@@ -39,7 +39,10 @@ export function Providers({ children }: ProvidersProps) {
             border: "1px solid hsl(var(--border))",
             boxShadow:
               "0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1)",
-            fontFamily: "inherit",
+            fontFamily:
+              "var(--font-space-mono), system-ui, -apple-system, sans-serif",
+            wordSpacing: "normal",
+            letterSpacing: "normal",
           },
         }}
       />
