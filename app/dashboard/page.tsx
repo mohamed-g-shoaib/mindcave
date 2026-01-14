@@ -24,6 +24,8 @@ import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
 import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
 import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { ImportBookmarksSheet } from "@/components/dashboard/import-bookmarks-sheet";
+import { CategoryGroup } from "@/components/dashboard/category-group";
+import { BookmarkGrid } from "@/components/dashboard/bookmark-grid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -220,6 +222,23 @@ function DashboardContent() {
       setDeletingBulk(false);
     }
   };
+
+  // Group bookmarks by category for the "All Bookmarks" view
+  const groupedBookmarks = !categoryId
+    ? categories
+        .map((category) => ({
+          category,
+          bookmarks: bookmarks.filter((b) => b.category_id === category.id),
+        }))
+        .filter((group) => group.bookmarks.length > 0)
+    : null;
+
+  // Find uncategorized bookmarks
+  const uncategorizedBookmarks = !categoryId
+    ? bookmarks.filter(
+        (b) => !b.category_id || !categories.some((c) => c.id === b.category_id)
+      )
+    : null;
 
   // Column options based on screen size and view mode
   const columnOptions = isMobile
@@ -501,7 +520,58 @@ function DashboardContent() {
               </Button>
             </div>
           </div>
+        ) : groupedBookmarks ? (
+          /* Grouped view for "All Bookmarks" */
+          <div className="space-y-4">
+            {groupedBookmarks.map(({ category, bookmarks: catBookmarks }) => (
+              <CategoryGroup
+                key={category.id}
+                category={category}
+                bookmarkCount={catBookmarks.length}
+              >
+                <BookmarkGrid
+                  bookmarks={catBookmarks}
+                  viewMode={viewMode}
+                  columns={currentColumns}
+                  isMobile={isMobile}
+                  showCategory={false}
+                  isSelecting={isSelectingBookmarks}
+                  selectedIds={selectedBookmarkIds}
+                  onToggleSelect={toggleBookmarkSelection}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onCopy={handleCopy}
+                />
+              </CategoryGroup>
+            ))}
+            {/* Uncategorized bookmarks */}
+            {uncategorizedBookmarks && uncategorizedBookmarks.length > 0 && (
+              <CategoryGroup
+                category={{
+                  id: "uncategorized",
+                  name: "Uncategorized",
+                  icon: "folder",
+                }}
+                bookmarkCount={uncategorizedBookmarks.length}
+              >
+                <BookmarkGrid
+                  bookmarks={uncategorizedBookmarks}
+                  viewMode={viewMode}
+                  columns={currentColumns}
+                  isMobile={isMobile}
+                  showCategory={false}
+                  isSelecting={isSelectingBookmarks}
+                  selectedIds={selectedBookmarkIds}
+                  onToggleSelect={toggleBookmarkSelection}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onCopy={handleCopy}
+                />
+              </CategoryGroup>
+            )}
+          </div>
         ) : (
+          /* Flat view for single category */
           <LayoutGroup>
             <motion.div
               layout
@@ -528,15 +598,15 @@ function DashboardContent() {
                       },
                       opacity: {
                         duration: 0.35,
-                        ease: [0.25, 0.1, 0.25, 1.0], // Custom cubic-bezier for smooth fade
+                        ease: [0.25, 0.1, 0.25, 1.0],
                       },
                       scale: {
                         duration: 0.4,
-                        ease: [0.34, 1.56, 0.64, 1], // Subtle elastic out
+                        ease: [0.34, 1.56, 0.64, 1],
                       },
                       y: {
                         duration: 0.4,
-                        ease: [0.16, 1, 0.3, 1], // Smooth vertical movement
+                        ease: [0.16, 1, 0.3, 1],
                       },
                     }}
                     className={cn(
@@ -544,9 +614,7 @@ function DashboardContent() {
                       viewMode === "list" && "overflow-hidden border"
                     )}
                     style={{
-                      // Browser optimization: defer rendering of off-screen items
-                      // Only applies to items after the first 10
-                      ...(index > 10 && { contentVisibility: "auto" as any }),
+                      ...(index > 10 && { contentVisibility: "auto" as never }),
                     }}
                   >
                     {isSelectingBookmarks && (
@@ -584,7 +652,7 @@ function DashboardContent() {
                         onEdit={handleEdit}
                         onDelete={handleDelete}
                         onCopy={handleCopy}
-                        showCategory={!categoryId}
+                        showCategory={false}
                         columns={currentColumns}
                       />
                     ) : (
@@ -593,7 +661,7 @@ function DashboardContent() {
                         onEdit={handleEdit}
                         onDelete={handleDelete}
                         onCopy={handleCopy}
-                        showCategory={!categoryId}
+                        showCategory={false}
                         columns={currentColumns}
                       />
                     )}
