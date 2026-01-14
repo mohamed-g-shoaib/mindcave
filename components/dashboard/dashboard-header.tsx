@@ -16,6 +16,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { CommandDialog } from "@/components/dashboard/command-dialog";
 import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { useCategories } from "@/hooks/use-categories";
@@ -44,7 +49,10 @@ export function DashboardHeader() {
     <>
       <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
         {/* Sidebar Toggle */}
-        <SidebarTrigger className="-ml-1" />
+        <Tooltip>
+          <TooltipTrigger render={<SidebarTrigger className="-ml-1" />} />
+          <TooltipContent side="right">Toggle sidebar (Ctrl+B)</TooltipContent>
+        </Tooltip>
         <Separator orientation="vertical" className="mx-2 h-4" />
 
         {/* Breadcrumb */}
@@ -64,7 +72,7 @@ export function DashboardHeader() {
               </>
             ) : (
               <BreadcrumbItem>
-                <BreadcrumbPage className="max-w-[120px] truncate">
+                <BreadcrumbPage className="max-w-30 truncate">
                   All Bookmarks
                 </BreadcrumbPage>
               </BreadcrumbItem>

@@ -49,6 +49,11 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -209,61 +214,87 @@ export function AppSidebar({ user }: AppSidebarProps) {
           <SidebarGroup>
             <SidebarGroupLabel>Library</SidebarGroupLabel>
             {!isSelectingCategories ? (
-              <SidebarGroupAction
-                type="button"
-                onClick={() => {
-                  setIsSelectingCategories(true);
-                  setSelectedCategoryIds(new Set());
-                }}
-                title="Select categories"
-              >
-                <HugeiconsIcon
-                  icon={CursorAddSelection01Icon}
-                  className="h-4 w-4"
-                />
-              </SidebarGroupAction>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <SidebarGroupAction
+                      type="button"
+                      onClick={() => {
+                        setIsSelectingCategories(true);
+                        setSelectedCategoryIds(new Set());
+                      }}
+                    />
+                  }
+                >
+                  <HugeiconsIcon
+                    icon={CursorAddSelection01Icon}
+                    className="h-4 w-4"
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="top">Select categories</TooltipContent>
+              </Tooltip>
             ) : (
               <>
-                <SidebarGroupAction
-                  type="button"
-                  className="right-15"
-                  disabled={
-                    selectedCategoryIds.size === 0 ||
-                    (deleteCategory as unknown as { isPending?: boolean })
-                      .isPending
-                  }
-                  onClick={() => setDeleteDialog({ type: "bulk" })}
-                  title={
-                    selectedCategoryIds.size === 0
-                      ? "Select categories to delete"
-                      : "Delete selected categories"
-                  }
-                >
-                  <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
-                </SidebarGroupAction>
-                <SidebarGroupAction
-                  type="button"
-                  className="right-9"
-                  onClick={() => {
-                    // Select all categories
-                    setSelectedCategoryIds(
-                      new Set(categories.map((c) => c.id))
-                    );
-                  }}
-                  title="Select all categories"
-                >
-                  <HugeiconsIcon icon={CheckListIcon} className="h-4 w-4" />
-                </SidebarGroupAction>
-                <SidebarGroupAction
-                  type="button"
-                  onClick={() => {
-                    setIsSelectingCategories(false);
-                    clearSelectedCategories();
-                  }}
-                  title="Cancel selection"
-                >
-                  <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
-                </SidebarGroupAction>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <SidebarGroupAction
+                        type="button"
+                        className="right-15"
+                        disabled={
+                          selectedCategoryIds.size === 0 ||
+                          (deleteCategory as unknown as { isPending?: boolean })
+                            .isPending
+                        }
+                        onClick={() => setDeleteDialog({ type: "bulk" })}
+                      />
+                    }
+                  >
+                    <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    {selectedCategoryIds.size === 0
+                      ? "Select categories first"
+                      : "Delete selected"}
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <SidebarGroupAction
+                        type="button"
+                        className="right-9"
+                        onClick={() => {
+                          // Select all categories
+                          setSelectedCategoryIds(
+                            new Set(categories.map((c) => c.id))
+                          );
+                        }}
+                      />
+                    }
+                  >
+                    <HugeiconsIcon icon={CheckListIcon} className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    Select all categories
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <SidebarGroupAction
+                        type="button"
+                        onClick={() => {
+                          setIsSelectingCategories(false);
+                          clearSelectedCategories();
+                        }}
+                      />
+                    }
+                  >
+                    <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent side="top">Cancel selection</TooltipContent>
+                </Tooltip>
               </>
             )}
             <SidebarGroupContent>
