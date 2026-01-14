@@ -103,9 +103,11 @@
     --primary-foreground: var(--background);
     --secondary: oklch(0.9245 0.0138 92.9892);
     --secondary-foreground: oklch(0.4334 0.0177 98.6048);
-    --muted: oklch(0.9341 0.0153 90.239);
+    /* Improved muted for better hover contrast in light mode */
+    --muted: oklch(0.91 0.0153 90.239);
     --muted-foreground: oklch(0.6059 0.0075 97.4233);
-    --accent: oklch(0.9245 0.0138 92.9892);
+    /* Improved accent for better hover contrast in light mode */
+    --accent: oklch(0.91 0.0138 92.9892);
     --accent-foreground: oklch(0.2671 0.0196 98.939);
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(1 0 0);
@@ -121,7 +123,8 @@
     --sidebar-foreground: oklch(0.359 0.0051 106.6524);
     --sidebar-primary: oklch(0.6171 0.1375 39.0427);
     --sidebar-primary-foreground: oklch(0.9881 0 0);
-    --sidebar-accent: oklch(0.9245 0.0138 92.9892);
+    /* Improved sidebar-accent for better hover contrast in light mode */
+    --sidebar-accent: oklch(0.91 0.0138 92.9892);
     --sidebar-accent-foreground: oklch(0.325 0 0);
     --sidebar-border: oklch(0.9401 0 0);
     --sidebar-ring: oklch(0.7731 0 0);
@@ -138,7 +141,8 @@
     --primary-foreground: var(--background);
     --secondary: oklch(0.268 0.007 56.043);
     --secondary-foreground: oklch(0.93 0.003 56.043);
-    --muted: oklch(0.2 0.006 56.043);
+    /* Improved muted for better hover contrast in dark mode */
+    --muted: oklch(0.28 0.008 56.043);
     --muted-foreground: oklch(0.63 0.01 56.043);
     --accent: oklch(0.6996 0.201959 44.4414);
     --accent-foreground: oklch(1 0 0);
@@ -156,7 +160,8 @@
     --sidebar-foreground: oklch(0.93 0.003 56.043);
     --sidebar-primary: oklch(0.7458 0.1802 56.73);
     --sidebar-primary-foreground: oklch(1 0 0);
-    --sidebar-accent: oklch(0.268 0.007 56.043);
+    /* Improved sidebar-accent for better hover contrast in dark mode */
+    --sidebar-accent: oklch(0.28 0.008 56.043);
     --sidebar-accent-foreground: oklch(0.93 0.003 56.043);
     --sidebar-border: oklch(0.35 0.006 56.043);
     --sidebar-ring: oklch(0.7458 0.1802 56.73);
