@@ -16,12 +16,14 @@ import {
   CheckListIcon,
   Cancel01Icon,
   Delete02Icon,
+  DownloadIcon,
 } from "@hugeicons/core-free-icons";
 
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
 import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
 import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
 import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
+import { ImportBookmarksSheet } from "@/components/dashboard/import-bookmarks-sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -126,6 +128,7 @@ function DashboardContent() {
   const [editingBookmark, setEditingBookmark] =
     useState<BookmarkWithCategory | null>(null);
   const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
+  const [importBookmarksOpen, setImportBookmarksOpen] = useState(false);
   const [deletingBookmarkId, setDeletingBookmarkId] = useState<string | null>(
     null
   );
@@ -421,13 +424,23 @@ function DashboardContent() {
             <div>
               <h3 className="text-lg font-semibold">No bookmarks yet</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Get started by adding your first bookmark
+                Get started by adding your first bookmark or import from your
+                browser
               </p>
             </div>
-            <Button className="mt-2" onClick={() => setAddBookmarkOpen(true)}>
-              <HugeiconsIcon icon={PlusSignIcon} className="mr-2 h-4 w-4" />
-              Add Bookmark
-            </Button>
+            <div className="flex gap-2 mt-2">
+              <Button onClick={() => setAddBookmarkOpen(true)}>
+                <HugeiconsIcon icon={PlusSignIcon} className="mr-2 h-4 w-4" />
+                Add Bookmark
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setImportBookmarksOpen(true)}
+              >
+                <HugeiconsIcon icon={DownloadIcon} className="mr-2 h-4 w-4" />
+                Import Bookmarks
+              </Button>
+            </div>
           </div>
         ) : (
           <LayoutGroup>
@@ -536,6 +549,11 @@ function DashboardContent() {
       <AddBookmarkSheet
         open={addBookmarkOpen}
         onOpenChange={setAddBookmarkOpen}
+      />
+
+      <ImportBookmarksSheet
+        open={importBookmarksOpen}
+        onOpenChange={setImportBookmarksOpen}
       />
 
       <AlertDialog

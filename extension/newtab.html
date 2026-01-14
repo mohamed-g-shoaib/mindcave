@@ -99,14 +99,24 @@
         <div id="empty-state" class="state-container hidden">
           <div class="state-icon">📚</div>
           <h2>No bookmarks yet</h2>
-          <p>Add your first bookmark from the dashboard.</p>
-          <a
-            href="https://mindcave.vercel.app/dashboard"
-            target="_blank"
-            class="button primary"
-          >
-            Open Dashboard
-          </a>
+          <p>Add your first bookmark or import from your browser.</p>
+          <div class="empty-state-actions">
+            <a
+              href="https://mindcave.vercel.app/dashboard"
+              target="_blank"
+              class="button primary"
+            >
+              Open Dashboard
+            </a>
+            <a
+              href="https://mindcave.vercel.app/dashboard"
+              target="_blank"
+              class="button ghost"
+              id="import-bookmarks-btn"
+            >
+              Import Bookmarks
+            </a>
+          </div>
         </div>
 
         <!-- Bookmarks Grid (Categories as Widgets) -->

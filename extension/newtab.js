@@ -185,6 +185,32 @@ function setupEventListeners() {
     saveSettings();
     render();
   });
+
+  // Import Bookmarks button (only available in empty state)
+  const importBtn = document.getElementById("import-bookmarks-btn");
+  if (importBtn) {
+    importBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      // Open dashboard in new tab
+      const dashboardWindow = window.open(
+        "https://mindcave.vercel.app/dashboard",
+        "_blank"
+      );
+
+      // Try to trigger import after dashboard loads
+      // Note: This may not work due to cross-origin restrictions
+      // The user will need to manually click Import Bookmarks in the dashboard
+      if (dashboardWindow) {
+        setTimeout(() => {
+          try {
+            dashboardWindow.postMessage({ action: "openImport" }, "*");
+          } catch (err) {
+            console.log("Could not auto-trigger import:", err);
+          }
+        }, 1500);
+      }
+    });
+  }
 }
 
 function updateUIFromState() {
