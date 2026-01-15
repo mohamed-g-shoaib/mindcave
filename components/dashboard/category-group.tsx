@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowDown01Icon } from "@hugeicons/core-free-icons";
 
 import { cn } from "@/lib/utils";
 import { getCategoryIcon } from "@/components/dashboard/icon-picker";
+import { useCollapsedCategories } from "@/hooks/use-preferences";
 import type { Category } from "@/lib/supabase/types";
 
 interface CategoryGroupProps {
@@ -18,74 +18,21 @@ interface CategoryGroupProps {
   defaultExpanded?: boolean;
 }
 
-const COLLAPSED_CATEGORIES_KEY = "mindcave_collapsed_categories";
-
-function getCollapsedCategories(): Set<string> {
-  if (typeof window === "undefined") return new Set();
-  try {
-    const saved = localStorage.getItem(COLLAPSED_CATEGORIES_KEY);
-    return saved ? new Set(JSON.parse(saved)) : new Set();
-  } catch {
-    return new Set();
-  }
-}
-
-function saveCollapsedCategories(categories: Set<string>): void {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(
-      COLLAPSED_CATEGORIES_KEY,
-      JSON.stringify(Array.from(categories))
-    );
-  } catch {
-    // Ignore storage errors
-  }
-}
-
 export function CategoryGroup({
   category,
   bookmarkCount,
   children,
-  defaultExpanded = true,
 }: CategoryGroupProps) {
-  const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-  const [isInitialized, setIsInitialized] = useState(false);
-
-  // Load collapsed state from localStorage
-  useEffect(() => {
-    const collapsed = getCollapsedCategories();
-    setIsExpanded(!collapsed.has(category.id));
-    setIsInitialized(true);
-  }, [category.id]);
+  const { isCollapsed, toggleCategory } = useCollapsedCategories();
+  const collapsed = isCollapsed(category.id);
+  const isExpanded = !collapsed;
 
   const toggleExpanded = () => {
-    const newExpanded = !isExpanded;
-    setIsExpanded(newExpanded);
-
-    // Persist to localStorage
-    const collapsed = getCollapsedCategories();
-    if (newExpanded) {
-      collapsed.delete(category.id);
-    } else {
-      collapsed.add(category.id);
-    }
-    saveCollapsedCategories(collapsed);
+    toggleCategory(category.id);
   };
 
   const icon = getCategoryIcon(category.icon || "folder");
   const color = category.color || undefined;
-
-  // Don't render until we've loaded the collapsed state
-  if (!isInitialized) {
-    return (
-      <div className="border border-border bg-card">
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-muted/30">
-          <div className="h-5 w-5 bg-muted animate-pulse" />
-          <div className="h-4 w-32 bg-muted animate-pulse" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="border border-border bg-card overflow-hidden">
