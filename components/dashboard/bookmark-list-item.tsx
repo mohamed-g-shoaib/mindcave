@@ -97,7 +97,7 @@ export function BookmarkListItem({
             }
           }}
         >
-          {/* Favicon */}
+          {/* Favicon - always visible, checkbox overlays on top */}
           <div className="flex h-8 w-8 shrink-0 items-center justify-center md:h-10 md:w-10 transition-transform group-hover:scale-110">
             {bookmark.favicon_url ? (
               <img
@@ -169,7 +169,7 @@ export function BookmarkListItem({
               </Button>
             )}
 
-            {/* Menu Button - always visible, consistent size */}
+            {/* Menu Button - always visible */}
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={

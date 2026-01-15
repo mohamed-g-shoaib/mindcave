@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
 import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
@@ -127,31 +126,14 @@ export function BookmarkGrid({
           >
             {isSelecting && onToggleSelect && (
               <div
-                className="absolute inset-0 z-10 cursor-pointer"
+                className={cn(
+                  "absolute inset-0 z-10 cursor-pointer transition-colors",
+                  selectedIds.has(bookmark.id)
+                    ? "bg-primary/10 ring-2 ring-inset ring-primary"
+                    : "hover:bg-muted/50"
+                )}
                 onClick={() => onToggleSelect(bookmark.id)}
-              >
-                <div
-                  className={cn(
-                    "absolute z-20",
-                    viewMode === "card"
-                      ? "top-2 left-2"
-                      : "left-3 top-1/2 -translate-y-1/2"
-                  )}
-                >
-                  <Checkbox
-                    checked={selectedIds.has(bookmark.id)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                </div>
-                <div
-                  className={cn(
-                    "absolute inset-0 transition-colors",
-                    selectedIds.has(bookmark.id)
-                      ? "bg-primary/10 ring-2 ring-primary"
-                      : "hover:bg-muted/50"
-                  )}
-                />
-              </div>
+              />
             )}
 
             {viewMode === "card" ? (
