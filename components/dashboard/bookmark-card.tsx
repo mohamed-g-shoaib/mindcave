@@ -151,7 +151,7 @@ export function BookmarkCard({
           {/* Content - fixed height with description area always present */}
           <CardHeader className="p-3 space-y-1">
             <div className="flex items-start justify-between gap-1">
-              <CardTitle className="line-clamp-2 text-base flex-1 min-w-0 min-h-12">
+              <CardTitle className="truncate text-base flex-1 min-w-0 min-h-6">
                 {bookmark.title}
               </CardTitle>
 
@@ -248,8 +248,8 @@ export function BookmarkCard({
               </div>
             </div>
 
-            {/* Description - always present for consistent height, line-clamp-2 for truncation */}
-            <CardDescription className="line-clamp-2 w-full min-h-10">
+            {/* Description - single line truncation for compact cards */}
+            <CardDescription className="truncate w-full min-h-5">
               {bookmark.description || "\u00A0"}
             </CardDescription>
           </CardHeader>
