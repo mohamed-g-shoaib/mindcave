@@ -42,7 +42,9 @@ export interface Database {
           description: string | null;
           url: string;
           og_image_url: string | null;
+          og_image_url_thumb: string | null;
           favicon_url: string | null;
+          favicon_url_thumb: string | null;
           media_type: string | null;
           media_embed_id: string | null;
           created_at: string;
@@ -56,7 +58,9 @@ export interface Database {
           description?: string | null;
           url: string;
           og_image_url?: string | null;
+          og_image_url_thumb?: string | null;
           favicon_url?: string | null;
+          favicon_url_thumb?: string | null;
           media_type?: string | null;
           media_embed_id?: string | null;
           created_at?: string;
@@ -70,7 +74,9 @@ export interface Database {
           description?: string | null;
           url?: string;
           og_image_url?: string | null;
+          og_image_url_thumb?: string | null;
           favicon_url?: string | null;
+          favicon_url_thumb?: string | null;
           media_type?: string | null;
           media_embed_id?: string | null;
           created_at?: string;
@@ -87,10 +93,12 @@ export interface Database {
           view_mode_desktop: "card" | "list";
           card_columns_desktop: number;
           list_columns_desktop: number;
+          group_columns_desktop: number;
           // Mobile preferences
           view_mode_mobile: "card" | "list";
           card_columns_mobile: number;
           list_columns_mobile: number;
+          group_columns_mobile: number;
           created_at: string;
           updated_at: string;
         };
@@ -102,9 +110,11 @@ export interface Database {
           view_mode_desktop?: "card" | "list";
           card_columns_desktop?: number;
           list_columns_desktop?: number;
+          group_columns_desktop?: number;
           view_mode_mobile?: "card" | "list";
           card_columns_mobile?: number;
           list_columns_mobile?: number;
+          group_columns_mobile?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -116,9 +126,11 @@ export interface Database {
           view_mode_desktop?: "card" | "list";
           card_columns_desktop?: number;
           list_columns_desktop?: number;
+          group_columns_desktop?: number;
           view_mode_mobile?: "card" | "list";
           card_columns_mobile?: number;
           list_columns_mobile?: number;
+          group_columns_mobile?: number;
           created_at?: string;
           updated_at?: string;
         };

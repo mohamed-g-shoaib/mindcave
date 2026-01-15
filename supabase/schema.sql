@@ -46,10 +46,12 @@ create table if not exists public.user_preferences (
   view_mode_desktop text default 'card' check (view_mode_desktop in ('card', 'list')),
   card_columns_desktop integer default 4 check (card_columns_desktop between 2 and 8),
   list_columns_desktop integer default 1 check (list_columns_desktop between 1 and 5),
+  group_columns_desktop integer default 1 check (group_columns_desktop between 1 and 3),
   -- Mobile preferences
   view_mode_mobile text default 'card' check (view_mode_mobile in ('card', 'list')),
   card_columns_mobile integer default 1 check (card_columns_mobile between 1 and 2),
   list_columns_mobile integer default 1 check (list_columns_mobile between 1 and 2),
+  group_columns_mobile integer default 1 check (group_columns_mobile between 1 and 2),
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
