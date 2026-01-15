@@ -99,6 +99,8 @@ export interface Database {
           card_columns_mobile: number;
           list_columns_mobile: number;
           group_columns_mobile: number;
+          // Collapsed categories
+          collapsed_categories: string[];
           created_at: string;
           updated_at: string;
         };
@@ -115,6 +117,7 @@ export interface Database {
           card_columns_mobile?: number;
           list_columns_mobile?: number;
           group_columns_mobile?: number;
+          collapsed_categories?: string[];
           created_at?: string;
           updated_at?: string;
         };
@@ -131,6 +134,7 @@ export interface Database {
           card_columns_mobile?: number;
           list_columns_mobile?: number;
           group_columns_mobile?: number;
+          collapsed_categories?: string[];
           created_at?: string;
           updated_at?: string;
         };

@@ -52,6 +52,8 @@ create table if not exists public.user_preferences (
   card_columns_mobile integer default 1 check (card_columns_mobile between 1 and 2),
   list_columns_mobile integer default 1 check (list_columns_mobile between 1 and 2),
   group_columns_mobile integer default 1 check (group_columns_mobile between 1 and 2),
+  -- Collapsed categories (synced across devices)
+  collapsed_categories text[] default '{}',
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
