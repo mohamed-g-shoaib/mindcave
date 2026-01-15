@@ -84,6 +84,13 @@ const LIST_COLUMN_OPTIONS = [
   { value: 5, label: "5 columns" },
 ];
 
+// Group column options (how many category groups per row)
+const GROUP_COLUMN_OPTIONS = [
+  { value: 1, label: "1 column" },
+  { value: 2, label: "2 columns" },
+  { value: 3, label: "3 columns" },
+];
+
 // Grid class mapping for cards (desktop)
 const CARD_GRID_CLASSES: Record<number, string> = {
   2: "sm:grid-cols-2",
@@ -110,6 +117,13 @@ const MOBILE_GRID_CLASSES: Record<number, string> = {
   2: "grid-cols-2",
 };
 
+// Group grid classes (for category groups layout)
+const GROUP_GRID_CLASSES: Record<number, string> = {
+  1: "grid-cols-1",
+  2: "grid-cols-1 lg:grid-cols-2",
+  3: "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3",
+};
+
 function DashboardContent() {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("category") || undefined;
@@ -127,9 +141,11 @@ function DashboardContent() {
     viewMode,
     cardColumns,
     listColumns,
+    groupColumns,
     setViewMode,
     setCardColumns,
     setListColumns,
+    setGroupColumns,
   } = useViewMode(isMobile);
 
   const [editingBookmark, setEditingBookmark] =
@@ -247,7 +263,20 @@ function DashboardContent() {
     ? CARD_COLUMN_OPTIONS
     : LIST_COLUMN_OPTIONS;
 
+  // Group column options - not shown on mobile (always 1 column for groups)
+  const groupColumnOptions = GROUP_COLUMN_OPTIONS;
+
   const currentColumns = viewMode === "card" ? cardColumns : listColumns;
+
+  // Effective group columns: always 1 on mobile
+  const effectiveGroupColumns = isMobile ? 1 : groupColumns;
+
+  // Determine if we should use compact mode for bookmarks
+  // Desktop: compact when bookmark columns >= 4 AND group columns > 1
+  // Mobile: compact when 2 bookmark columns
+  const isCompactMode = isMobile
+    ? currentColumns === 2
+    : currentColumns >= 4 && groupColumns > 1;
 
   const handleColumnChange = (cols: number) => {
     if (viewMode === "card") {
@@ -272,17 +301,22 @@ function DashboardContent() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <Skeleton className="h-9 w-48" />
-            <Skeleton className="mt-2 h-5 w-64" />
-          </div>
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-8" />
-            <Skeleton className="h-8 w-8" />
-            <Skeleton className="h-8 w-24" />
-          </div>
+        {/* Header skeleton */}
+        <div>
+          <Skeleton className="h-9 w-48" />
+          <Skeleton className="mt-2 h-5 w-64" />
         </div>
+        {/* Controls bar skeleton */}
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-8" />
+          <Skeleton className="h-8 w-8" />
+          <div className="h-6 w-px bg-border" />
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-8 w-28 hidden md:block" />
+          <div className="flex-1" />
+          <Skeleton className="h-8 w-8" />
+        </div>
+        {/* Content skeleton */}
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="space-y-3">
@@ -299,8 +333,8 @@ function DashboardContent() {
   return (
     <>
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-start justify-between gap-4">
+        {/* Header - stacks on mobile */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold md:text-3xl">
               {currentCategory || "All Bookmarks"}
@@ -313,7 +347,12 @@ function DashboardContent() {
                   }`}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+        </div>
+
+        {/* Controls Bar */}
+        <div className="flex flex-col gap-2">
+          {/* Row 1: View mode and column settings + select button on desktop */}
+          <div className="flex flex-wrap items-center gap-2">
             {/* View Mode Toggle */}
             <div
               className="flex items-center gap-1"
@@ -351,7 +390,10 @@ function DashboardContent() {
               </Tooltip>
             </div>
 
-            {/* Column Selector Dropdown */}
+            {/* Divider */}
+            <div className="h-6 w-px bg-border" />
+
+            {/* Bookmark Column Selector Dropdown */}
             <Tooltip>
               <DropdownMenu>
                 <TooltipTrigger
@@ -368,11 +410,12 @@ function DashboardContent() {
                     />
                   }
                 >
+                  <span className="text-muted-foreground">Bookmarks:</span>
                   {columnOptions.find((o) => o.value === currentColumns)
                     ?.label || `${currentColumns} col`}
                   <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />
                 </TooltipTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="start">
                   {columnOptions.map((option) => (
                     <DropdownMenuItem
                       key={option.value}
@@ -387,12 +430,59 @@ function DashboardContent() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <TooltipContent>Change column layout</TooltipContent>
+              <TooltipContent>Change bookmark column layout</TooltipContent>
             </Tooltip>
 
-            {/* Bookmark Multi-Select Controls */}
-            {bookmarks.length > 0 && (
+            {/* Group Columns Selector (only for All Bookmarks view on desktop) */}
+            {!categoryId && !isMobile && (
+              <Tooltip>
+                <DropdownMenu>
+                  <TooltipTrigger
+                    render={
+                      <DropdownMenuTrigger
+                        render={
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="gap-1 text-xs"
+                          />
+                        }
+                      />
+                    }
+                  >
+                    <span className="text-muted-foreground">Groups:</span>
+                    {groupColumnOptions.find((o) => o.value === groupColumns)
+                      ?.label || `${groupColumns} col`}
+                    <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />
+                  </TooltipTrigger>
+                  <DropdownMenuContent align="start">
+                    {groupColumnOptions.map((option) => (
+                      <DropdownMenuItem
+                        key={option.value}
+                        onClick={() => setGroupColumns(option.value)}
+                        className="justify-between"
+                      >
+                        {option.label}
+                        {groupColumns === option.value && (
+                          <HugeiconsIcon
+                            icon={Tick02Icon}
+                            className="h-4 w-4"
+                          />
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <TooltipContent>Change category group layout</TooltipContent>
+              </Tooltip>
+            )}
+
+            {/* Desktop: Select button inline with separator */}
+            {bookmarks.length > 0 && !isMobile && (
               <>
+                {/* Divider before select */}
+                <div className="h-6 w-px bg-border" />
+
                 {!isSelectingBookmarks ? (
                   <Tooltip>
                     <TooltipTrigger
@@ -488,6 +578,95 @@ function DashboardContent() {
               </>
             )}
           </div>
+
+          {/* Row 2: Mobile selection controls on separate row */}
+          {bookmarks.length > 0 && isMobile && (
+            <div className="flex items-center gap-1">
+              {!isSelectingBookmarks ? (
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => {
+                          setIsSelectingBookmarks(true);
+                          clearSelectedBookmarks();
+                        }}
+                      />
+                    }
+                  >
+                    <HugeiconsIcon
+                      icon={CursorAddSelection01Icon}
+                      className="h-4 w-4"
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>Select bookmarks</TooltipContent>
+                </Tooltip>
+              ) : (
+                <>
+                  {selectedBookmarkIds.size > 0 && (
+                    <span className="text-xs text-muted-foreground mr-1">
+                      {selectedBookmarkIds.size} selected
+                    </span>
+                  )}
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          disabled={
+                            selectedBookmarkIds.size === 0 ||
+                            deleteBookmark.isPending
+                          }
+                          onClick={() => setDeletingBulk(true)}
+                        />
+                      }
+                    >
+                      <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {selectedBookmarkIds.size === 0
+                        ? "Select bookmarks first"
+                        : "Delete selected"}
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={selectAllBookmarks}
+                        />
+                      }
+                    >
+                      <HugeiconsIcon icon={CheckListIcon} className="h-4 w-4" />
+                    </TooltipTrigger>
+                    <TooltipContent>Select all bookmarks</TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => {
+                            setIsSelectingBookmarks(false);
+                            clearSelectedBookmarks();
+                          }}
+                        />
+                      }
+                    >
+                      <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
+                    </TooltipTrigger>
+                    <TooltipContent>Cancel selection</TooltipContent>
+                  </Tooltip>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -522,7 +701,12 @@ function DashboardContent() {
           </div>
         ) : groupedBookmarks ? (
           /* Grouped view for "All Bookmarks" */
-          <div className="space-y-4">
+          <div
+            className={cn(
+              "grid gap-4",
+              GROUP_GRID_CLASSES[effectiveGroupColumns] || "grid-cols-1"
+            )}
+          >
             {groupedBookmarks.map(({ category, bookmarks: catBookmarks }) => (
               <CategoryGroup
                 key={category.id}
@@ -535,6 +719,7 @@ function DashboardContent() {
                   columns={currentColumns}
                   isMobile={isMobile}
                   showCategory={false}
+                  compact={isCompactMode}
                   isSelecting={isSelectingBookmarks}
                   selectedIds={selectedBookmarkIds}
                   onToggleSelect={toggleBookmarkSelection}
@@ -560,6 +745,7 @@ function DashboardContent() {
                   columns={currentColumns}
                   isMobile={isMobile}
                   showCategory={false}
+                  compact={isCompactMode}
                   isSelecting={isSelectingBookmarks}
                   selectedIds={selectedBookmarkIds}
                   onToggleSelect={toggleBookmarkSelection}
