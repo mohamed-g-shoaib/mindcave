@@ -40,6 +40,7 @@ interface BookmarkGridProps {
   columns: number;
   isMobile: boolean;
   showCategory?: boolean;
+  compact?: boolean; // Hide category icon, move copy to menu
   isSelecting?: boolean;
   selectedIds?: Set<string>;
   onToggleSelect?: (id: string) => void;
@@ -54,6 +55,7 @@ export function BookmarkGrid({
   columns,
   isMobile,
   showCategory = true,
+  compact = false,
   isSelecting = false,
   selectedIds = new Set(),
   onToggleSelect,
@@ -160,6 +162,7 @@ export function BookmarkGrid({
                 onCopy={onCopy}
                 showCategory={showCategory}
                 columns={columns}
+                compact={compact}
               />
             ) : (
               <BookmarkListItem
@@ -169,6 +172,7 @@ export function BookmarkGrid({
                 onCopy={onCopy}
                 showCategory={showCategory}
                 columns={columns}
+                compact={compact}
               />
             )}
           </motion.div>

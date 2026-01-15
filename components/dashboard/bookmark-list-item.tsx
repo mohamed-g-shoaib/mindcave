@@ -39,6 +39,7 @@ interface BookmarkListItemProps {
   onCopy: (url: string) => void;
   showCategory?: boolean;
   columns?: number;
+  compact?: boolean; // Hide category icon, move copy to menu
 }
 
 export function BookmarkListItem({
@@ -48,6 +49,7 @@ export function BookmarkListItem({
   onCopy,
   showCategory = true,
   columns = 1,
+  compact = false,
 }: BookmarkListItemProps) {
   const [copied, setCopied] = useState(false);
 
@@ -73,6 +75,11 @@ export function BookmarkListItem({
     (bookmark as any).favicon_url_thumb ||
     getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
   const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
+
+  // Show category icon only if not compact and showCategory is true
+  const shouldShowCategoryIcon = !compact && showCategory && bookmark.category;
+  // Show copy button separately only if not compact
+  const shouldShowCopyButton = !compact;
 
   return (
     <ContextMenu>
@@ -126,39 +133,41 @@ export function BookmarkListItem({
 
           {/* Actions Container - unified spacing and hit areas */}
           <div className="flex items-center -mr-1 gap-0.5 shrink-0">
-            {/* Category Icon - no background, fixed container size for consistent gap */}
-            {showCategory && bookmark.category && (
+            {/* Category Icon - hidden in compact mode */}
+            {shouldShowCategoryIcon && (
               <div
                 className={`items-center justify-center w-8 h-8 shrink-0 ${
                   columns === 1 ? "flex" : "hidden md:flex"
                 }`}
-                style={{ color: bookmark.category.color || undefined }}
-                title={bookmark.category.name}
+                style={{ color: bookmark.category?.color || undefined }}
+                title={bookmark.category?.name}
               >
                 <HugeiconsIcon
-                  icon={getCategoryIcon(bookmark.category.icon)}
+                  icon={getCategoryIcon(bookmark.category!.icon)}
                   className="h-4 w-4"
                 />
               </div>
             )}
 
-            {/* Copy Button - shown always, except for mobile 2 columns (moved to menu) */}
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={handleCopy}
-              className={`hover:text-primary transition-colors h-8 w-8 px-0 shrink-0 ${
-                columns === 2 ? "hidden md:flex" : "flex"
-              }`}
-              aria-label="Copy link"
-            >
-              <HugeiconsIcon
-                icon={copied ? Tick02Icon : Copy01Icon}
-                className={`h-4 w-4 transition-all duration-200 ${
-                  copied ? "text-green-500 scale-110" : ""
+            {/* Copy Button - hidden in compact mode (moved to menu) */}
+            {shouldShowCopyButton && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={handleCopy}
+                className={`hover:text-primary transition-colors h-8 w-8 px-0 shrink-0 ${
+                  columns === 2 ? "hidden md:flex" : "flex"
                 }`}
-              />
-            </Button>
+                aria-label="Copy link"
+              >
+                <HugeiconsIcon
+                  icon={copied ? Tick02Icon : Copy01Icon}
+                  className={`h-4 w-4 transition-all duration-200 ${
+                    copied ? "text-green-500 scale-110" : ""
+                  }`}
+                />
+              </Button>
+            )}
 
             {/* Menu Button - always visible, consistent size */}
             <DropdownMenu>
@@ -175,6 +184,21 @@ export function BookmarkListItem({
                 <HugeiconsIcon icon={MoreVerticalIcon} className="h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                {/* Copy option in menu (shown in compact mode or mobile 2 columns) */}
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCopy();
+                  }}
+                  className={compact || columns === 2 ? "flex" : "hidden"}
+                >
+                  <HugeiconsIcon
+                    icon={copied ? Tick02Icon : Copy01Icon}
+                    className={cn("mr-2 h-4 w-4", copied && "text-green-500")}
+                  />
+                  {copied ? "Copied!" : "Copy Link"}
+                </DropdownMenuItem>
+
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation();
@@ -183,21 +207,6 @@ export function BookmarkListItem({
                 >
                   <HugeiconsIcon icon={Edit02Icon} className="mr-2 h-4 w-4" />
                   Edit
-                </DropdownMenuItem>
-
-                {/* Mobile 2 Columns: Move Copy Link to menu */}
-                <DropdownMenuItem
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleCopy();
-                  }}
-                  className={columns === 2 ? "flex md:hidden" : "hidden"}
-                >
-                  <HugeiconsIcon
-                    icon={copied ? Tick02Icon : Copy01Icon}
-                    className={`mr-2 h-4 w-4 ${copied ? "text-green-500" : ""}`}
-                  />
-                  {copied ? "Copied!" : "Copy Link"}
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
