@@ -9,10 +9,12 @@ const DEFAULT_PREFERENCES: Partial<UserPreferences> = {
   view_mode_desktop: "card",
   card_columns_desktop: 4,
   list_columns_desktop: 1,
+  group_columns_desktop: 1,
   // Mobile
   view_mode_mobile: "card",
   card_columns_mobile: 1,
   list_columns_mobile: 1,
+  group_columns_mobile: 1,
 };
 
 export function usePreferences() {
@@ -79,16 +81,19 @@ export function useViewMode(isMobile: boolean) {
   const viewModeDesktop = preferences?.view_mode_desktop ?? "card";
   const cardColumnsDesktop = preferences?.card_columns_desktop ?? 4;
   const listColumnsDesktop = preferences?.list_columns_desktop ?? 1;
+  const groupColumnsDesktop = preferences?.group_columns_desktop ?? 1;
 
   // Mobile preferences
   const viewModeMobile = preferences?.view_mode_mobile ?? "card";
   const cardColumnsMobile = preferences?.card_columns_mobile ?? 1;
   const listColumnsMobile = preferences?.list_columns_mobile ?? 1;
+  const groupColumnsMobile = preferences?.group_columns_mobile ?? 1;
 
   // Current platform values
   const viewMode = isMobile ? viewModeMobile : viewModeDesktop;
   const cardColumns = isMobile ? cardColumnsMobile : cardColumnsDesktop;
   const listColumns = isMobile ? listColumnsMobile : listColumnsDesktop;
+  const groupColumns = isMobile ? groupColumnsMobile : groupColumnsDesktop;
 
   const setViewMode = (mode: "card" | "list") => {
     if (isMobile) {
@@ -114,13 +119,23 @@ export function useViewMode(isMobile: boolean) {
     }
   };
 
+  const setGroupColumns = (columns: number) => {
+    if (isMobile) {
+      updatePreferences.mutate({ group_columns_mobile: columns });
+    } else {
+      updatePreferences.mutate({ group_columns_desktop: columns });
+    }
+  };
+
   return {
     viewMode,
     cardColumns,
     listColumns,
+    groupColumns,
     setViewMode,
     setCardColumns,
     setListColumns,
+    setGroupColumns,
     isLoading: updatePreferences.isPending,
   };
 }
