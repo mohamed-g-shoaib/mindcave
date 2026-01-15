@@ -14,6 +14,7 @@ const DEFAULT_PREFERENCES = {
   card_columns_mobile: 1,
   list_columns_mobile: 1,
   group_columns_mobile: 1,
+  collapsed_categories: [] as string[],
 };
 
 export async function GET() {
@@ -73,6 +74,7 @@ export async function PATCH(request: Request) {
     group_columns_mobile,
     theme,
     sidebar_expanded,
+    collapsed_categories,
   } = body;
 
   // Upsert preferences (insert if not exists, update if exists)
@@ -91,6 +93,7 @@ export async function PATCH(request: Request) {
         ...(group_columns_mobile !== undefined && { group_columns_mobile }),
         ...(theme !== undefined && { theme }),
         ...(sidebar_expanded !== undefined && { sidebar_expanded }),
+        ...(collapsed_categories !== undefined && { collapsed_categories }),
       },
       { onConflict: "user_id" }
     )

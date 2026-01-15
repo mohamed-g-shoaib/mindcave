@@ -15,6 +15,7 @@ const DEFAULT_PREFERENCES: Partial<UserPreferences> = {
   card_columns_mobile: 1,
   list_columns_mobile: 1,
   group_columns_mobile: 1,
+  collapsed_categories: [],
 };
 
 export function usePreferences() {
@@ -137,5 +138,28 @@ export function useViewMode(isMobile: boolean) {
     setListColumns,
     setGroupColumns,
     isLoading: updatePreferences.isPending,
+  };
+}
+
+export function useCollapsedCategories() {
+  const { data: preferences } = usePreferences();
+  const updatePreferences = useUpdatePreferences();
+
+  const collapsedCategories = preferences?.collapsed_categories ?? [];
+
+  const toggleCategory = (categoryId: string) => {
+    const isCollapsed = collapsedCategories.includes(categoryId);
+    const newCollapsed = isCollapsed
+      ? collapsedCategories.filter((id) => id !== categoryId)
+      : [...collapsedCategories, categoryId];
+
+    updatePreferences.mutate({ collapsed_categories: newCollapsed });
+  };
+
+  return {
+    collapsedCategories,
+    toggleCategory,
+    isCollapsed: (categoryId: string) =>
+      collapsedCategories.includes(categoryId),
   };
 }
