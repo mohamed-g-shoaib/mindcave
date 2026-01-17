@@ -100,7 +100,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
   const [importBookmarksOpen, setImportBookmarksOpen] = useState(false);
   const [isSelectingCategories, setIsSelectingCategories] = useState(false);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<Set<string>>(
-    () => new Set()
+    () => new Set(),
   );
   const [deleteDialog, setDeleteDialog] = useState<
     { type: "single"; id: string; name: string } | { type: "bulk" } | null
@@ -174,7 +174,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
       toast.error(
         deleteDialog.type === "single"
           ? "Failed to delete category"
-          : "Failed to delete selected categories"
+          : "Failed to delete selected categories",
       );
     }
   };
@@ -197,7 +197,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 size="lg"
-                onClick={() => router.push("/")}
+                onClick={() => window.open("/", "_blank")}
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground [&_svg]:size-auto"
                 data-onboarding="sidebar-logo"
               >
@@ -267,7 +267,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                         onClick={() => {
                           // Select all categories
                           setSelectedCategoryIds(
-                            new Set(categories.map((c) => c.id))
+                            new Set(categories.map((c) => c.id)),
                           );
                         }}
                       />
@@ -354,7 +354,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                               <SidebarMenuButton
                                 onClick={() =>
                                   router.push(
-                                    `/dashboard?category=${category.id}`
+                                    `/dashboard?category=${category.id}`,
                                   )
                                 }
                                 isActive={currentCategoryId === category.id}
@@ -386,7 +386,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                                 onClick={() =>
                                   handleDeleteCategory(
                                     category.id,
-                                    category.name
+                                    category.name,
                                   )
                                 }
                                 variant="destructive"
@@ -423,7 +423,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                                 onClick={() =>
                                   handleDeleteCategory(
                                     category.id,
-                                    category.name
+                                    category.name,
                                   )
                                 }
                                 variant="destructive"
@@ -497,7 +497,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     </p>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push("/")}>
+                  <DropdownMenuItem onClick={() => window.open("/", "_blank")}>
                     <HugeiconsIcon icon={Home01Icon} className="mr-2 h-4 w-4" />
                     Go to Homepage
                   </DropdownMenuItem>
@@ -566,8 +566,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
               {deleteDialog?.type === "bulk"
                 ? `Delete ${selectedCategoryIds.size} categories?`
                 : deleteDialog?.type === "single"
-                ? `Delete \"${deleteDialog.name}\"?`
-                : "Delete category?"}
+                  ? `Delete \"${deleteDialog.name}\"?`
+                  : "Delete category?"}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {deleteDialog?.type === "bulk" ? (
