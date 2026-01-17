@@ -117,11 +117,12 @@ const MOBILE_GRID_CLASSES: Record<number, string> = {
   2: "grid-cols-2",
 };
 
-// Group grid classes (for category groups layout)
-const GROUP_GRID_CLASSES: Record<number, string> = {
-  1: "grid-cols-1",
-  2: "grid-cols-1 lg:grid-cols-2",
-  3: "grid-cols-1 lg:grid-cols-2 xl:grid-cols-3",
+// Group column classes (for category groups layout)
+// Using CSS columns instead of grid for better flow when groups collapse
+const GROUP_COLUMN_CLASSES: Record<number, string> = {
+  1: "columns-1",
+  2: "columns-1 lg:columns-2",
+  3: "columns-1 lg:columns-2 xl:columns-3",
 };
 
 function DashboardContent() {
@@ -153,13 +154,13 @@ function DashboardContent() {
   const [addBookmarkOpen, setAddBookmarkOpen] = useState(false);
   const [importBookmarksOpen, setImportBookmarksOpen] = useState(false);
   const [deletingBookmarkId, setDeletingBookmarkId] = useState<string | null>(
-    null
+    null,
   );
 
   // Bookmark multi-select state
   const [isSelectingBookmarks, setIsSelectingBookmarks] = useState(false);
   const [selectedBookmarkIds, setSelectedBookmarkIds] = useState<Set<string>>(
-    () => new Set()
+    () => new Set(),
   );
   const [deletingBulk, setDeletingBulk] = useState(false);
 
@@ -252,7 +253,8 @@ function DashboardContent() {
   // Find uncategorized bookmarks
   const uncategorizedBookmarks = !categoryId
     ? bookmarks.filter(
-        (b) => !b.category_id || !categories.some((c) => c.id === b.category_id)
+        (b) =>
+          !b.category_id || !categories.some((c) => c.id === b.category_id),
       )
     : null;
 
@@ -260,8 +262,8 @@ function DashboardContent() {
   const columnOptions = isMobile
     ? MOBILE_COLUMN_OPTIONS
     : viewMode === "card"
-    ? CARD_COLUMN_OPTIONS
-    : LIST_COLUMN_OPTIONS;
+      ? CARD_COLUMN_OPTIONS
+      : LIST_COLUMN_OPTIONS;
 
   // Group column options - not shown on mobile (always 1 column for groups)
   const groupColumnOptions = GROUP_COLUMN_OPTIONS;
@@ -703,8 +705,8 @@ function DashboardContent() {
           /* Grouped view for "All Bookmarks" */
           <div
             className={cn(
-              "grid gap-4",
-              GROUP_GRID_CLASSES[effectiveGroupColumns] || "grid-cols-1"
+              "gap-4",
+              GROUP_COLUMN_CLASSES[effectiveGroupColumns] || "columns-1",
             )}
           >
             {groupedBookmarks.map(({ category, bookmarks: catBookmarks }) => (
@@ -764,7 +766,7 @@ function DashboardContent() {
               className={cn(
                 "grid gap-4",
                 getGridClasses(),
-                viewMode === "card" && "auto-rows-fr"
+                viewMode === "card" && "auto-rows-fr",
               )}
             >
               <AnimatePresence mode="popLayout">
@@ -797,7 +799,7 @@ function DashboardContent() {
                     }}
                     className={cn(
                       "relative",
-                      viewMode === "list" && "overflow-hidden border"
+                      viewMode === "list" && "overflow-hidden border",
                     )}
                     style={{
                       ...(index > 10 && { contentVisibility: "auto" as never }),
@@ -813,7 +815,7 @@ function DashboardContent() {
                             "absolute z-20",
                             viewMode === "card"
                               ? "top-2 left-2"
-                              : "left-3 top-1/2 -translate-y-1/2"
+                              : "left-3 top-1/2 -translate-y-1/2",
                           )}
                         >
                           <Checkbox
@@ -826,7 +828,7 @@ function DashboardContent() {
                             "absolute inset-0 transition-colors",
                             selectedBookmarkIds.has(bookmark.id)
                               ? "bg-primary/10 ring-2 ring-primary"
-                              : "hover:bg-muted/50"
+                              : "hover:bg-muted/50",
                           )}
                         />
                       </div>

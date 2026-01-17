@@ -35,7 +35,7 @@ export function CategoryGroup({
   const color = category.color || undefined;
 
   return (
-    <div className="border border-border bg-card overflow-hidden">
+    <div className="border border-border bg-card overflow-hidden break-inside-avoid mb-4">
       {/* Category Header */}
       <button
         onClick={toggleExpanded}
