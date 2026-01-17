@@ -9,6 +9,7 @@ import { TestimonialsSection } from "@/components/landing/testimonials-section";
 import { FAQSection } from "@/components/landing/faq-section";
 import { CTASection } from "@/components/landing/cta-section";
 import { Footer } from "@/components/landing/footer";
+import { ScrollToTop } from "@/components/landing/scroll-to-top";
 
 async function getUser() {
   try {
@@ -82,6 +83,8 @@ export default function LandingPage() {
       >
         <FooterWithUser />
       </Suspense>
+
+      <ScrollToTop />
     </div>
   );
 }
