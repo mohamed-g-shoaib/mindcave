@@ -4,7 +4,7 @@ import { makeBookmarkMediaKey } from "@/lib/storage/bookmark-media";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();
   const { id } = await params;
@@ -53,7 +53,7 @@ export async function PATCH(
       `
       *,
       category:categories(*)
-    `
+    `,
     )
     .single();
 
@@ -70,7 +70,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const supabase = await createClient();
   const { id } = await params;
@@ -101,33 +101,42 @@ export async function DELETE(
   }
 
   // Best-effort: delete stored media for this URL so re-adding later is clean.
-  try {
-    const key = makeBookmarkMediaKey(bookmark.url);
-    const ogPaths = [
-      `${user.id}/ogimage/${key}.png`,
-      `${user.id}/ogimage/${key}.jpg`,
-      `${user.id}/ogimage/${key}.webp`,
-    ];
-    const favPaths = [
-      `${user.id}/favicon/${key}.png`,
-      `${user.id}/favicon/${key}.ico`,
-      `${user.id}/favicon/${key}.svg`,
-    ];
+  // Run cleanup in parallel (non-blocking) for faster response
+  const cleanupPromise = (async () => {
+    try {
+      const key = makeBookmarkMediaKey(bookmark.url);
+      const ogPaths = [
+        `${user.id}/ogimage/${key}.png`,
+        `${user.id}/ogimage/${key}.jpg`,
+        `${user.id}/ogimage/${key}.webp`,
+      ];
+      const favPaths = [
+        `${user.id}/favicon/${key}.png`,
+        `${user.id}/favicon/${key}.ico`,
+        `${user.id}/favicon/${key}.svg`,
+      ];
 
-    await supabase.storage.from("ogimage").remove(ogPaths);
-    await supabase.storage.from("favicon").remove(favPaths);
-  } catch {
-    // Ignore storage cleanup failures.
-  }
+      // Run both storage cleanups in parallel
+      await Promise.all([
+        supabase.storage.from("ogimage").remove(ogPaths),
+        supabase.storage.from("favicon").remove(favPaths),
+      ]);
+    } catch {
+      // Ignore storage cleanup failures.
+    }
+  })();
 
-  const { error } = await supabase
-    .from("bookmarks")
-    .delete()
-    .eq("id", id)
-    .eq("user_id", user.id);
+  // Delete bookmark and cleanup storage in parallel
+  const [deleteResult] = await Promise.all([
+    supabase.from("bookmarks").delete().eq("id", id).eq("user_id", user.id),
+    cleanupPromise,
+  ]);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (deleteResult.error) {
+    return NextResponse.json(
+      { error: deleteResult.error.message },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ success: true });
