@@ -1,7 +1,7 @@
 "use client";
 
+import { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useLazyImage } from "@/hooks/use-lazy-image";
 import {
   Link01Icon,
   Edit02Icon,
@@ -16,6 +16,11 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getOptimizedImageUrl } from "@/lib/image-proxy";
 import { cn } from "@/lib/utils";
 import type { DensityLevel } from "@/lib/density";
@@ -36,6 +41,8 @@ export function BookmarkListItem({
   onDelete,
   onCopy,
 }: BookmarkListItemProps) {
+  const [faviconError, setFaviconError] = useState(false);
+
   const handleOpen = () => {
     window.open(bookmark.url, "_blank", "noopener,noreferrer");
   };
@@ -48,12 +55,18 @@ export function BookmarkListItem({
   const faviconUrl =
     (bookmark as never as { favicon_url_thumb?: string }).favicon_url_thumb ||
     getOptimizedImageUrl(bookmark.favicon_url, 32, "webp");
-  const { ref: faviconRef, imageSrc: faviconSrc } = useLazyImage(faviconUrl);
 
   // Determine layout based on density
   const isVertical = density === "compact" || density === "icon";
   const showTitle = density !== "icon";
   const showDescription = density === "normal";
+
+  // Only show tooltip at icon density (when title is completely hidden)
+  const needsTooltip = density === "icon";
+
+  // Should show fallback icon
+  const showFaviconFallback =
+    !bookmark.favicon_url || (bookmark.favicon_url && faviconError);
 
   // Favicon size based on density
   const faviconSize =
@@ -79,71 +92,99 @@ export function BookmarkListItem({
           ? "p-2"
           : "p-1.5";
 
-  return (
-    <ContextMenu>
-      <ContextMenuTrigger>
+  // Minimum height for adequate hit targets (44px mobile, 24px desktop)
+  const minHeight = density === "icon" ? "min-h-[56px]" : "";
+
+  const listItemElement = (
+    <div
+      className={cn(
+        "group cursor-pointer transition-colors",
+        "hover:bg-muted/50 hover:ring-1 hover:ring-primary/50",
+        "border-b last:border-b-0",
+        padding,
+        minHeight,
+        isVertical
+          ? "flex flex-col items-center justify-center text-center"
+          : "flex items-center gap-3",
+      )}
+      onClick={handleOpen}
+    >
+      {/* Favicon */}
+      <div
+        className={cn(
+          "shrink-0 flex items-center justify-center",
+          faviconContainerSize,
+        )}
+      >
+        {!showFaviconFallback ? (
+          <img
+            src={faviconUrl || undefined}
+            alt=""
+            className={cn(
+              "object-contain dark:drop-shadow-[0_0_1px_rgba(255,255,255,0.5)]",
+              faviconSize,
+            )}
+            loading="lazy"
+            onError={() => setFaviconError(true)}
+          />
+        ) : (
+          <HugeiconsIcon
+            icon={Link01Icon}
+            className={cn("text-muted-foreground", faviconSize)}
+          />
+        )}
+      </div>
+
+      {/* Content */}
+      {showTitle && (
         <div
           className={cn(
-            "group cursor-pointer transition-colors",
-            "hover:bg-muted/50 hover:ring-1 hover:ring-primary/50",
-            "border-b last:border-b-0",
-            padding,
-            isVertical
-              ? "flex flex-col items-center justify-center text-center"
-              : "flex items-center gap-3",
+            "min-w-0",
+            isVertical ? "w-full mt-1" : "flex-1 flex flex-col gap-0.5",
           )}
-          onClick={handleOpen}
         >
-          {/* Favicon */}
-          <div
+          <span
             className={cn(
-              "shrink-0 flex items-center justify-center",
-              faviconContainerSize,
+              "line-clamp-1 font-medium",
+              density === "compact" ? "text-xs" : "text-sm",
             )}
           >
-            {bookmark.favicon_url ? (
-              <img
-                ref={faviconRef}
-                src={faviconSrc || undefined}
-                alt=""
-                className={cn("object-contain", faviconSize)}
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
-            ) : (
-              <HugeiconsIcon
-                icon={Link01Icon}
-                className={cn("text-muted-foreground", faviconSize)}
-              />
-            )}
-          </div>
-
-          {/* Content */}
-          {showTitle && (
-            <div
-              className={cn(
-                "min-w-0",
-                isVertical ? "w-full mt-1" : "flex-1 flex flex-col gap-0.5",
-              )}
-            >
-              <span
-                className={cn(
-                  "line-clamp-1 font-medium",
-                  density === "compact" ? "text-xs" : "text-sm",
-                )}
-              >
-                {bookmark.title}
-              </span>
-              {showDescription && bookmark.description && (
-                <span className="line-clamp-1 text-xs text-muted-foreground">
-                  {bookmark.description}
-                </span>
-              )}
-            </div>
+            {bookmark.title}
+          </span>
+          {showDescription && bookmark.description && (
+            <span className="line-clamp-1 text-xs text-muted-foreground">
+              {bookmark.description}
+            </span>
           )}
         </div>
-      </ContextMenuTrigger>
+      )}
+    </div>
+  );
+
+  // Wrap with tooltip only when title is completely hidden (icon density)
+  const listItemWithTooltip = needsTooltip ? (
+    <Tooltip>
+      <TooltipTrigger
+        render={(props) => <div {...props}>{listItemElement}</div>}
+      />
+      <TooltipContent side="bottom" className="max-w-xs">
+        <p className="font-medium">{bookmark.title}</p>
+        {bookmark.description && (
+          <p className="text-xs text-muted-foreground line-clamp-2">
+            {bookmark.description}
+          </p>
+        )}
+      </TooltipContent>
+    </Tooltip>
+  ) : (
+    listItemElement
+  );
+
+  return (
+    <ContextMenu>
+      <ContextMenuTrigger
+        render={(props) => <div {...props}>{listItemWithTooltip}</div>}
+      />
 
       <ContextMenuContent className="w-48">
         <ContextMenuItem onClick={handleOpen}>
