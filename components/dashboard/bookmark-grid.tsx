@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
 import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
 import { cn } from "@/lib/utils";
+import { DENSITY_GAP, type DensityLevel } from "@/lib/density";
 import type { BookmarkWithCategory } from "@/lib/supabase/types";
 
 // Grid class mapping for cards (desktop)
@@ -37,9 +38,8 @@ interface BookmarkGridProps {
   bookmarks: BookmarkWithCategory[];
   viewMode: "card" | "list";
   columns: number;
+  density: DensityLevel;
   isMobile: boolean;
-  showCategory?: boolean;
-  compact?: boolean; // Hide category icon, move copy to menu
   isSelecting?: boolean;
   selectedIds?: Set<string>;
   onToggleSelect?: (id: string) => void;
@@ -52,9 +52,8 @@ export function BookmarkGrid({
   bookmarks,
   viewMode,
   columns,
+  density,
   isMobile,
-  showCategory = true,
-  compact = false,
   isSelecting = false,
   selectedIds = new Set(),
   onToggleSelect,
@@ -66,12 +65,10 @@ export function BookmarkGrid({
     if (isMobile) {
       return MOBILE_GRID_CLASSES[columns] || "grid-cols-1";
     }
-    const cardColumns = columns;
-    const listColumns = columns;
     const desktopClasses =
       viewMode === "card"
-        ? CARD_GRID_CLASSES[cardColumns] || CARD_GRID_CLASSES[4]
-        : LIST_GRID_CLASSES[listColumns] || LIST_GRID_CLASSES[1];
+        ? CARD_GRID_CLASSES[columns] || CARD_GRID_CLASSES[4]
+        : LIST_GRID_CLASSES[columns] || LIST_GRID_CLASSES[1];
     return `grid-cols-1 ${desktopClasses}`;
   };
 
@@ -83,9 +80,10 @@ export function BookmarkGrid({
     <motion.div
       layout
       className={cn(
-        "grid gap-4",
+        "grid",
+        DENSITY_GAP[density],
         getGridClasses(),
-        viewMode === "card" && "auto-rows-fr"
+        viewMode === "card" && "auto-rows-fr",
       )}
     >
       <AnimatePresence mode="popLayout">
@@ -93,9 +91,9 @@ export function BookmarkGrid({
           <motion.div
             layout
             key={bookmark.id}
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -8 }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
             transition={{
               layout: {
                 type: "spring",
@@ -103,34 +101,25 @@ export function BookmarkGrid({
                 damping: 25,
                 mass: 0.6,
               },
-              opacity: {
-                duration: 0.35,
-                ease: [0.25, 0.1, 0.25, 1.0],
-              },
-              scale: {
-                duration: 0.4,
-                ease: [0.34, 1.56, 0.64, 1],
-              },
-              y: {
-                duration: 0.4,
-                ease: [0.16, 1, 0.3, 1],
-              },
+              opacity: { duration: 0.2, ease: "easeOut" },
+              scale: { duration: 0.2, ease: "easeOut" },
             }}
             className={cn(
               "relative",
-              viewMode === "list" && "overflow-hidden border"
+              viewMode === "list" && "overflow-hidden border",
             )}
             style={{
               ...(index > 10 && { contentVisibility: "auto" as never }),
             }}
           >
+            {/* Selection overlay */}
             {isSelecting && onToggleSelect && (
               <div
                 className={cn(
                   "absolute inset-0 z-10 cursor-pointer transition-colors",
                   selectedIds.has(bookmark.id)
                     ? "bg-primary/10 ring-2 ring-inset ring-primary"
-                    : "hover:bg-muted/50"
+                    : "hover:bg-muted/50",
                 )}
                 onClick={() => onToggleSelect(bookmark.id)}
               />
@@ -139,22 +128,18 @@ export function BookmarkGrid({
             {viewMode === "card" ? (
               <BookmarkCard
                 bookmark={bookmark}
+                density={density}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onCopy={onCopy}
-                showCategory={showCategory}
-                columns={columns}
-                compact={compact}
               />
             ) : (
               <BookmarkListItem
                 bookmark={bookmark}
+                density={density}
                 onEdit={onEdit}
                 onDelete={onDelete}
                 onCopy={onCopy}
-                showCategory={showCategory}
-                columns={columns}
-                compact={compact}
               />
             )}
           </motion.div>
