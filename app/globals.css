@@ -171,7 +171,29 @@
 @layer base {
   * {
     @apply border-border;
+
+    scrollbar-color: color-mix(in oklch, var(--color-primary), transparent 70%)
+      transparent;
+    scrollbar-width: auto;
   }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full border-2 border-transparent bg-clip-padding;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/60;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -226,7 +248,9 @@
   color: var(--color-popover-foreground) !important;
   border: 1px solid var(--color-primary) !important;
   border-radius: 0 !important;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
   font-family: var(--font-space-mono), ui-monospace, monospace !important;
   max-width: min(400px, calc(100vw - 2rem)) !important;
   padding: 1rem !important;
