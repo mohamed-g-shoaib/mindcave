@@ -2,7 +2,6 @@
 
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { toast } from "sonner";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
@@ -19,15 +18,12 @@ import {
   DownloadIcon,
 } from "@hugeicons/core-free-icons";
 
-import { BookmarkCard } from "@/components/dashboard/bookmark-card";
-import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
 import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
 import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { ImportBookmarksSheet } from "@/components/dashboard/import-bookmarks-sheet";
 import { CategoryGroup } from "@/components/dashboard/category-group";
 import { BookmarkGrid } from "@/components/dashboard/bookmark-grid";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -56,6 +52,7 @@ import { useBookmarksRealtime } from "@/hooks/use-bookmarks-realtime";
 import { useCategories } from "@/hooks/use-categories";
 import { useViewMode } from "@/hooks/use-preferences";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { calculateDensity } from "@/lib/density";
 import type { BookmarkWithCategory, Category } from "@/lib/supabase/types";
 
 // Mobile column options (1-2 cols)
@@ -90,32 +87,6 @@ const GROUP_COLUMN_OPTIONS = [
   { value: 2, label: "2 columns" },
   { value: 3, label: "3 columns" },
 ];
-
-// Grid class mapping for cards (desktop)
-const CARD_GRID_CLASSES: Record<number, string> = {
-  2: "sm:grid-cols-2",
-  3: "sm:grid-cols-2 lg:grid-cols-3",
-  4: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
-  5: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5",
-  6: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6",
-  7: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7",
-  8: "sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-8",
-};
-
-// Grid class mapping for lists (desktop)
-const LIST_GRID_CLASSES: Record<number, string> = {
-  1: "",
-  2: "lg:grid-cols-2",
-  3: "lg:grid-cols-2 xl:grid-cols-3",
-  4: "lg:grid-cols-2 xl:grid-cols-4",
-  5: "lg:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5",
-};
-
-// Mobile grid classes
-const MOBILE_GRID_CLASSES: Record<number, string> = {
-  1: "grid-cols-1",
-  2: "grid-cols-2",
-};
 
 // Group column classes (for category groups layout)
 // Using CSS columns instead of grid for better flow when groups collapse
@@ -273,12 +244,12 @@ function DashboardContent() {
   // Effective group columns: always 1 on mobile
   const effectiveGroupColumns = isMobile ? 1 : groupColumns;
 
-  // Determine if we should use compact mode for bookmarks
-  // Desktop: compact when bookmark columns >= 4 AND group columns > 1
-  // Mobile: compact when 2 bookmark columns
-  const isCompactMode = isMobile
-    ? currentColumns === 2
-    : currentColumns >= 4 && groupColumns > 1;
+  // Calculate density level based on column settings
+  const density = calculateDensity(
+    currentColumns,
+    effectiveGroupColumns,
+    isMobile,
+  );
 
   const handleColumnChange = (cols: number) => {
     if (viewMode === "card") {
@@ -286,18 +257,6 @@ function DashboardContent() {
     } else {
       setListColumns(cols);
     }
-  };
-
-  // Build grid classes
-  const getGridClasses = () => {
-    if (isMobile) {
-      return MOBILE_GRID_CLASSES[currentColumns] || "grid-cols-1";
-    }
-    const desktopClasses =
-      viewMode === "card"
-        ? CARD_GRID_CLASSES[cardColumns] || CARD_GRID_CLASSES[4]
-        : LIST_GRID_CLASSES[listColumns] || LIST_GRID_CLASSES[1];
-    return `grid-cols-1 ${desktopClasses}`;
   };
 
   if (isLoading) {
@@ -719,9 +678,8 @@ function DashboardContent() {
                   bookmarks={catBookmarks}
                   viewMode={viewMode}
                   columns={currentColumns}
+                  density={density}
                   isMobile={isMobile}
-                  showCategory={false}
-                  compact={isCompactMode}
                   isSelecting={isSelectingBookmarks}
                   selectedIds={selectedBookmarkIds}
                   onToggleSelect={toggleBookmarkSelection}
@@ -745,9 +703,8 @@ function DashboardContent() {
                   bookmarks={uncategorizedBookmarks}
                   viewMode={viewMode}
                   columns={currentColumns}
+                  density={density}
                   isMobile={isMobile}
-                  showCategory={false}
-                  compact={isCompactMode}
                   isSelecting={isSelectingBookmarks}
                   selectedIds={selectedBookmarkIds}
                   onToggleSelect={toggleBookmarkSelection}
@@ -760,104 +717,19 @@ function DashboardContent() {
           </div>
         ) : (
           /* Flat view for single category */
-          <LayoutGroup>
-            <motion.div
-              layout
-              className={cn(
-                "grid gap-4",
-                getGridClasses(),
-                viewMode === "card" && "auto-rows-fr",
-              )}
-            >
-              <AnimatePresence mode="popLayout">
-                {bookmarks.map((bookmark, index) => (
-                  <motion.div
-                    layout
-                    key={bookmark.id}
-                    initial={{ opacity: 0, scale: 0.96, y: 8 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.96, y: -8 }}
-                    transition={{
-                      layout: {
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 25,
-                        mass: 0.6,
-                      },
-                      opacity: {
-                        duration: 0.35,
-                        ease: [0.25, 0.1, 0.25, 1.0],
-                      },
-                      scale: {
-                        duration: 0.4,
-                        ease: [0.34, 1.56, 0.64, 1],
-                      },
-                      y: {
-                        duration: 0.4,
-                        ease: [0.16, 1, 0.3, 1],
-                      },
-                    }}
-                    className={cn(
-                      "relative",
-                      viewMode === "list" && "overflow-hidden border",
-                    )}
-                    style={{
-                      ...(index > 10 && { contentVisibility: "auto" as never }),
-                    }}
-                  >
-                    {isSelectingBookmarks && (
-                      <div
-                        className="absolute inset-0 z-10 cursor-pointer"
-                        onClick={() => toggleBookmarkSelection(bookmark.id)}
-                      >
-                        <div
-                          className={cn(
-                            "absolute z-20",
-                            viewMode === "card"
-                              ? "top-2 left-2"
-                              : "left-3 top-1/2 -translate-y-1/2",
-                          )}
-                        >
-                          <Checkbox
-                            checked={selectedBookmarkIds.has(bookmark.id)}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </div>
-                        <div
-                          className={cn(
-                            "absolute inset-0 transition-colors",
-                            selectedBookmarkIds.has(bookmark.id)
-                              ? "bg-primary/10 ring-2 ring-primary"
-                              : "hover:bg-muted/50",
-                          )}
-                        />
-                      </div>
-                    )}
-
-                    {viewMode === "card" ? (
-                      <BookmarkCard
-                        bookmark={bookmark}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                        onCopy={handleCopy}
-                        showCategory={false}
-                        columns={currentColumns}
-                      />
-                    ) : (
-                      <BookmarkListItem
-                        bookmark={bookmark}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                        onCopy={handleCopy}
-                        showCategory={false}
-                        columns={currentColumns}
-                      />
-                    )}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          </LayoutGroup>
+          <BookmarkGrid
+            bookmarks={bookmarks}
+            viewMode={viewMode}
+            columns={currentColumns}
+            density={density}
+            isMobile={isMobile}
+            isSelecting={isSelectingBookmarks}
+            selectedIds={selectedBookmarkIds}
+            onToggleSelect={toggleBookmarkSelection}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onCopy={handleCopy}
+          />
         )}
       </div>
 
