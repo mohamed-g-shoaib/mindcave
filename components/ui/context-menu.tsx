@@ -55,7 +55,7 @@ function ContextMenuContent({
           data-slot="context-menu-content"
           className={cn(
             "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-36 rounded-none shadow-md ring-1 duration-100 z-50 max-h-(--available-height) origin-(--transform-origin) overflow-x-hidden overflow-y-auto outline-none",
-            className
+            className,
           )}
           {...props}
         />
@@ -74,16 +74,16 @@ function ContextMenuLabel({
   className,
   inset,
   ...props
-}: ContextMenuPrimitive.GroupLabel.Props & {
+}: React.ComponentProps<"div"> & {
   inset?: boolean;
 }) {
   return (
-    <ContextMenuPrimitive.GroupLabel
+    <div
       data-slot="context-menu-label"
       data-inset={inset}
       className={cn(
         "text-muted-foreground px-2 py-2 text-xs data-inset:pl-8",
-        className
+        className,
       )}
       {...props}
     />
@@ -106,7 +106,7 @@ function ContextMenuItem({
       data-variant={variant}
       className={cn(
         "focus:bg-secondary focus:text-secondary-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive focus:*:[svg]:text-secondary-foreground gap-2 rounded-none px-2 py-2 text-xs [&_svg:not([class*='size-'])]:size-4 group/context-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-inset:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        className
+        className,
       )}
       {...props}
     />
@@ -133,7 +133,7 @@ function ContextMenuSubTrigger({
       data-inset={inset}
       className={cn(
         "focus:bg-secondary focus:text-secondary-foreground data-open:bg-secondary data-open:text-secondary-foreground gap-2 rounded-none px-2 py-2 text-xs [&_svg:not([class*='size-'])]:size-4 flex cursor-default items-center outline-hidden select-none data-inset:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        className
+        className,
       )}
       {...props}
     >
@@ -171,7 +171,7 @@ function ContextMenuCheckboxItem({
       data-slot="context-menu-checkbox-item"
       className={cn(
         "focus:bg-secondary focus:text-secondary-foreground gap-2 rounded-none py-2 pr-8 pl-2 text-xs [&_svg:not([class*='size-'])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        className
+        className,
       )}
       checked={checked}
       {...props}
@@ -207,7 +207,7 @@ function ContextMenuRadioItem({
       data-slot="context-menu-radio-item"
       className={cn(
         "focus:bg-secondary focus:text-secondary-foreground gap-2 rounded-none py-2 pr-8 pl-2 text-xs [&_svg:not([class*='size-'])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        className
+        className,
       )}
       {...props}
     >
@@ -243,7 +243,7 @@ function ContextMenuShortcut({
       data-slot="context-menu-shortcut"
       className={cn(
         "text-muted-foreground group-focus/context-menu-item:text-secondary-foreground ml-auto text-xs tracking-widest",
-        className
+        className,
       )}
       {...props}
     />
