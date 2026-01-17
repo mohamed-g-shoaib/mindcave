@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 
 import { BookmarkCard } from "@/components/dashboard/bookmark-card";
 import { BookmarkListItem } from "@/components/dashboard/bookmark-list-item";
@@ -61,6 +61,8 @@ export function BookmarkGrid({
   onDelete,
   onCopy,
 }: BookmarkGridProps) {
+  const prefersReducedMotion = useReducedMotion();
+
   const getGridClasses = () => {
     if (isMobile) {
       return MOBILE_GRID_CLASSES[columns] || "grid-cols-1";
@@ -76,9 +78,35 @@ export function BookmarkGrid({
     return null;
   }
 
+  // Animation variants respecting reduced motion preference
+  const itemVariants = prefersReducedMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+      }
+    : {
+        initial: { opacity: 0, scale: 0.96 },
+        animate: { opacity: 1, scale: 1 },
+        exit: { opacity: 0, scale: 0.96 },
+      };
+
+  const transition = prefersReducedMotion
+    ? { duration: 0.15 }
+    : {
+        layout: {
+          type: "spring",
+          stiffness: 200,
+          damping: 25,
+          mass: 0.6,
+        },
+        opacity: { duration: 0.2, ease: "easeOut" },
+        scale: { duration: 0.2, ease: "easeOut" },
+      };
+
   return (
     <motion.div
-      layout
+      layout={!prefersReducedMotion}
       className={cn(
         "grid",
         DENSITY_GAP[density],
@@ -89,28 +117,21 @@ export function BookmarkGrid({
       <AnimatePresence mode="popLayout">
         {bookmarks.map((bookmark, index) => (
           <motion.div
-            layout
+            layout={!prefersReducedMotion}
             key={bookmark.id}
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{
-              layout: {
-                type: "spring",
-                stiffness: 200,
-                damping: 25,
-                mass: 0.6,
-              },
-              opacity: { duration: 0.2, ease: "easeOut" },
-              scale: { duration: 0.2, ease: "easeOut" },
-            }}
+            initial={itemVariants.initial}
+            animate={itemVariants.animate}
+            exit={itemVariants.exit}
+            transition={transition}
             className={cn(
               "relative",
               viewMode === "list" && "overflow-hidden border",
             )}
-            style={{
-              ...(index > 10 && { contentVisibility: "auto" as never }),
-            }}
+            style={
+              index > 10
+                ? { contentVisibility: "auto" as "auto" | "hidden" | "visible" }
+                : undefined
+            }
           >
             {/* Selection overlay */}
             {isSelecting && onToggleSelect && (
