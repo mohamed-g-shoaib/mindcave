@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 export function OGPreview({ id }: { id: string }) {
-  const baseClass = "aspect-video bg-muted p-2";
+  const baseClass = "h-full w-full bg-muted p-2";
 
   switch (id) {
     case "react":
