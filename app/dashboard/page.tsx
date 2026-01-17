@@ -16,6 +16,8 @@ import {
   Cancel01Icon,
   Delete02Icon,
   DownloadIcon,
+  GridIcon,
+  LayoutGridIcon,
 } from "@hugeicons/core-free-icons";
 
 import { EditBookmarkSheet } from "@/components/dashboard/edit-bookmark-sheet";
@@ -50,8 +52,9 @@ import {
 import { useBookmarks, useDeleteBookmark } from "@/hooks/use-bookmarks";
 import { useBookmarksRealtime } from "@/hooks/use-bookmarks-realtime";
 import { useCategories } from "@/hooks/use-categories";
-import { useViewMode } from "@/hooks/use-preferences";
+import { useViewMode, useSortPreferences } from "@/hooks/use-preferences";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SortSelector } from "@/components/dashboard/sort-selector";
 import { calculateDensity } from "@/lib/density";
 import type { BookmarkWithCategory, Category } from "@/lib/supabase/types";
 
@@ -101,8 +104,9 @@ function DashboardContent() {
   const categoryId = searchParams.get("category") || undefined;
   const isMobile = useIsMobile();
 
+  const { sortBy, sortOrder } = useSortPreferences();
   const { data: bookmarks = [] as BookmarkWithCategory[], isLoading } =
-    useBookmarks(categoryId);
+    useBookmarks(categoryId, sortBy, sortOrder);
   const { data: categories = [] as Category[] } = useCategories();
   const deleteBookmark = useDeleteBookmark();
 
@@ -311,91 +315,148 @@ function DashboardContent() {
         </div>
 
         {/* Controls Bar */}
-        <div className="flex flex-col gap-2">
-          {/* Row 1: View mode and column settings + select button on desktop */}
-          <div className="flex flex-wrap items-center gap-2">
-            {/* View Mode Toggle */}
-            <div
-              className="flex items-center gap-1"
-              data-onboarding="view-toggle"
-            >
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      variant={viewMode === "card" ? "secondary" : "ghost"}
-                      size="icon-sm"
-                      onClick={() => setViewMode("card")}
-                      aria-label="Card view"
-                    />
-                  }
-                >
-                  <HugeiconsIcon icon={GridViewIcon} className="h-4 w-4" />
-                </TooltipTrigger>
-                <TooltipContent>Card view</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      variant={viewMode === "list" ? "secondary" : "ghost"}
-                      size="icon-sm"
-                      onClick={() => setViewMode("list")}
-                      aria-label="List view"
-                    />
-                  }
-                >
-                  <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" />
-                </TooltipTrigger>
-                <TooltipContent>List view</TooltipContent>
-              </Tooltip>
+        <div className="flex flex-col gap-3">
+          {/* Toolbar Rows */}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            {/* Primary Row: View Modes & Multi-select */}
+            <div className="flex items-center justify-start gap-2">
+              <div
+                className="flex items-center gap-1"
+                data-onboarding="view-toggle"
+              >
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant={viewMode === "card" ? "secondary" : "ghost"}
+                        size="icon-sm"
+                        onClick={() => setViewMode("card")}
+                        aria-label="Card view"
+                      />
+                    }
+                  >
+                    <HugeiconsIcon icon={GridViewIcon} className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent>Card view</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant={viewMode === "list" ? "secondary" : "ghost"}
+                        size="icon-sm"
+                        onClick={() => setViewMode("list")}
+                        aria-label="List view"
+                      />
+                    }
+                  >
+                    <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent>List view</TooltipContent>
+                </Tooltip>
+              </div>
+
+              {/* Selection Controls (Positioned at the end on mobile row 1) */}
+              <div className="flex items-center gap-1">
+                <div className="h-6 w-px bg-border" />
+                {bookmarks.length > 0 && (
+                  <>
+                    {!isSelectingBookmarks ? (
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => {
+                                setIsSelectingBookmarks(true);
+                                clearSelectedBookmarks();
+                              }}
+                            />
+                          }
+                        >
+                          <HugeiconsIcon
+                            icon={CursorAddSelection01Icon}
+                            className="h-4 w-4"
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent>Select bookmarks</TooltipContent>
+                      </Tooltip>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        {selectedBookmarkIds.size > 0 && (
+                          <span className="text-xs text-muted-foreground mr-1">
+                            {selectedBookmarkIds.size}
+                          </span>
+                        )}
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                disabled={
+                                  selectedBookmarkIds.size === 0 ||
+                                  deleteBookmark.isPending
+                                }
+                                onClick={() => setDeletingBulk(true)}
+                              />
+                            }
+                          >
+                            <HugeiconsIcon
+                              icon={Delete02Icon}
+                              className="h-4 w-4"
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>Delete selected</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={selectAllBookmarks}
+                              />
+                            }
+                          >
+                            <HugeiconsIcon
+                              icon={CheckListIcon}
+                              className="h-4 w-4"
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>Select all</TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={() => {
+                                  setIsSelectingBookmarks(false);
+                                  clearSelectedBookmarks();
+                                }}
+                              />
+                            }
+                          >
+                            <HugeiconsIcon
+                              icon={Cancel01Icon}
+                              className="h-4 w-4"
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent>Cancel</TooltipContent>
+                        </Tooltip>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
 
-            {/* Divider */}
-            <div className="h-6 w-px bg-border" />
-
-            {/* Bookmark Column Selector Dropdown */}
-            <Tooltip>
-              <DropdownMenu>
-                <TooltipTrigger
-                  render={
-                    <DropdownMenuTrigger
-                      render={
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="gap-1 text-xs"
-                          data-onboarding="column-selector"
-                        />
-                      }
-                    />
-                  }
-                >
-                  <span className="text-muted-foreground">Bookmarks:</span>
-                  {columnOptions.find((o) => o.value === currentColumns)
-                    ?.label || `${currentColumns} col`}
-                  <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />
-                </TooltipTrigger>
-                <DropdownMenuContent align="start">
-                  {columnOptions.map((option) => (
-                    <DropdownMenuItem
-                      key={option.value}
-                      onClick={() => handleColumnChange(option.value)}
-                      className="justify-between"
-                    >
-                      {option.label}
-                      {currentColumns === option.value && (
-                        <HugeiconsIcon icon={Tick02Icon} className="h-4 w-4" />
-                      )}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <TooltipContent>Change bookmark column layout</TooltipContent>
-            </Tooltip>
-
-            {/* Group Columns Selector (only for All Bookmarks view on desktop) */}
-            {!categoryId && !isMobile && (
+            {/* Secondary Row: Grid, Group & Sort Settings */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar sm:overflow-visible sm:ml-auto">
+              {/* Grid Selector */}
               <Tooltip>
                 <DropdownMenu>
                   <TooltipTrigger
@@ -405,26 +466,28 @@ function DashboardContent() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="gap-1 text-xs"
+                            className="h-8 gap-1.5 px-2 text-xs shrink-0"
+                            data-onboarding="column-selector"
                           />
                         }
                       />
                     }
                   >
-                    <span className="text-muted-foreground">Groups:</span>
-                    {groupColumnOptions.find((o) => o.value === groupColumns)
-                      ?.label || `${groupColumns} col`}
+                    <HugeiconsIcon icon={GridIcon} className="size-4" />
+                    <span className="text-muted-foreground">Grid:</span>
+                    {columnOptions.find((o) => o.value === currentColumns)
+                      ?.label || `${currentColumns} col`}
                     <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />
                   </TooltipTrigger>
                   <DropdownMenuContent align="start">
-                    {groupColumnOptions.map((option) => (
+                    {columnOptions.map((option) => (
                       <DropdownMenuItem
                         key={option.value}
-                        onClick={() => setGroupColumns(option.value)}
+                        onClick={() => handleColumnChange(option.value)}
                         className="justify-between"
                       >
                         {option.label}
-                        {groupColumns === option.value && (
+                        {currentColumns === option.value && (
                           <HugeiconsIcon
                             icon={Tick02Icon}
                             className="h-4 w-4"
@@ -434,200 +497,66 @@ function DashboardContent() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <TooltipContent>Change category group layout</TooltipContent>
+                <TooltipContent>Column layout</TooltipContent>
               </Tooltip>
-            )}
 
-            {/* Desktop: Select button inline with separator */}
-            {bookmarks.length > 0 && !isMobile && (
-              <>
-                {/* Divider before select */}
-                <div className="h-6 w-px bg-border" />
-
-                {!isSelectingBookmarks ? (
-                  <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => {
-                            setIsSelectingBookmarks(true);
-                            clearSelectedBookmarks();
-                          }}
-                        />
-                      }
-                    >
-                      <HugeiconsIcon
-                        icon={CursorAddSelection01Icon}
-                        className="h-4 w-4"
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent>Select bookmarks</TooltipContent>
-                  </Tooltip>
-                ) : (
-                  <div className="flex items-center gap-1">
-                    {selectedBookmarkIds.size > 0 && (
-                      <span className="text-xs text-muted-foreground mr-1">
-                        {selectedBookmarkIds.size} selected
-                      </span>
-                    )}
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            disabled={
-                              selectedBookmarkIds.size === 0 ||
-                              deleteBookmark.isPending
-                            }
-                            onClick={() => setDeletingBulk(true)}
-                          />
-                        }
-                      >
-                        <HugeiconsIcon
-                          icon={Delete02Icon}
-                          className="h-4 w-4"
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        {selectedBookmarkIds.size === 0
-                          ? "Select bookmarks first"
-                          : "Delete selected"}
-                      </TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={selectAllBookmarks}
-                          />
-                        }
-                      >
-                        <HugeiconsIcon
-                          icon={CheckListIcon}
-                          className="h-4 w-4"
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>Select all bookmarks</TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={
-                          <Button
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={() => {
-                              setIsSelectingBookmarks(false);
-                              clearSelectedBookmarks();
-                            }}
-                          />
-                        }
-                      >
-                        <HugeiconsIcon
-                          icon={Cancel01Icon}
-                          className="h-4 w-4"
-                        />
-                      </TooltipTrigger>
-                      <TooltipContent>Cancel selection</TooltipContent>
-                    </Tooltip>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-
-          {/* Row 2: Mobile selection controls on separate row */}
-          {bookmarks.length > 0 && isMobile && (
-            <div className="flex items-center gap-1">
-              {!isSelectingBookmarks ? (
+              {/* Group Columns Selector (Desktop only) */}
+              {!categoryId && !isMobile && (
                 <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => {
-                          setIsSelectingBookmarks(true);
-                          clearSelectedBookmarks();
-                        }}
-                      />
-                    }
-                  >
-                    <HugeiconsIcon
-                      icon={CursorAddSelection01Icon}
-                      className="h-4 w-4"
-                    />
-                  </TooltipTrigger>
-                  <TooltipContent>Select bookmarks</TooltipContent>
-                </Tooltip>
-              ) : (
-                <>
-                  {selectedBookmarkIds.size > 0 && (
-                    <span className="text-xs text-muted-foreground mr-1">
-                      {selectedBookmarkIds.size} selected
-                    </span>
-                  )}
-                  <Tooltip>
+                  <DropdownMenu>
                     <TooltipTrigger
                       render={
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          disabled={
-                            selectedBookmarkIds.size === 0 ||
-                            deleteBookmark.isPending
+                        <DropdownMenuTrigger
+                          render={
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 gap-1.5 px-2 text-xs shrink-0"
+                            />
                           }
-                          onClick={() => setDeletingBulk(true)}
                         />
                       }
                     >
-                      <HugeiconsIcon icon={Delete02Icon} className="h-4 w-4" />
+                      <HugeiconsIcon icon={LayoutGridIcon} className="size-4" />
+                      <span className="text-muted-foreground">Groups:</span>
+                      {groupColumnOptions.find((o) => o.value === groupColumns)
+                        ?.label || `${groupColumns} col`}
+                      <HugeiconsIcon
+                        icon={ArrowDown01Icon}
+                        className="h-3 w-3"
+                      />
                     </TooltipTrigger>
-                    <TooltipContent>
-                      {selectedBookmarkIds.size === 0
-                        ? "Select bookmarks first"
-                        : "Delete selected"}
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={selectAllBookmarks}
-                        />
-                      }
-                    >
-                      <HugeiconsIcon icon={CheckListIcon} className="h-4 w-4" />
-                    </TooltipTrigger>
-                    <TooltipContent>Select all bookmarks</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => {
-                            setIsSelectingBookmarks(false);
-                            clearSelectedBookmarks();
-                          }}
-                        />
-                      }
-                    >
-                      <HugeiconsIcon icon={Cancel01Icon} className="h-4 w-4" />
-                    </TooltipTrigger>
-                    <TooltipContent>Cancel selection</TooltipContent>
-                  </Tooltip>
-                </>
+                    <DropdownMenuContent align="start">
+                      {groupColumnOptions.map((option) => (
+                        <DropdownMenuItem
+                          key={option.value}
+                          onClick={() => setGroupColumns(option.value)}
+                          className="justify-between"
+                        >
+                          {option.label}
+                          {groupColumns === option.value && (
+                            <HugeiconsIcon
+                              icon={Tick02Icon}
+                              className="h-4 w-4"
+                            />
+                          )}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <TooltipContent>Group layout</TooltipContent>
+                </Tooltip>
               )}
+
+              {/* Separator for desktop */}
+              <div className="hidden sm:block h-6 w-px bg-border mx-1" />
+
+              {/* Sort Selector */}
+              <div className="shrink-0">
+                <SortSelector />
+              </div>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Content */}
