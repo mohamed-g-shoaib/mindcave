@@ -5,17 +5,24 @@ import type {
   BookmarkUpdate,
 } from "@/lib/supabase/types";
 
-export function useBookmarks(categoryId?: string) {
+export function useBookmarks(
+  categoryId?: string,
+  sortBy: "created_at" | "updated_at" | "title" = "created_at",
+  sortOrder: "asc" | "desc" = "desc",
+) {
   return useQuery({
-    queryKey: ["bookmarks", categoryId],
+    queryKey: ["bookmarks", categoryId, sortBy, sortOrder],
     queryFn: async () => {
-      const url = categoryId
-        ? `/api/bookmarks?category=${categoryId}`
-        : "/api/bookmarks";
-      const res = await fetch(url);
+      const params = new URLSearchParams();
+      if (categoryId) params.append("category", categoryId);
+      params.append("sort_by", sortBy);
+      params.append("sort_order", sortOrder);
+
+      const res = await fetch(`/api/bookmarks?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to fetch bookmarks");
       return res.json() as Promise<BookmarkWithCategory[]>;
     },
+    placeholderData: (previousData) => previousData,
   });
 }
 

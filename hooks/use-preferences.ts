@@ -16,6 +16,8 @@ const DEFAULT_PREFERENCES: Partial<UserPreferences> = {
   list_columns_mobile: 1,
   group_columns_mobile: 1,
   collapsed_categories: [],
+  sort_by: "created_at",
+  sort_order: "desc",
 };
 
 export function usePreferences() {
@@ -55,7 +57,7 @@ export function useUpdatePreferences() {
             ...DEFAULT_PREFERENCES,
             ...old,
             ...newData,
-          } as UserPreferences)
+          }) as UserPreferences,
       );
       return { previousPrefs };
     },
@@ -161,5 +163,27 @@ export function useCollapsedCategories() {
     toggleCategory,
     isCollapsed: (categoryId: string) =>
       collapsedCategories.includes(categoryId),
+  };
+}
+
+export function useSortPreferences() {
+  const { data: preferences } = usePreferences();
+  const updatePreferences = useUpdatePreferences();
+
+  const sortBy = preferences?.sort_by ?? "created_at";
+  const sortOrder = preferences?.sort_order ?? "desc";
+
+  const setSorting = (
+    by: "created_at" | "updated_at" | "title",
+    order: "asc" | "desc",
+  ) => {
+    updatePreferences.mutate({ sort_by: by, sort_order: order });
+  };
+
+  return {
+    sortBy,
+    sortOrder,
+    setSorting,
+    isLoading: updatePreferences.isPending,
   };
 }
