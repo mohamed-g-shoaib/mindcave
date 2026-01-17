@@ -123,20 +123,20 @@ export function BookmarkListItem({
           {showTitle && (
             <div
               className={cn(
-                "min-w-0 flex-1",
-                isVertical ? "w-full mt-1" : "flex flex-col gap-0.5",
+                "min-w-0",
+                isVertical ? "w-full mt-1" : "flex-1 flex flex-col gap-0.5",
               )}
             >
               <span
                 className={cn(
-                  "truncate font-medium",
+                  "line-clamp-1 font-medium",
                   density === "compact" ? "text-xs" : "text-sm",
                 )}
               >
                 {bookmark.title}
               </span>
               {showDescription && bookmark.description && (
-                <span className="truncate text-xs text-muted-foreground">
+                <span className="line-clamp-1 text-xs text-muted-foreground">
                   {bookmark.description}
                 </span>
               )}
