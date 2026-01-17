@@ -101,6 +101,9 @@ export interface Database {
           group_columns_mobile: number;
           // Collapsed categories
           collapsed_categories: string[];
+          // Sort preferences
+          sort_by: "created_at" | "updated_at" | "title";
+          sort_order: "asc" | "desc";
           created_at: string;
           updated_at: string;
         };
@@ -118,6 +121,8 @@ export interface Database {
           list_columns_mobile?: number;
           group_columns_mobile?: number;
           collapsed_categories?: string[];
+          sort_by?: "created_at" | "updated_at" | "title";
+          sort_order?: "asc" | "desc";
           created_at?: string;
           updated_at?: string;
         };
@@ -135,6 +140,8 @@ export interface Database {
           list_columns_mobile?: number;
           group_columns_mobile?: number;
           collapsed_categories?: string[];
+          sort_by?: "created_at" | "updated_at" | "title";
+          sort_order?: "asc" | "desc";
           created_at?: string;
           updated_at?: string;
         };

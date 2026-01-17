@@ -8,13 +8,13 @@ import { NextResponse } from "next/server";
 function generateThumbnailUrl(
   imageUrl: string | null | undefined,
   width: number,
-  quality: number
+  quality: number,
 ): string | null {
   if (!imageUrl) return null;
 
   // Build the thumbnail URL using our image proxy
   return `/api/image-proxy?url=${encodeURIComponent(
-    imageUrl
+    imageUrl,
   )}&w=${width}&fmt=webp&q=${quality}`;
 }
 
@@ -33,16 +33,27 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const categoryId = searchParams.get("category");
 
+  const rawSortBy = searchParams.get("sort_by") || "created_at";
+  const rawSortOrder = searchParams.get("sort_order") || "desc";
+
+  const sortBy = ["created_at", "updated_at", "title"].includes(rawSortBy)
+    ? (rawSortBy as "created_at" | "updated_at" | "title")
+    : "created_at";
+
+  const sortOrder = ["asc", "desc"].includes(rawSortOrder)
+    ? (rawSortOrder as "asc" | "desc")
+    : "desc";
+
   let query = supabase
     .from("bookmarks")
     .select(
       `
       *,
       category:categories(*)
-    `
+    `,
     )
     .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+    .order(sortBy, { ascending: sortOrder === "asc" });
 
   if (categoryId) {
     query = query.eq("category_id", categoryId);
@@ -104,7 +115,7 @@ export async function POST(request: Request) {
       `
       *,
       category:categories(*)
-    `
+    `,
     )
     .single();
 

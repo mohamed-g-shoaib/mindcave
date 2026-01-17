@@ -15,6 +15,8 @@ const DEFAULT_PREFERENCES = {
   list_columns_mobile: 1,
   group_columns_mobile: 1,
   collapsed_categories: [] as string[],
+  sort_by: "created_at",
+  sort_order: "desc",
 };
 
 export async function GET() {
@@ -75,6 +77,8 @@ export async function PATCH(request: Request) {
     theme,
     sidebar_expanded,
     collapsed_categories,
+    sort_by,
+    sort_order,
   } = body;
 
   // Upsert preferences (insert if not exists, update if exists)
@@ -94,8 +98,10 @@ export async function PATCH(request: Request) {
         ...(theme !== undefined && { theme }),
         ...(sidebar_expanded !== undefined && { sidebar_expanded }),
         ...(collapsed_categories !== undefined && { collapsed_categories }),
+        ...(sort_by !== undefined && { sort_by }),
+        ...(sort_order !== undefined && { sort_order }),
       },
-      { onConflict: "user_id" }
+      { onConflict: "user_id" },
     )
     .select()
     .single();
