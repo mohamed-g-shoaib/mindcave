@@ -12,35 +12,32 @@ const AnimationSkeleton = () => (
 // Dynamic imports for code splitting - only load when rendered
 const QuickAddDemo = dynamic(
   () => import("./demos/quick-add-demo").then((m) => m.QuickAddDemo),
-  { ssr: false, loading: () => <AnimationSkeleton /> }
+  { ssr: false, loading: () => <AnimationSkeleton /> },
 );
 
 const CategoryDemo = dynamic(
   () => import("./demos/category-demo").then((m) => m.CategoryDemo),
-  { ssr: false, loading: () => <AnimationSkeleton /> }
+  { ssr: false, loading: () => <AnimationSkeleton /> },
 );
 
 const SearchDemo = dynamic(
   () => import("./demos/search-demo").then((m) => m.SearchDemo),
-  { ssr: false, loading: () => <AnimationSkeleton /> }
+  { ssr: false, loading: () => <AnimationSkeleton /> },
 );
 
 const SmartMetadataDemo = dynamic(
   () => import("./demos/smart-metadata-demo").then((m) => m.SmartMetadataDemo),
-  { ssr: false, loading: () => <AnimationSkeleton /> }
+  { ssr: false, loading: () => <AnimationSkeleton /> },
 );
 
 const ViewModesDemo = dynamic(
   () => import("./demos/view-modes-demo").then((m) => m.ViewModesDemo),
-  { ssr: false, loading: () => <AnimationSkeleton /> }
+  { ssr: false, loading: () => <AnimationSkeleton /> },
 );
 
 export function FeaturesSection() {
   return (
-    <section id="features" className="relative bg-muted py-28 md:py-40">
-      {/* Bottom Bleed - smoother transition */}
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-linear-to-t from-background via-background/50 to-transparent pointer-events-none" />
-
+    <section id="features" className="py-28 md:py-40">
       <div className="mx-auto max-w-350 px-4 sm:px-8">
         <motion.div
           initial={{ opacity: 0, transform: "translateY(20px)" }}
