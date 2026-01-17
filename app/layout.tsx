@@ -95,6 +95,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={`${spaceMono.variable}`}
+      data-scroll-behavior="smooth"
     >
       <body
         suppressHydrationWarning
