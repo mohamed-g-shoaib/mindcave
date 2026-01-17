@@ -1,7 +1,13 @@
 import { cn } from "@/lib/utils";
 
-export function OGPreview({ id }: { id: string }) {
-  const baseClass = "h-full w-full bg-muted p-2";
+export function OGPreview({
+  id,
+  className,
+}: {
+  id: string;
+  className?: string;
+}) {
+  const baseClass = cn("bg-muted p-2", className || "aspect-video");
 
   switch (id) {
     case "react":

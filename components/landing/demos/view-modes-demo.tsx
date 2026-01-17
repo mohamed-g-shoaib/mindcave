@@ -140,7 +140,7 @@ export function ViewModesDemo() {
                 >
                   {/* OG Image placeholder */}
                   <div className="relative min-h-0 flex-1 w-full overflow-hidden border-b border-border/50">
-                    <OGPreview id={bookmark.id} />
+                    <OGPreview id={bookmark.id} className="h-full w-full" />
                   </div>
 
                   {/* Info area */}
