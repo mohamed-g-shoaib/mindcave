@@ -1,5 +1,3 @@
-"use client";
-
 export type DensityLevel = "normal" | "comfortable" | "compact" | "icon";
 
 /**
@@ -39,14 +37,4 @@ export const DENSITY_GAP: Record<DensityLevel, string> = {
   comfortable: "gap-3",
   compact: "gap-2",
   icon: "gap-1.5",
-};
-
-/**
- * Padding sizes for each density level (Tailwind classes)
- */
-export const DENSITY_PADDING: Record<DensityLevel, string> = {
-  normal: "p-3",
-  comfortable: "p-2",
-  compact: "p-1.5",
-  icon: "p-1",
 };
