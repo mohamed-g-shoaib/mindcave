@@ -17,7 +17,7 @@ BEGIN
   );
   RETURN COALESCE(NEW, OLD);
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Create trigger on bookmarks table
 DROP TRIGGER IF EXISTS bookmarks_realtime_broadcast ON public.bookmarks;
