@@ -45,17 +45,19 @@ export async function GET(request: Request) {
     if (!response.ok) {
       return NextResponse.json(
         { error: "Failed to fetch image" },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
-    let buffer = await response.arrayBuffer();
+    const arrayBuffer = await response.arrayBuffer();
+    let buffer: Buffer | ArrayBuffer = arrayBuffer;
     let contentType = response.headers.get("content-type") || "image/jpeg";
 
     // Resize and convert format if requested
     if (width || format) {
       try {
-        let pipeline = sharp(buffer);
+        // Use Buffer.from for better Sharp compatibility
+        let pipeline = sharp(Buffer.from(arrayBuffer));
 
         // Resize if width is specified
         if (width) {
@@ -82,15 +84,25 @@ export async function GET(request: Request) {
         }
 
         const processedBuffer = await pipeline.toBuffer();
-        buffer = processedBuffer.buffer as ArrayBuffer;
+        // Return the Buffer directly, don't use .buffer as it can be unsafe
+        buffer = processedBuffer;
       } catch (sharpError) {
-        console.error("Sharp processing error:", sharpError);
+        console.error("Sharp processing error for URL:", imageUrl);
+        console.error("Content-Type:", contentType);
+        console.error("Buffer length:", arrayBuffer.byteLength);
+        if (arrayBuffer.byteLength > 0) {
+          console.error(
+            "Buffer start (hex):",
+            Buffer.from(arrayBuffer.slice(0, 16)).toString("hex"),
+          );
+        }
+        console.error(sharpError);
         // Fall back to original buffer if processing fails
       }
     }
 
     // Return the image with appropriate headers
-    return new NextResponse(buffer, {
+    return new NextResponse(buffer as BodyInit, {
       headers: {
         "Content-Type": contentType,
         "Cache-Control": "public, max-age=31536000", // Cache for 365 days
@@ -101,7 +113,7 @@ export async function GET(request: Request) {
     console.error("Image proxy error:", error);
     return NextResponse.json(
       { error: "Failed to proxy image" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
