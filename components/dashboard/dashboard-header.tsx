@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { CommandDialog } from "@/components/dashboard/command-dialog";
+import { GoogleSearch } from "@/components/dashboard/google-search";
 import { AddBookmarkSheet } from "@/components/dashboard/add-bookmark-sheet";
 import { useCategories } from "@/hooks/use-categories";
 
@@ -80,8 +81,10 @@ export function DashboardHeader() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {/* Spacer */}
-        <div className="flex-1" />
+        {/* Center - Search */}
+        <div className="flex-1 flex justify-center px-4">
+          <GoogleSearch />
+        </div>
 
         {/* Actions */}
         <div className="flex items-center gap-2">

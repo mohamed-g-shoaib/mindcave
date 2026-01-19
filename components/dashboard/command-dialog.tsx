@@ -48,7 +48,7 @@ export function CommandDialog({ open, onOpenChange }: CommandDialogProps) {
       onOpenChange(false);
       command();
     },
-    [onOpenChange]
+    [onOpenChange],
   );
 
   return (
@@ -86,7 +86,7 @@ export function CommandDialog({ open, onOpenChange }: CommandDialogProps) {
                     value={category.name}
                     onSelect={() =>
                       runCommand(() =>
-                        router.push(`/dashboard?category=${category.id}`)
+                        router.push(`/dashboard?category=${category.id}`),
                       )
                     }
                   >
