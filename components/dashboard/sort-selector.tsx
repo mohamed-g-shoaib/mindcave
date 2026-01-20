@@ -110,10 +110,6 @@ export function SortSelector() {
         />
         <DropdownMenuContent align="end" className="w-48">
           <DropdownMenuGroup>
-            <DropdownMenuLabel className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-              Sort by
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
             {SORT_OPTIONS.map((option) => {
               const isActive =
                 option.sortBy === sortBy && option.sortOrder === sortOrder;
