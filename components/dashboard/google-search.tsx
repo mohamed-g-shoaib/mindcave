@@ -3,21 +3,33 @@
 import * as React from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Search01Icon } from "@hugeicons/core-free-icons";
-import { motion, AnimatePresence } from "framer-motion";
+import { Google } from "@/components/google-icon";
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 
 export function GoogleSearch() {
   const [query, setQuery] = React.useState("");
   const [suggestions, setSuggestions] = React.useState<string[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedIndex, setSelectedIndex] = React.useState(-1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   // Fetch suggestions when query changes
   React.useEffect(() => {
     if (!query.trim()) {
       setSuggestions([]);
+      setIsOpen(false);
       return;
     }
 
@@ -26,10 +38,21 @@ export function GoogleSearch() {
         const response = await fetch(
           `/api/search/suggestions?q=${encodeURIComponent(query)}`,
         );
+
+        if (!response.ok) {
+          setSuggestions([]);
+          return;
+        }
+
         const data = await response.json();
-        setSuggestions(data);
+        if (Array.isArray(data)) {
+          setSuggestions(data);
+          setIsOpen(data.length > 0);
+          setSelectedIndex(0);
+        }
       } catch (error) {
         console.error("Suggestion fetch error:", error);
+        setSuggestions([]);
       }
     }, 200);
 
@@ -51,18 +74,27 @@ export function GoogleSearch() {
   }, []);
 
   const handleSearch = (searchTerm: string) => {
-    if (!searchTerm.trim()) return;
+    const term = searchTerm.trim();
+    if (!term) return;
+
     window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(searchTerm)}`,
+      `https://www.google.com/search?q=${encodeURIComponent(term)}`,
       "_blank",
     );
     setQuery("");
     setIsOpen(false);
-    setSelectedIndex(-1);
+    setSuggestions([]);
+    inputRef.current?.blur();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen) return;
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen || suggestions.length === 0) {
+      if (e.key === "Enter" && query.trim()) {
+        e.preventDefault();
+        handleSearch(query);
+      }
+      return;
+    }
 
     switch (e.key) {
       case "ArrowDown":
@@ -73,16 +105,16 @@ export function GoogleSearch() {
         break;
       case "ArrowUp":
         e.preventDefault();
-        setSelectedIndex((prev) => (prev > -1 ? prev - 1 : prev));
+        setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0));
         break;
       case "Enter":
         e.preventDefault();
-        const finalTerm =
-          selectedIndex >= 0 ? suggestions[selectedIndex] : query;
-        handleSearch(finalTerm);
+        handleSearch(suggestions[selectedIndex] || query);
         break;
       case "Escape":
+        e.preventDefault();
         setIsOpen(false);
+        inputRef.current?.blur();
         break;
     }
   };
@@ -90,61 +122,61 @@ export function GoogleSearch() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full max-w-md mx-auto hidden lg:block"
+      className="relative w-full max-w-sm hidden lg:block"
     >
-      <div className="relative group">
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+      <InputGroup className="bg-muted/50 border-input/30 hover:border-input/50 focus-within:border-primary/50 transition-all rounded-none h-7 shadow-none">
+        <InputGroupAddon align="inline-start" className="pl-2">
           <HugeiconsIcon
             icon={Search01Icon}
-            className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors"
+            className="size-3.5 text-muted-foreground"
           />
-        </div>
-        <Input
+        </InputGroupAddon>
+        <InputGroupInput
+          ref={inputRef}
           type="text"
-          placeholder="Search the web..."
+          placeholder="Search Google..."
           value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setIsOpen(true);
-            setSelectedIndex(-1);
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => {
+            if (query.trim() && suggestions.length > 0) {
+              setIsOpen(true);
+            }
           }}
-          onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          className="pl-10 h-9 bg-muted/30 border-none focus-visible:ring-1 focus-visible:ring-primary/40 rounded-full transition-all w-full"
+          className="text-xs h-full px-1"
         />
-      </div>
+        <InputGroupAddon align="inline-end" className="pr-2">
+          <Google className="size-3.5" />
+        </InputGroupAddon>
+      </InputGroup>
 
-      <AnimatePresence>
-        {isOpen && suggestions.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute top-full mt-2 w-full bg-background border rounded-2xl shadow-xl overflow-hidden z-50 p-1.5 ring-1 ring-black/5"
+      {isOpen && suggestions.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-2 z-50">
+          <Command
+            shouldFilter={false}
+            className="rounded-none border bg-popover text-popover-foreground shadow-md overflow-hidden animate-in fade-in zoom-in-95 duration-100"
           >
-            {suggestions.map((suggestion, index) => (
-              <button
-                key={suggestion}
-                onClick={() => handleSearch(suggestion)}
-                onMouseEnter={() => setSelectedIndex(index)}
-                className={cn(
-                  "flex items-center w-full px-3 py-2 text-sm rounded-xl transition-colors text-left",
-                  index === selectedIndex
-                    ? "bg-accent text-accent-foreground"
-                    : "text-muted-foreground hover:bg-accent/50",
-                )}
-              >
-                <HugeiconsIcon
-                  icon={Search01Icon}
-                  className="mr-3 h-3.5 w-3.5 opacity-40"
-                />
-                <span className="truncate">{suggestion}</span>
-              </button>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <CommandList className="max-h-75">
+              <CommandGroup>
+                {suggestions.map((suggestion, index) => (
+                  <CommandItem
+                    key={`${suggestion}-${index}`}
+                    value={suggestion}
+                    onSelect={() => handleSearch(suggestion)}
+                    onMouseEnter={() => setSelectedIndex(index)}
+                    className={cn(
+                      "cursor-pointer rounded-none",
+                      index === selectedIndex && "bg-muted text-foreground",
+                    )}
+                  >
+                    <span>{suggestion}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </div>
+      )}
     </div>
   );
 }
