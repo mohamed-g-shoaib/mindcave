@@ -93,12 +93,12 @@ export function DashboardHeader() {
             variant="ghost"
             size="sm"
             onClick={() => setCommandOpen(true)}
-            className="hidden gap-2 text-muted-foreground sm:flex"
+            className="hidden gap-2 bg-muted/50 border-input/30 hover:bg-muted/70 text-muted-foreground sm:flex h-7 rounded-none px-2.5"
           >
-            <HugeiconsIcon icon={Search01Icon} className="h-4 w-4" />
-            <span className="text-xs">Search...</span>
-            <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 border bg-muted px-1.5 font-mono text-xs font-medium opacity-100 sm:flex">
-              <span className="text-xs">{shortcutKey}</span>K
+            <HugeiconsIcon icon={Search01Icon} className="size-3.5" />
+            <span className="text-xs">Search Dashboard...</span>
+            <kbd className="pointer-events-none hidden h-4 select-none items-center gap-1 border bg-muted px-1 font-mono text-[10px] font-medium opacity-100 sm:flex">
+              <span>{shortcutKey}</span>K
             </kbd>
           </Button>
 
