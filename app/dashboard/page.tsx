@@ -297,165 +297,16 @@ function DashboardContent() {
 
   return (
     <>
-      <div className="space-y-6">
-        {/* Header - stacks on mobile */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold md:text-3xl">
+      <div className="space-y-8">
+        <div className="space-y-2">
+          {/* Header & Main Toolbar Row */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h1 className="text-2xl font-bold md:text-3xl shrink-0">
               {currentCategory || "All Bookmarks"}
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground md:mt-2 md:text-base">
-              {bookmarks.length === 0
-                ? "No bookmarks yet. Add your first one!"
-                : `${bookmarks.length} bookmark${
-                    bookmarks.length === 1 ? "" : "s"
-                  }`}
-            </p>
-          </div>
-        </div>
 
-        {/* Controls Bar */}
-        <div className="flex flex-col gap-3">
-          {/* Toolbar Rows */}
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-            {/* Primary Row: View Modes & Multi-select */}
-            <div className="flex items-center justify-start gap-2">
-              <div
-                className="flex items-center gap-1"
-                data-onboarding="view-toggle"
-              >
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button
-                        variant={viewMode === "card" ? "secondary" : "ghost"}
-                        size="icon-sm"
-                        onClick={() => setViewMode("card")}
-                        aria-label="Card view"
-                      />
-                    }
-                  >
-                    <HugeiconsIcon icon={GridViewIcon} className="h-4 w-4" />
-                  </TooltipTrigger>
-                  <TooltipContent>Card view</TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger
-                    render={
-                      <Button
-                        variant={viewMode === "list" ? "secondary" : "ghost"}
-                        size="icon-sm"
-                        onClick={() => setViewMode("list")}
-                        aria-label="List view"
-                      />
-                    }
-                  >
-                    <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" />
-                  </TooltipTrigger>
-                  <TooltipContent>List view</TooltipContent>
-                </Tooltip>
-              </div>
-
-              {/* Selection Controls (Positioned at the end on mobile row 1) */}
-              <div className="flex items-center gap-1">
-                <div className="h-6 w-px bg-border" />
-                {bookmarks.length > 0 && (
-                  <>
-                    {!isSelectingBookmarks ? (
-                      <Tooltip>
-                        <TooltipTrigger
-                          render={
-                            <Button
-                              variant="ghost"
-                              size="icon-sm"
-                              onClick={() => {
-                                setIsSelectingBookmarks(true);
-                                clearSelectedBookmarks();
-                              }}
-                            />
-                          }
-                        >
-                          <HugeiconsIcon
-                            icon={CursorAddSelection01Icon}
-                            className="h-4 w-4"
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>Select bookmarks</TooltipContent>
-                      </Tooltip>
-                    ) : (
-                      <div className="flex items-center gap-1">
-                        {selectedBookmarkIds.size > 0 && (
-                          <span className="text-xs text-muted-foreground mr-1">
-                            {selectedBookmarkIds.size}
-                          </span>
-                        )}
-                        <Tooltip>
-                          <TooltipTrigger
-                            render={
-                              <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                disabled={
-                                  selectedBookmarkIds.size === 0 ||
-                                  deleteBookmark.isPending
-                                }
-                                onClick={() => setDeletingBulk(true)}
-                              />
-                            }
-                          >
-                            <HugeiconsIcon
-                              icon={Delete02Icon}
-                              className="h-4 w-4"
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>Delete selected</TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                          <TooltipTrigger
-                            render={
-                              <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                onClick={selectAllBookmarks}
-                              />
-                            }
-                          >
-                            <HugeiconsIcon
-                              icon={CheckListIcon}
-                              className="h-4 w-4"
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>Select all</TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                          <TooltipTrigger
-                            render={
-                              <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                onClick={() => {
-                                  setIsSelectingBookmarks(false);
-                                  clearSelectedBookmarks();
-                                }}
-                              />
-                            }
-                          >
-                            <HugeiconsIcon
-                              icon={Cancel01Icon}
-                              className="h-4 w-4"
-                            />
-                          </TooltipTrigger>
-                          <TooltipContent>Cancel</TooltipContent>
-                        </Tooltip>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Secondary Row: Grid, Group & Sort Settings */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar sm:overflow-visible sm:ml-auto">
+            {/* Secondary Controls (Grid, Group, Sort) moved up to Title row */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar sm:overflow-visible">
               {/* Grid Selector */}
               <Tooltip>
                 <DropdownMenu>
@@ -474,12 +325,13 @@ function DashboardContent() {
                     }
                   >
                     <HugeiconsIcon icon={GridIcon} className="size-4" />
-                    <span className="text-muted-foreground">Grid:</span>
-                    {columnOptions.find((o) => o.value === currentColumns)
-                      ?.label || `${currentColumns} col`}
+                    <span className="text-muted-foreground hidden md:inline">
+                      Grid:
+                    </span>
+                    {currentColumns}
                     <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />
                   </TooltipTrigger>
-                  <DropdownMenuContent align="start">
+                  <DropdownMenuContent align="end">
                     {columnOptions.map((option) => (
                       <DropdownMenuItem
                         key={option.value}
@@ -497,7 +349,7 @@ function DashboardContent() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <TooltipContent>Column layout</TooltipContent>
+                <TooltipContent side="bottom">Column layout</TooltipContent>
               </Tooltip>
 
               {/* Group Columns Selector (Desktop only) */}
@@ -518,15 +370,16 @@ function DashboardContent() {
                       }
                     >
                       <HugeiconsIcon icon={LayoutGridIcon} className="size-4" />
-                      <span className="text-muted-foreground">Groups:</span>
-                      {groupColumnOptions.find((o) => o.value === groupColumns)
-                        ?.label || `${groupColumns} col`}
+                      <span className="text-muted-foreground hidden md:inline">
+                        Groups:
+                      </span>
+                      {groupColumns}
                       <HugeiconsIcon
                         icon={ArrowDown01Icon}
                         className="h-3 w-3"
                       />
                     </TooltipTrigger>
-                    <DropdownMenuContent align="start">
+                    <DropdownMenuContent align="end">
                       {groupColumnOptions.map((option) => (
                         <DropdownMenuItem
                           key={option.value}
@@ -544,17 +397,166 @@ function DashboardContent() {
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <TooltipContent>Group layout</TooltipContent>
+                  <TooltipContent side="bottom">Group layout</TooltipContent>
                 </Tooltip>
               )}
-
-              {/* Separator for desktop */}
-              <div className="hidden sm:block h-6 w-px bg-border mx-1" />
 
               {/* Sort Selector */}
               <div className="shrink-0">
                 <SortSelector />
               </div>
+            </div>
+          </div>
+
+          {/* Operational Statistics & View Controls Row */}
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-muted-foreground">
+              {bookmarks.length === 0
+                ? "No bookmarks yet"
+                : `${bookmarks.length} bookmark${
+                    bookmarks.length === 1 ? "" : "s"
+                  }`}
+            </p>
+
+            <div className="flex items-center gap-2">
+              {/* View Modes */}
+              <div
+                className="flex items-center gap-1"
+                data-onboarding="view-toggle"
+              >
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant={viewMode === "card" ? "secondary" : "ghost"}
+                        size="icon-sm"
+                        onClick={() => setViewMode("card")}
+                        aria-label="Card view"
+                      />
+                    }
+                  >
+                    <HugeiconsIcon icon={GridViewIcon} className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">Card view</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant={viewMode === "list" ? "secondary" : "ghost"}
+                        size="icon-sm"
+                        onClick={() => setViewMode("list")}
+                        aria-label="List view"
+                      />
+                    }
+                  >
+                    <HugeiconsIcon icon={ListViewIcon} className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">List view</TooltipContent>
+                </Tooltip>
+              </div>
+
+              <div className="h-4 w-px bg-border mx-1" />
+
+              {/* Selection Controls */}
+              {bookmarks.length > 0 && (
+                <>
+                  {!isSelectingBookmarks ? (
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={() => {
+                              setIsSelectingBookmarks(true);
+                              clearSelectedBookmarks();
+                            }}
+                          />
+                        }
+                      >
+                        <HugeiconsIcon
+                          icon={CursorAddSelection01Icon}
+                          className="h-4 w-4"
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">
+                        Select bookmarks
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <div className="flex items-center gap-1">
+                      {selectedBookmarkIds.size > 0 && (
+                        <span className="text-[10px] font-mono font-medium bg-primary/10 text-primary px-1.5 py-0.5 border-primary/20 mr-1 shrink-0">
+                          {selectedBookmarkIds.size}
+                        </span>
+                      )}
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              disabled={
+                                selectedBookmarkIds.size === 0 ||
+                                deleteBookmark.isPending
+                              }
+                              onClick={() => setDeletingBulk(true)}
+                            />
+                          }
+                        >
+                          <HugeiconsIcon
+                            icon={Delete02Icon}
+                            className="h-4 w-4"
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                          Delete selected
+                        </TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={selectAllBookmarks}
+                            />
+                          }
+                        >
+                          <HugeiconsIcon
+                            icon={CheckListIcon}
+                            className="h-4 w-4"
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">
+                          Select all
+                        </TooltipContent>
+                      </Tooltip>
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => {
+                                setIsSelectingBookmarks(false);
+                                clearSelectedBookmarks();
+                              }}
+                            />
+                          }
+                        >
+                          <HugeiconsIcon
+                            icon={Cancel01Icon}
+                            className="h-4 w-4 text-destructive"
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent side="bottom">Cancel</TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -753,16 +755,24 @@ function DashboardContent() {
 
 function DashboardLoading() {
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Skeleton className="h-9 w-48" />
-          <Skeleton className="mt-2 h-5 w-64" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-8 w-24" />
+            <Skeleton className="h-8 w-32" />
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Skeleton className="h-8 w-8" />
-          <Skeleton className="h-8 w-8" />
-          <Skeleton className="h-8 w-24" />
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-5 w-32" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-8" />
+            <Skeleton className="h-8 w-8" />
+            <div className="h-4 w-px bg-border mx-1" />
+            <Skeleton className="h-8 w-8" />
+          </div>
         </div>
       </div>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
