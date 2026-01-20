@@ -120,10 +120,7 @@ export function GoogleSearch() {
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full max-w-sm hidden lg:block"
-    >
+    <div ref={containerRef} className="relative w-full max-w-sm">
       <InputGroup className="bg-muted/50 border-input/30 hover:border-input/50 focus-within:border-primary/50 transition-all rounded-none h-7 shadow-none">
         <InputGroupAddon align="inline-start" className="pl-2">
           <HugeiconsIcon
@@ -134,7 +131,7 @@ export function GoogleSearch() {
         <InputGroupInput
           ref={inputRef}
           type="text"
-          placeholder="Search Google..."
+          placeholder="Search..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => {
@@ -143,7 +140,7 @@ export function GoogleSearch() {
             }
           }}
           onKeyDown={handleKeyDown}
-          className="text-xs h-full px-1"
+          className="text-xs h-full px-1 sm:placeholder:content-['Search_Google...']"
         />
         <InputGroupAddon align="inline-end" className="pr-2">
           <Google className="size-3.5" />

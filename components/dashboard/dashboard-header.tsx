@@ -6,16 +6,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignIcon, Search01Icon } from "@hugeicons/core-free-icons";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import {
   Tooltip,
   TooltipContent,
@@ -41,11 +32,6 @@ export function DashboardHeader() {
 
   const shortcutKey = isMac ? "⌘" : "Ctrl";
 
-  // Get current category name
-  const currentCategory = categoryId
-    ? categories.find((c) => c.id === categoryId)?.name
-    : null;
-
   return (
     <>
       <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-background px-4">
@@ -54,35 +40,8 @@ export function DashboardHeader() {
           <TooltipTrigger render={<SidebarTrigger className="-ml-1" />} />
           <TooltipContent side="right">Toggle sidebar (Ctrl+B)</TooltipContent>
         </Tooltip>
-        <Separator orientation="vertical" className="mx-2 h-4" />
-
-        {/* Breadcrumb */}
-        <Breadcrumb>
-          <BreadcrumbList>
-            {currentCategory ? (
-              <>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="/dashboard">
-                    All Bookmarks
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{currentCategory}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </>
-            ) : (
-              <BreadcrumbItem>
-                <BreadcrumbPage className="max-w-30 truncate">
-                  All Bookmarks
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            )}
-          </BreadcrumbList>
-        </Breadcrumb>
-
         {/* Center - Search */}
-        <div className="flex-1 flex justify-center px-4">
+        <div className="flex-1 flex justify-center px-1 sm:px-4">
           <GoogleSearch />
         </div>
 
