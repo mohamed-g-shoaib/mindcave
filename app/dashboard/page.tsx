@@ -298,16 +298,65 @@ function DashboardContent() {
   return (
     <>
       <div className="space-y-8">
-        <div className="space-y-2">
-          {/* Header & Main Toolbar Row */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h1 className="text-2xl font-bold md:text-3xl shrink-0">
-              {currentCategory || "All Bookmarks"}
-            </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 items-center">
+          {/* Row 1 Col 1: Title (Order 1 on all) */}
+          <h1 className="text-2xl font-bold md:text-3xl shrink-0 order-1">
+            {currentCategory || "All Bookmarks"}
+          </h1>
 
-            {/* Secondary Controls (Grid, Group, Sort) moved up to Title row */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar sm:overflow-visible">
-              {/* Grid Selector */}
+          {/* Row 2 Col 1: Count (Order 2 on Mobile, Order 3 on Desktop) */}
+          <p className="text-sm text-muted-foreground order-2 sm:order-3">
+            {bookmarks.length === 0
+              ? "No bookmarks yet"
+              : `${bookmarks.length} bookmark${
+                  bookmarks.length === 1 ? "" : "s"
+                }`}
+          </p>
+
+          {/* Row 1 Col 2: High-level Controls (Order 3 on Mobile, Order 2 on Desktop) */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar sm:overflow-visible sm:justify-end order-3 sm:order-2 -ml-2 sm:ml-0 sm:-mr-2">
+            {/* Grid Selector */}
+            <Tooltip>
+              <DropdownMenu>
+                <TooltipTrigger
+                  render={
+                    <DropdownMenuTrigger
+                      render={
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 gap-1.5 px-2 text-xs shrink-0"
+                          data-onboarding="column-selector"
+                        />
+                      }
+                    />
+                  }
+                >
+                  <HugeiconsIcon icon={GridIcon} className="size-4" />
+                  <span className="text-muted-foreground">Grid:</span>
+                  {currentColumns}
+                  <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />
+                </TooltipTrigger>
+                <DropdownMenuContent align="end">
+                  {columnOptions.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() => handleColumnChange(option.value)}
+                      className="justify-between"
+                    >
+                      {option.label}
+                      {currentColumns === option.value && (
+                        <HugeiconsIcon icon={Tick02Icon} className="h-4 w-4" />
+                      )}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <TooltipContent side="bottom">Column layout</TooltipContent>
+            </Tooltip>
+
+            {/* Group Columns Selector (Desktop only) */}
+            {!categoryId && !isMobile && (
               <Tooltip>
                 <DropdownMenu>
                   <TooltipTrigger
@@ -318,28 +367,25 @@ function DashboardContent() {
                             variant="ghost"
                             size="sm"
                             className="h-8 gap-1.5 px-2 text-xs shrink-0"
-                            data-onboarding="column-selector"
                           />
                         }
                       />
                     }
                   >
-                    <HugeiconsIcon icon={GridIcon} className="size-4" />
-                    <span className="text-muted-foreground hidden md:inline">
-                      Grid:
-                    </span>
-                    {currentColumns}
+                    <HugeiconsIcon icon={LayoutGridIcon} className="size-4" />
+                    <span className="text-muted-foreground">Groups:</span>
+                    {groupColumns}
                     <HugeiconsIcon icon={ArrowDown01Icon} className="h-3 w-3" />
                   </TooltipTrigger>
                   <DropdownMenuContent align="end">
-                    {columnOptions.map((option) => (
+                    {groupColumnOptions.map((option) => (
                       <DropdownMenuItem
                         key={option.value}
-                        onClick={() => handleColumnChange(option.value)}
+                        onClick={() => setGroupColumns(option.value)}
                         className="justify-between"
                       >
                         {option.label}
-                        {currentColumns === option.value && (
+                        {groupColumns === option.value && (
                           <HugeiconsIcon
                             icon={Tick02Icon}
                             className="h-4 w-4"
@@ -349,77 +395,20 @@ function DashboardContent() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <TooltipContent side="bottom">Column layout</TooltipContent>
+                <TooltipContent side="bottom">Group layout</TooltipContent>
               </Tooltip>
+            )}
 
-              {/* Group Columns Selector (Desktop only) */}
-              {!categoryId && !isMobile && (
-                <Tooltip>
-                  <DropdownMenu>
-                    <TooltipTrigger
-                      render={
-                        <DropdownMenuTrigger
-                          render={
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 gap-1.5 px-2 text-xs shrink-0"
-                            />
-                          }
-                        />
-                      }
-                    >
-                      <HugeiconsIcon icon={LayoutGridIcon} className="size-4" />
-                      <span className="text-muted-foreground hidden md:inline">
-                        Groups:
-                      </span>
-                      {groupColumns}
-                      <HugeiconsIcon
-                        icon={ArrowDown01Icon}
-                        className="h-3 w-3"
-                      />
-                    </TooltipTrigger>
-                    <DropdownMenuContent align="end">
-                      {groupColumnOptions.map((option) => (
-                        <DropdownMenuItem
-                          key={option.value}
-                          onClick={() => setGroupColumns(option.value)}
-                          className="justify-between"
-                        >
-                          {option.label}
-                          {groupColumns === option.value && (
-                            <HugeiconsIcon
-                              icon={Tick02Icon}
-                              className="h-4 w-4"
-                            />
-                          )}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                  <TooltipContent side="bottom">Group layout</TooltipContent>
-                </Tooltip>
-              )}
-
-              {/* Sort Selector */}
-              <div className="shrink-0">
-                <SortSelector />
-              </div>
+            {/* Sort Selector */}
+            <div className="shrink-0">
+              <SortSelector />
             </div>
           </div>
 
-          {/* Operational Statistics & View Controls Row */}
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">
-              {bookmarks.length === 0
-                ? "No bookmarks yet"
-                : `${bookmarks.length} bookmark${
-                    bookmarks.length === 1 ? "" : "s"
-                  }`}
-            </p>
-
-            <div className="flex items-center gap-2">
-              {/* View Modes */}
+          {/* Row 2 Col 2: Operational Controls (Order 4 on all) */}
+          <div className="flex items-center justify-between sm:justify-end gap-2 order-4 sm:-mr-1.5">
+            {/* Mobile View Toggle & Selection container */}
+            <div className="flex items-center gap-2 -ml-1.5 sm:ml-0">
               <div
                 className="flex items-center gap-1"
                 data-onboarding="view-toggle"
@@ -756,23 +745,19 @@ function DashboardContent() {
 function DashboardLoading() {
   return (
     <div className="space-y-8">
-      <div className="space-y-2">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <Skeleton className="h-9 w-48" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-24" />
-            <Skeleton className="h-8 w-24" />
-            <Skeleton className="h-8 w-32" />
-          </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-4 items-center">
+        <Skeleton className="h-9 w-48 order-1" />
+        <Skeleton className="h-5 w-32 order-2 sm:order-3" />
+        <div className="flex items-center gap-2 order-3 sm:order-2 sm:justify-end">
+          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-8 w-24" />
+          <Skeleton className="h-8 w-32" />
         </div>
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-5 w-32" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-8 w-8" />
-            <Skeleton className="h-8 w-8" />
-            <div className="h-4 w-px bg-border mx-1" />
-            <Skeleton className="h-8 w-8" />
-          </div>
+        <div className="flex items-center gap-2 order-4 sm:justify-end">
+          <Skeleton className="h-8 w-8" />
+          <Skeleton className="h-8 w-8" />
+          <div className="h-4 w-px bg-border mx-1" />
+          <Skeleton className="h-8 w-8" />
         </div>
       </div>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
