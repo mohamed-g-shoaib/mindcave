@@ -59,7 +59,7 @@ export function CommandDialog({ open, onOpenChange }: CommandDialogProps) {
       description="Search bookmarks and categories"
     >
       <Command className="**:[[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12">
-        <CommandInput placeholder="Type to search..." />
+        <CommandInput placeholder="Search Dashboard..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
 
